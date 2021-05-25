@@ -1,0 +1,85 @@
+:root {
+	--linkcolor: 000;
+	--menucolor: var(--linkcolor);
+	--menuhicolor: var(--menucolor);
+	--menubordercolor:var(--menucolor);
+	--menuhicolor: var(--menucolor);
+	--menuactivecolor: var(--menucolor);
+}
+
+
+.cs-menu ul {
+	list-style: none;
+	margin:0;
+	padding:0;
+}
+
+.cs-menu a {
+	display:block;
+	color:var(--menucolor);
+
+}
+
+.cs-menu a:hover {
+	color:var(--menuhicolor);
+}
+
+.level3 {
+	padding-left:1.6em;
+}
+
+.level2 + .level3 {
+	padding-top:5px;
+}
+
+.cs-menu .headingselected a {
+	color:var(--menuhicolor);
+}
+
+
+#submenu {
+	padding-left:1.6em;
+	border-left: 1px solid var(--menubordercolor);
+	font-size:86%;
+	padding-bottom: 12px;
+}
+
+#submenu {
+	display: block;
+}
+
+@media only screen and (max-width: 800px) {
+	#submenu {
+		display: none;
+	}
+}
+
+.doc-sub-menu {
+	display: none;
+}
+
+.selected .doc-sub-menu {
+	display: block;
+}
+
+.menuItem  {
+	padding:0 0 1em 0;
+}
+
+#submenu a {
+    padding: 0 0 8px 0;
+}
+
+.doc-sub-menu  {
+	padding:0em 0 0em 1em;
+	margin-top:1em;
+}
+
+.doc-sub-menu  a {
+	display:block;
+	padding-bottom: 1em;
+}
+
+
+
+

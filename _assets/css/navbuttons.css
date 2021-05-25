@@ -1,0 +1,38 @@
+:root {
+	--linkcolor: 000;
+	--bordercolor:#eee;
+	--buttoncolor: var(--linkcolor);
+	--buttonhicolor:; var(--buttoncolor);
+}
+
+.navButtons {
+	display:grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 10px;
+	min-height: 26px;
+	margin-top: 1em;
+}
+
+.navButtons a {
+	color:var(--buttoncolor);
+}
+
+.navButtons a:hover {
+	color:var(--buttonhicolor);
+}
+
+
+.previousnext a {
+	display: inline-block;
+	padding:4px;
+	border:1px solid var(--bordercolor);
+}
+
+
+.previousnext:before {
+
+}
+
+.next {
+	text-align: right;
+}

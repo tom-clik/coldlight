@@ -1,4 +1,4 @@
-component name="coldlight" extends="utils.utils" {
+component name="coldlight" {
 	
 	/**
 	 * @hint      Pseudo constructor
@@ -193,6 +193,9 @@ component name="coldlight" extends="utils.utils" {
 			throw("Path #arguments.path# not found");
 		}
 
+		// writeOutput(arguments.path & "\toc.md");
+		// abort;
+
 		local.autotoc = NOT FileExists(arguments.path & "\toc.md");
 		local.hasIndex = FileExists(arguments.path & "\index.md");
 
@@ -209,7 +212,7 @@ component name="coldlight" extends="utils.utils" {
 			local.tocDom = variables.markdown.coldsoup.parse(local.doc.html);
 		}
 		else {
-			throw("Auto toc func not complete");
+			throw(message="Auto toc func not complete",detail="The functionality to create a toc def automaticaly is WIP. Please create toc.md file and add it to your doc root");
 		}
 
 		var nodes = local.tocDom.getElementsByTag("a");
@@ -440,13 +443,10 @@ component name="coldlight" extends="utils.utils" {
 			
 			}
 
-			
-			
-			
 			if (StructKeyExists(this.data,local.pub)) {
 
 				local.pubdata = this.data[local.pub];
-				local.pages = local.pubdata.orderedIndex;
+				local.pages = Duplicate(local.pubdata.orderedIndex);
 				
 				if (!local.multiMode) {
 					ArrayPrepend(local.pages,"index");

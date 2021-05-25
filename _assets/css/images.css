@@ -1,0 +1,11 @@
+
+img.box {
+	border:1px solid var(--bordercolor, #eee);
+	box-shadow: 4px 4px 4px 0px rgba(156,150,156,0.72);
+	margin:0 0px 12px 0;
+}
+
+img.left {
+	float:left;
+	margin:0 12px 12px 0;
+}
