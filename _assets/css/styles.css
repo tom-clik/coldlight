@@ -19,11 +19,15 @@
 }
 
 body {
-	font-family: "Open sans";
+	font-family:  var(--bodyfont);
 	padding:0;
 	margin:0;
 	font-size: 80%;
 	color: var(--text);
+}
+
+.cs-title, .title {
+	font-family:  var(--titlefont);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -100,7 +104,7 @@ a {
     -webkit-transition: all 0.4s ease-in-out;
 }
 
-#pagecontainer {
+#maincol {
 	padding-top: var(--headerheight);
 	min-height: 100%;
 	display: grid;
@@ -118,7 +122,7 @@ a {
 
 @media only screen and (max-width: 800px) {
 
-	#pagecontainer {
+	#maincol {
 		padding-top:0;
 		grid-template-rows: min-content auto 50px;
 
@@ -157,14 +161,8 @@ a {
 
 }
 
-.spanning {
+div.spanning {
 	padding:0 20px;
-}
-
-.spanning > .inner {
-	max-width: 1280px;
-	margin:0 auto;
-	position: relative;
 }
 
 .hasSticky > .inner {
@@ -180,7 +178,7 @@ a {
 	 text-align: center;
 }
 
-#footer > .inner {
+#footer {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -188,47 +186,19 @@ a {
 	height: 100%;
 }
 
-#content > .inner {
+#content  {
 	padding: var(--contentpadding) 0 var(--contentpadding) 0;
 }
 
-#content> .inner {
-	display: grid;
-	grid-template-areas: "leftcol main";
-	grid-template-columns: 240px auto;
-}
 
-#rightcol {
-	display:none;
-	grid-area: rightcol;
-	padding-left:20px;
-}
-
-@media only screen and (min-width: 980px) {
-	#rightcol {
-		display:block;
-	}
-
-
-	#content> .inner {
-		grid-template-areas: "leftcol main rightcol";
-		grid-template-columns: 240px auto 260px;
-	}
-}
-
-#mainmenu, #submenu {
+#mainmenu, #pagemenu {
 	position: sticky;
 	top: calc(var(--headerheight) + var(--contentpadding));
 }
 
 
-
-
 @media only screen and (max-width: 800px) {
-	#content> .inner {
-		display: block;
-	}
-
+	
 	#mainmenu {
 
 		padding:20px;
@@ -247,15 +217,6 @@ a {
 	}
 
 	
-}
-
-#leftcol {
-	grid-area: leftcol;
-	padding-right:20px;
-}
-
-#maincol {
-	grid-area: main;
 }
 
 #breadcrumb {
@@ -397,5 +358,61 @@ a.xref {
 
 a.xref:hover {
 	color:var(--text);
+}
+
+/** menus  */
+
+.level3 {
+	padding-left:1.6em;
+}
+
+.level2 + .level3 {
+	padding-top:5px;
+}
+
+.cs-menu .headingselected a {
+	color:var(--menuhicolor);
+}
+
+
+#pagemenu {
+	padding-left:1.6em;
+	border-left: 1px solid var(--menubordercolor);
+	font-size:86%;
+	padding-bottom: 12px;
+}
+
+#pagemenu {
+	display: block;
+}
+
+@media only screen and (max-width: 800px) {
+	#pagemenu {
+		display: none;
+	}
+}
+
+
+#pagemenu a {
+    padding: 0 0 8px 0;
+}
+
+.doc-sub-menu {
+	display: none;
+}
+
+.selected .doc-sub-menu {
+	display: block;
+}
+
+
+.doc-sub-menu  {
+	padding:0em 0 0em 1em;
+	margin-top:1em;
+}
+
+.doc-sub-menu  a {
+	display:block;
+	padding-bottom: 1em;
 }
 

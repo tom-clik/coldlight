@@ -1,0 +1,11 @@
+.cs-title {
+	font-family: var(--titlefont);
+}
+
+.cs-title h1, .cs-title h2, .cs-title h3, .cs-title h4, .cs-title h5, .cs-title h6 {
+	font-family: inherit;
+	font-weight: inherit;
+	color: inherit;
+	margin:0;
+	padding:0;
+}

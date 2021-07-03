@@ -1,84 +1,129 @@
 :root {
 	--linkcolor: 000;
 	--menucolor: var(--linkcolor);
-	--menuhicolor: var(--menucolor);
+	--menuhovercolor: var(--menucolor);
 	--menubordercolor:var(--menucolor);
 	--menuhicolor: var(--menucolor);
-	--menuactivecolor: var(--menucolor);
+	--menugap: 4px;
+	--menucolumngap: 0;
+	--menuitempadding: 0 8px;
+	--menuvalign: center;
 }
-
 
 .cs-menu ul {
 	list-style: none;
 	margin:0;
-	padding:0;
+	padding-left: 0em;
+    text-indent: 0px;
+	display:grid;
+	grid-template-columns: repeat(auto-fill, minmax(100px,1fr));
+	grid-gap:var(--menugap);
+	grid-column-gap:var(--menucolumngap);
+}
+
+.cs-menu ul.submenu {
+	transition:height 0.3s ease-in-out;
+  	position: absolute;
+  	top:0;
+  	visibility: hidden;
+  	z-index: 100;
+  	width:100%;
+}
+
+.cs-menu li {
+	position:relative;
+	min-height:100%;
+	display: flex;
+	align-items: var(--menuvalign);
+	padding:var(--menuitempadding);	
+}
+
+.cs-menu li.open > ul.submenu {
+	position: absolute;
+	visibility: visible;
+	top:100%;
+	margin-top:4px;
+}
+
+.cs-menu ul.submenu li.open > ul.submenu {
+	left:100%;
+	top:0;
+	margin-top:0px;
+	margin-left:4px;
+}
+
+.cs-menu.scheme-flex ul {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+
+}
+
+.cs-menu.scheme-flex li {
+	margin-right:12px;
+}
+
+.scheme-vertical li.open > ul.submenu {
+	position: static;
 }
 
 .cs-menu a {
-	display:block;
+	text-decoration: none;
 	color:var(--menucolor);
 
 }
 
+.cs-menu a.hasmenu {
+	padding-right:24px;
+}
+
+.cs-menu a svg {
+	max-height:100%;
+	width:16px;
+	position: absolute;
+	top:0;
+	right:4px;
+	transform: rotate(-90deg);
+	transition-property: transform;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in-out;
+}
+
 .cs-menu a:hover {
-	color:var(--menuhicolor);
+	color:var(--menuhovercolor);
 }
 
-.level3 {
-	padding-left:1.6em;
+.cs-menu li.open > a svg {
+	transform: none;
 }
 
-.level2 + .level3 {
-	padding-top:5px;
+.scheme-vertical ul {
+	grid-template-columns: 1fr;
+	grid-row-gap:var(--menugap);
 }
 
-.cs-menu .headingselected a {
-	color:var(--menuhicolor);
+.scheme-vertical ul.submenu  {
+	grid-row-gap:0px;
 }
 
-
-#submenu {
-	padding-left:1.6em;
-	border-left: 1px solid var(--menubordercolor);
-	font-size:86%;
-	padding-bottom: 12px;
-}
-
-#submenu {
+.scheme-vertical a {
 	display: block;
+	transition-property: background-color;
+	transition-duration: 1s;
+	transition-timing-function: ease-in-out;
 }
 
-@media only screen and (max-width: 800px) {
-	#submenu {
-		display: none;
-	}
+.scheme-vertical .submenu a {
+	background-color: #d4d4d4;
+	padding-left:18px;
 }
 
-.doc-sub-menu {
-	display: none;
+.scheme-vertical .submenu .submenu a {
+	padding-left:36px;
 }
 
-.selected .doc-sub-menu {
-	display: block;
-}
 
-.menuItem  {
-	padding:0 0 1em 0;
-}
 
-#submenu a {
-    padding: 0 0 8px 0;
-}
-
-.doc-sub-menu  {
-	padding:0em 0 0em 1em;
-	margin-top:1em;
-}
-
-.doc-sub-menu  a {
-	display:block;
-	padding-bottom: 1em;
-}
 
 
 

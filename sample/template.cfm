@@ -1,5 +1,5 @@
-<div id="pagecontainer">
-	<header id="header" class="header spanning">
+<div id="uberContainer">
+	<div id="header" class="header spanning">
 		<div class="inner">
 			<div id="sitetitle" class="scheme-title">
 				<a href="index.cfm">
@@ -23,13 +23,13 @@
 			</div>
 		</div>
 
-	</header>
+	</div>
 
 	<div id="content" class="spanning">
+		
 		<div class="inner">
 			
-			<div id="leftcol" class="hasSticky">
-				<div class="inner">
+			<div id="subcol" class="hasSticky">
 					<div id="mainmenu" class="cs-menu menu-vertical">
 						<div id="mobileclose" class="icon icon-big">
 							<a href="#top">M</a>
@@ -38,13 +38,12 @@
 							<cfoutput>#application.coldLight.pubMenu(pub=request.pub,selected=request.code,cache=request.cache)#</cfoutput>
 						</nav>
 					</div>
-				</div>
+				
 			</div>
 
 			<div id="maincol">
-				<div class="inner">
 					
-
+				<div id="maincol_top">	
 					<div id="pageContent">
 						<div class="pageTitle">
 							<h1><cfoutput>#request.page.title#</cfoutput></h1>
@@ -54,6 +53,8 @@
 						</div>
 					</div>
 
+				</div>
+				<div id="maincol_bottom">		
 					<div class="navButtons">
 						<div id="previous" class="previousnext previous">
 							<cfif request.page.previous neq "">
@@ -66,28 +67,27 @@
 							</cfif>
 						</div>
 					</div>
-					
-				</div>
+				</div>	
+				
 			</div>
 
-			<div id="rightcol" class="hasSticky">
-				<div class="inner">
-
-					<div id="submenu" class="cs-menu menu-vertical">
+			<div id="xcol" class="hasSticky">
+				
+					<div id="pagemenu" class="cs-menu menu-vertical">
 						<cfoutput>#application.coldLight.getPageHeadings(page=request.page)#</cfoutput>
 					</div>
 					
-				</div>
+				
 			</div>
 			
 		</div>	
 	</div>         
 
-	<footer id="footer" class="spanning">
+	<div id="footer" class="spanning">
 		<div class="inner">
 			<small class="copyright"><cfoutput>#application.pageObj.site.copyright#</cfoutput></small>
 		</div>
-	</footer>
+	</div>
 		
 </div>
 

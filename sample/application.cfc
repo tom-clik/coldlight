@@ -47,9 +47,10 @@ component{
 		
 
 		application.pageObj.site.title = "<span class=""text-highlight"">Cold</span><span>Light</span>";			
+		application.pageObj.site.copyright = "&copy; Tom Peer 1999-2021";
 
 		application.pageObj.content.title = "Coldlight Demo";
-		application.pageObj.content.copyright = "&copy; Tom Peer 1999-2021";
+		application.pageObj.content["bodyClass"] = "spanning col-SMX";
 
 		application.rootFolder = Replace(getDirectoryFromPath(getCurrentTemplatePath()),"sample\","sourcedocs");
 		
@@ -81,6 +82,7 @@ component{
 		if (request.reload) onApplicationStart();
 
 		request.content = application.pageObj.getContent();
+		
 		
 		// use pageBuilder in onRequestEnd
 		request.buildPage = false;
