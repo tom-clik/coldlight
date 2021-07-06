@@ -1,38 +1,56 @@
 :root {
-	--linkcolor: 000;
+	--linkcolor: #000;
 	--bordercolor:#eee;
 	--buttoncolor: var(--linkcolor);
-	--buttonhicolor:; var(--buttoncolor);
+	--buttonhicolor: var(--buttoncolor);
+	--buttonwidth: 32px;
+	--buttonheight: var(--buttonwidth);
+	--buttongap: 10px;
 }
 
-.navButtons {
+.cs-button a {
 	display:grid;
-	grid-template-columns: 1fr 1fr;
-	grid-gap: 10px;
-	min-height: 26px;
-	margin-top: 1em;
-}
-
-.navButtons a {
+	grid-template-columns: var(--buttonwidth) auto;
+	grid-column-gap: var(--buttongap);
+	grid-template-areas: "button label";
 	color:var(--buttoncolor);
+	stroke:var(--buttoncolor);
+	fill:var(--buttoncolor);
 }
 
-.navButtons a:hover {
+.cs-button svg {
+	width:100%;
+	height:100%;
+	display:block;
+}
+
+.cs-button .icon {
+	grid-area:button;
+	width:var(--buttonwidth);
+	height:var(--buttonheight);
+}
+
+.cs-button label {
+	grid-area:label;
+}
+
+.cs-button.right  a{
+	grid-template-columns:  auto var(--buttonwidth);
+	grid-template-areas: "label button";
+}
+
+
+.cs-button a:hover {
 	color:var(--buttonhicolor);
+	stroke:var(--buttonhicolor);
+	fill:var(--buttonhicolor);
 }
 
-
-.previousnext a {
+.cs-button label {
 	display: inline-block;
 	padding:4px;
-	border:1px solid var(--bordercolor);
 }
 
-
-.previousnext:before {
-
-}
-
-.next {
+.cs-button.right label {
 	text-align: right;
 }
