@@ -211,11 +211,3 @@ figure img {
 .scheme-overlay figure:hover figcaption {
 	opacity: 1;
 }
-
-@media (max-width: 800px) {
-	.cs-imagegrid.masonry figure {
-		width:  50%;
-		display: block;
-	}
-	
-}
