@@ -1,13 +1,41 @@
+/* MENUS
+
+
+Create a grid or flexbox menu from a ul
+
+## Grid menus
+
+By default menus are horizontal grids. Change this to vertical with scheme-vertical
+
+scheme-flex will use a flexbox which only makes sense for horizontal menus.
+
+## HTML
+
+
+
+## Issues
+
+1. First item padding etc
+   All the adjustments needed for first and last items for paddings and borders are hardwired into scheme-flex
+
+2. Submenu animations
+   Still don't have a CSS only trick for these. Can't animate to a height of auto. Potiential to look into just assigning
+   a height to them using JS and seeing if the animation will work then.
+
+
+*/
+
 :root {
 	--linkcolor: 000;
 	--menucolor: var(--linkcolor);
 	--menuhovercolor: var(--menucolor);
 	--menubordercolor:var(--menucolor);
 	--menuhicolor: var(--menucolor);
-	--menugap: 4px;
+	--menugap: 4px;/* only grid modes */
 	--menucolumngap: 0;
 	--menuitempadding: 0 8px;
-	--menuvalign: center;
+	--menuvalign: center;/* used for adding icons into the item */
+	--itemborder:0;/* border width (can use e.g. 0 1px 0 0) */
 }
 
 .cs-menu ul {
@@ -21,47 +49,85 @@
 	grid-column-gap:var(--menucolumngap);
 }
 
-.cs-menu ul.submenu {
-	transition:height 0.3s ease-in-out;
-  	position: absolute;
-  	top:0;
-  	visibility: hidden;
-  	z-index: 100;
+@media screen and (max-width:630px) {
+
+	.cs-menu.mobilemenu {
+		height:0;
+		overflow: hidden;
+	}
+	.cs-menu.open.mobilemenu {
+		max-height:400px;
+	}
+
+}
+
+/* Watch the specifity here. JS library creates clone to get heights */
+ul.submenu {
+	z-index: 100;
   	width:100%;
+  	height: 0;
+  	overflow: hidden;
+  	/*margin-top:4px; TO DO: menu gap? some sort of var */
+}
+
+.cs-menu li.open > ul.submenu {
+	display:block;
 }
 
 .cs-menu li {
 	position:relative;
-	min-height:100%;
-	display: flex;
-	align-items: var(--menuvalign);
+	/*min-height:100%;*/
 	padding:var(--menuitempadding);	
 	color:var(--menucolor);
-}
-
-.cs-menu li.open > ul.submenu {
-	position: absolute;
-	visibility: visible;
-	top:100%;
-	margin-top:4px;
+	border-width:var(--itemborder);
+	border-style:solid;
+	border-color:var(--menucolor);
 }
 
 .cs-menu ul.submenu li.open > ul.submenu {
-	left:100%;
-	top:0;
 	margin-top:0px;
-	margin-left:4px;
+
 }
 
 .cs-menu.scheme-flex ul {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
-
 }
 
-.cs-menu.scheme-flex li {
-	margin-right:12px;
+.cs-menu.scheme-flex ul li:first-of-type {
+	padding-left:0;
+}
+
+.cs-menu.scheme-flex ul li:last-of-type {
+	padding-right:0;
+	border-width:0;
+}
+
+@media screen and (max-width:630px) {
+
+
+	.cs-menu.scheme-flex:not(.mobile) ul {
+		flex-direction: column;
+	}
+	
+	/* reset the first and last hacks above but you'll probably
+	want to define different values for these */
+	
+	.cs-menu.scheme-flex:not(.mobile) {
+		--menuitempadding: 4px 0;
+		--itemborder: 0;
+	}
+
+	.cs-menu.scheme-flex:not(.mobile) ul li:first-of-type {
+		padding:var(--menuitempadding);	
+	}
+
+	.cs-menu.scheme-flex:not(.mobile) ul li:last-of-type {
+		padding:var(--menuitempadding);	
+		border-width:var(--itemborder);
+	}
+
 }
 
 .scheme-vertical li.open > ul.submenu {
@@ -82,18 +148,33 @@
 	position: absolute;
 	top:0;
 	right:4px;
-	transform: rotate(-90deg);
+	fill:var(--menucolor);
+	stroke:var(--menucolor);
 	transition-property: transform;
 	transition-duration: 0.3s;
 	transition-timing-function: ease-in-out;
 }
 
-.cs-menu li:hover {
+.cs-menu li:hover > a svg {
+	fill:var(--menuhovercolor);
+	stroke:var(--menuhovercolor);
+}
+
+.cs-menu li:hover > a{
 	color:var(--menuhovercolor);
 }
 
+.cs-menu li.hi > a, .cs-menu li.hi:hover  > a {
+	color:var(--menuhicolor);
+}
+
+.cs-menu li.hi > a svg, .cs-menu li.hi:hover > a svg {
+	fill:var(--menuhicolor);
+	stroke:var(--menuhicolor);
+}
+
 .cs-menu li.open > a svg {
-	transform: none;
+	transform: rotate(90deg);
 }
 
 .scheme-vertical ul {
@@ -113,10 +194,9 @@
 }
 
 .scheme-vertical .submenu a {
-	background-color: #d4d4d4;
 	padding-left:18px;
 }
-
+ 
 .scheme-vertical .submenu .submenu a {
 	padding-left:36px;
 }

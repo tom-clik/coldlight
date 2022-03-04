@@ -1,5 +1,30 @@
-.cs-title {
-	font-family: var(--titlefont);
+/* Now does all font handling including for headers etc
+*/
+:root {
+	--text-font: Verdana;
+	--font-size:100%;
+	--title-font:inherit;
+	/* Headings are the cross headers inside text items (see .textWrap) 
+	usually we want headings to be the title font but sometimes
+	we want something different. The sizes here only apply to these. 
+	All sizes applied to titles are done by assigning a font size to the content section (for titles)
+	or the cs title panel for e.g. general content sections */
+	--heading-font: var(--title-font);
+	--h1size: 140%;
+	--h2size: calc(var(--h1size) * .9);
+	--h3size: calc(var(--h1size) * .8);
+	--h4size: 1em;
+	--h5size: var(--h4size);
+	--h6size: var(--h5size);
+}
+
+body {
+	font-family: var(--text-font);
+	font-size: var(--font-size);
+}
+
+.cs-title, .title {
+	font-family: var(--title-font);
 }
 
 .cs-title h1, .cs-title h2, .cs-title h3, .cs-title h4, .cs-title h5, .cs-title h6 {
@@ -9,3 +34,29 @@
 	margin:0;
 	padding:0;
 }
+
+/* Headings with text items */
+.textWrap h1, .textWrap h2, .textWrap h3, .textWrap h4, .textWrap h5, .textWrap h6 {
+	font-family: var(--heading-font);
+	margin-bottom: 0.2em;
+}
+
+.textWrap h1 {
+	font-size: var(--h1size);
+}
+.textWrap h2 {
+	font-size: var(--h2size);
+}
+.textWrap h3 {
+	font-size: var(--h3size);
+}
+.textWrap h3 {
+	font-size: var(--h4size);
+}
+.textWrap h3 {
+	font-size: var(--h5size);
+}
+.textWrap h3 {
+	font-size: var(--h6size);
+}
+

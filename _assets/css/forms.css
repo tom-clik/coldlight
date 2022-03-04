@@ -1,0 +1,76 @@
+:root {
+	--bordercolor: #333333;
+}
+
+div.form.scheme-narrow {
+	max-width: 600px;
+}
+
+div.fieldrow {
+	display:grid;
+	grid-template-columns: 140px auto;
+	grid-column-gap:20px;
+}
+
+@media screen and (max-width:630px) {
+	div.fieldrow {
+		display:grid;
+		grid-template-columns: auto;
+		grid-column-gap:6px;
+	}
+}
+
+div.form label, div.form field,  .am_table td {
+	padding:4px;
+}
+
+div.fieldrow label,.fieldrow field.right {
+	text-align: right;
+}
+@media screen and (max-width:630px) {
+	div.fieldrow label {
+		text-align: left;
+	}
+}
+
+.fieldrow field + label {
+	text-align: left;	
+}
+
+
+.form input[type=text], .form input[type=password], .form textarea, .form select,
+td.field input[type=text], td.field input[type=password], td.field textarea, td.field select
+ {
+	border:1px solid var(--bordercolor);
+	padding:2px;
+}
+
+.scheme-minimal div.fieldrow {
+	display: grid;
+ 	grid-template-columns: auto 1fr;
+	grid-column-gap:8px;
+}
+
+.scheme-minimal div.fieldrow label {
+	text-align: left;
+}
+
+td.field .helpicon {
+	float:right;
+	margin-right:-36px;
+}
+
+td.field.hasHelp {
+	padding-right:40px;
+}
+
+textarea.error, input.error {
+	border-color:red;
+}
+
+label.error {
+	display: block;
+	color:red;
+	font-size: 110%;
+	padding:8px 0;
+}

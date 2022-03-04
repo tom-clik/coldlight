@@ -1,0 +1,9 @@
+:root {
+	--mingridcol: 200px;
+	--gridgap: 10px;
+}
+.scheme-grid {
+	display:grid;
+	grid-template-columns: repeat(auto-fill, minmax(var(--mingridcol),1fr));
+	grid-gap:var(--gridgap);
+}
