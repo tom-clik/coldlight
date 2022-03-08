@@ -70,6 +70,18 @@ body.spanning .spanning .inner {
 	grid-template-rows: min-content min-content auto min-content;
 }
 
+.inner {
+	min-height:100%;
+}
+
+#content .inner {
+	display: grid;
+	grid-template-areas: "contentheader"
+						 "contentwrap"	 
+						 "contentfooter";
+	grid-template-rows: min-content  auto min-content;
+}
+
 #contentwrap {
 	display: grid;
 	grid-template-areas: "subcol maincol xcol";
