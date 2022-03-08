@@ -1,12 +1,16 @@
 /*!
- *  Font Awesome 4.5.0 by @davegandy - http://fontawesome.io - @fontawesome
- *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ * Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Copyright 2022 Fonticons, Inc.
  */
-/* FONT PATH
- * -------------------------- */
+
+@import url('font-awesome-icons.css');
+
+
 @font-face {
-  font-family: 'FontAwesome';
-  src: local('FontAwesome');
-  font-weight: normal;
+  font-family: 'Font Awesome 6 Free';
   font-style: normal;
-}
+  font-weight: 400;
+  font-display: block;
+  src: url("../../fonts/fa-regular-400.woff2") format("woff2"), url("../../fonts/fa-regular-400.ttf") format("truetype"); }
+
