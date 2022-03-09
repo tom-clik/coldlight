@@ -10,12 +10,11 @@
 	All sizes applied to titles are done by assigning a font size to the content section (for titles)
 	or the cs title panel for e.g. general content sections */
 	--heading-font: var(--title-font);
-	--h1size: 140%;
-	--h2size: calc(var(--h1size) * .9);
-	--h3size: calc(var(--h1size) * .8);
-	--h4size: 1em;
-	--h5size: var(--h4size);
-	--h6size: var(--h5size);
+	--heading-font: inherit;
+	--heading-font-weight:inherit;
+	--heading-color:inherit;
+	--heading-margin:0;
+	--heading-padding:0;
 }
 
 body {
@@ -27,36 +26,42 @@ body {
 	font-family: var(--title-font);
 }
 
-.cs-title h1, .cs-title h2, .cs-title h3, .cs-title h4, .cs-title h5, .cs-title h6 {
-	font-family: inherit;
-	font-weight: inherit;
-	color: inherit;
-	margin:0;
-	padding:0;
-}
-
 /* Headings with text items */
-.textWrap h1, .textWrap h2, .textWrap h3, .textWrap h4, .textWrap h5, .textWrap h6 {
-	font-family: var(--heading-font);
-	margin-bottom: 0.2em;
+.textWrap {
+	--h1size: 140%;
+	--h2size: calc(var(--h1size) * .9);
+	--h3size: calc(var(--h1size) * .8);
+	--h4size: 1em;
+	--h5size: var(--h4size);
+	--h6size: var(--h5size);
+	--heading-font: var(--title-font);
+	--heading-margin: 0 0 0.2em 0;
+	
 }
 
-.textWrap h1 {
+h1, h2, h3, h4, h5, h6 {
+	margin: var(--heading-margin);
+	font-family:  var(--heading-font);
+	font-weight:  var(--heading-font-weight);
+	color:  var(--heading-color);
+}
+
+h1 {
 	font-size: var(--h1size);
 }
-.textWrap h2 {
+h2 {
 	font-size: var(--h2size);
 }
-.textWrap h3 {
+h3 {
 	font-size: var(--h3size);
 }
-.textWrap h3 {
+h3 {
 	font-size: var(--h4size);
 }
-.textWrap h3 {
+h3 {
 	font-size: var(--h5size);
 }
-.textWrap h3 {
+h3 {
 	font-size: var(--h6size);
 }
 
