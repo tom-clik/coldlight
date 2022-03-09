@@ -121,7 +121,17 @@
 	padding-left:36px;
 }
 
+.cs-button .state_close {
+	display: none;
+}
 
+.cs-button.close .state_open {
+	display: none;
+}
+
+.cs-button.close .state_close {
+	display: block;
+}
 
 
 

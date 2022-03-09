@@ -1,0 +1,50 @@
+:root {
+	/*--form-label-width:33%;*/
+	--form-label-width:min-content;
+	--form-gap:4px;
+	--field-padding:2px;
+	--border-color:black;
+	--field-border: 1px solid var(--border-color);
+	--button-border:var(--field-border);
+	--button-color:inherit;
+	--button-bg-color:transparent;
+	--button-padding:4px 12px;
+
+}
+
+.label label {
+	white-space: nowrap;
+	padding-right:12px;
+}
+
+.fieldgroup {
+	display: grid;
+	grid-template-columns: var(--form-label-width) auto;
+	grid-gap: var(--form-gap);
+}
+
+.field input[type=text], .field select, .field textarea {
+	border: var(--field-border);
+	padding: var(--field-padding);
+	width:100%;
+}
+
+input.button {
+	border: var(--button-border);
+	color: var(--button-color);
+	background-color: var(--button-bg-color);
+	text-align: center;
+	padding:var(--button-padding);
+}
+
+input.button:hover {
+	background-color: var(--button-color);
+	color: var(--button-bg-color);
+	
+}
+
+@media screen and (max-width:630px) {
+	.fieldgroup {
+		display: block;
+	}
+}
