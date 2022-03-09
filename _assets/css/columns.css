@@ -225,10 +225,11 @@ body.col-XSM #contentwrap {
 		display:none;
 	}
 
-	body:not(.spanning) #footer, body.spanning #footer .inner {
+	#footer .inner {
 		display: grid;
 		grid-template-areas: "footer_right" "footer_left" "footer_middle" ;
-		grid-gap:12px;
+		grid-gap:2px;
+		grid-template-rows: min-content min-content min-content;
 		grid-template-columns: auto;
 	}
 

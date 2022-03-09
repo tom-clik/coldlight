@@ -1,21 +1,37 @@
-:root {
-	--linkcolor: #000;
-	--bordercolor:#eee;
-	--buttoncolor: var(--linkcolor);
-	--buttonhicolor: var(--buttoncolor);
+/*
+Display a icon and a label 
+
+NOt working brilliantly well. Needs a width assigned to it which is ok
+*/
+
+.cs-button {
+	--link-color: inherit;
+	--border-color:initial;
+	--border-width:1px;
+	--background-color: transparent;
+	--border-style:solid;
 	--buttonwidth: 32px;
 	--buttonheight: var(--buttonwidth);
 	--buttongap: 10px;
+	--buttonpadding: 8px;
+}
+
+.noicon {
+	--buttonwidth:0px;
+	--buttongap: 0px;
 }
 
 .cs-button a {
+	padding: var(--buttonpadding);
 	display:grid;
 	grid-template-columns: var(--buttonwidth) auto;
 	grid-column-gap: var(--buttongap);
 	grid-template-areas: "button label";
-	color:var(--buttoncolor);
-	stroke:var(--buttoncolor);
-	fill:var(--buttoncolor);
+	color:var(--link-color);
+	stroke:var(--link-color);
+	fill:var(--link-color);
+	background-color: var(--background-color);
+	border: var(--border-width) var(--border-style) var(--border-color);	
 }
 
 .cs-button svg {
@@ -39,12 +55,6 @@
 	grid-template-areas: "label button";
 }
 
-
-.cs-button a:hover {
-	color:var(--buttonhicolor);
-	stroke:var(--buttonhicolor);
-	fill:var(--buttonhicolor);
-}
 
 .cs-button label {
 	display: inline-block;

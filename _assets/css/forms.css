@@ -1,39 +1,52 @@
-:root {
-	--bordercolor: #333333;
+.form {
+	--border-color: #333333;
+	--form-label-width: 33%;
+	--form-label-gap: 20px;
+	--form-row-gap: 8px;
+	--field-padding: 4px;
+	--input-padding:2px;
+	--form-width: 100%;
+
 }
 
-div.form.scheme-narrow {
-	max-width: 600px;
+.form {
+	max-width: var(--form-width);
 }
 
 div.fieldrow {
 	display:grid;
-	grid-template-columns: 140px auto;
-	grid-column-gap:20px;
+	grid-template-columns: var(--form-label-width) auto;
+	grid-column-gap:var(--form-label-gap);
+	margin-bottom: var(--form-row-gap);
 }
 
 @media screen and (max-width:630px) {
 	div.fieldrow {
 		display:grid;
 		grid-template-columns: auto;
-		grid-column-gap:6px;
 	}
 }
 
-div.form label, div.form field,  .am_table td {
-	padding:4px;
+.form .label, .form .field,  .am_table td {
+	padding:var(--field-padding);
 }
 
-div.fieldrow label,.fieldrow field.right {
+
+div.fieldrow label {
+	display: inline-block;
+	line-height: 1;
+}
+
+div.fieldrow .label,.fieldrow .field.right {
 	text-align: right;
 }
 @media screen and (max-width:630px) {
-	div.fieldrow label {
+	div.fieldrow .label {
 		text-align: left;
 	}
 }
 
-.fieldrow field + label {
+.fieldrow .field + label {
 	text-align: left;	
 }
 
@@ -41,14 +54,21 @@ div.fieldrow label,.fieldrow field.right {
 .form input[type=text], .form input[type=password], .form textarea, .form select,
 td.field input[type=text], td.field input[type=password], td.field textarea, td.field select
  {
-	border:1px solid var(--bordercolor);
-	padding:2px;
+	border:1px solid var(--border-color);
+	padding:var(--input-padding);
+	width: 100%;
+}
+
+
+/* legacy stuff TO DO: remove */
+.scheme-narrow {
+	--form-width:600px;
 }
 
 .scheme-minimal div.fieldrow {
 	display: grid;
  	grid-template-columns: auto 1fr;
-	grid-column-gap:8px;
+	--form-label-gap:8px;
 }
 
 .scheme-minimal div.fieldrow label {

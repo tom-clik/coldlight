@@ -9,12 +9,13 @@
 	we want something different. The sizes here only apply to these. 
 	All sizes applied to titles are done by assigning a font size to the content section (for titles)
 	or the cs title panel for e.g. general content sections */
-	--heading-font: var(--title-font);
 	--heading-font: inherit;
 	--heading-font-weight:inherit;
 	--heading-color:inherit;
+	--heading-font-align: inherit;
 	--heading-margin:0;
 	--heading-padding:0;
+	--link-color:inherit;
 }
 
 body {
@@ -22,12 +23,48 @@ body {
 	font-size: var(--font-size);
 }
 
+/* Need the hove to override reset.css value */
+a, a:hover, input.button, input.button:hover {
+	color:var(--link-color);
+}
+
+.button, input.button {
+	--button-border-color:var(--link-color);
+	--button-border-width:1px;
+	--button-background-color: transparent;
+	--button-border-style:solid;
+	--button-padding: 8px;
+	display: inline-block;
+	padding:var(--button-padding);
+	background-color: var(--button-background-color);
+	border: var(--button-border-width) var(--button-border-style) var(--button-border-color);
+}
+
+.noicon {
+	--buttonwidth:0px;
+	--buttongap: 0px;
+}
+
+.cs-button a {
+	padding: var(--buttonpadding);
+	display:grid;
+	grid-template-columns: var(--buttonwidth) auto;
+	grid-column-gap: var(--buttongap);
+	grid-template-areas: "button label";
+	color:var(--link-color);
+	stroke:var(--link-color);
+	fill:var(--link-color);
+	background-color: var(--background-color);
+	border: var(--border-width) var(--border-style) var(--border-color);	
+}
+}
+
 .cs-title, .title {
 	font-family: var(--title-font);
 }
 
-/* Headings with text items */
-.textWrap {
+/* Headings within text items */
+.textWrap, .cs-text {
 	--h1size: 140%;
 	--h2size: calc(var(--h1size) * .9);
 	--h3size: calc(var(--h1size) * .8);
@@ -43,6 +80,7 @@ h1, h2, h3, h4, h5, h6 {
 	margin: var(--heading-margin);
 	font-family:  var(--heading-font);
 	font-weight:  var(--heading-font-weight);
+	text-align: var(--heading-font-align);
 	color:  var(--heading-color);
 }
 
