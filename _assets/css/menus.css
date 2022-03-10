@@ -13,6 +13,11 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 
 
 
+## Notes
+
+This stylesheet includes lots of behaviours that are applied via classes. There is default behaviour for mobile elements
+but this styling should be applied directly via your stylesheet generator.
+
 ## Issues
 
 1. First item padding etc
@@ -26,16 +31,20 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 */
 
 :root {
-	--linkcolor: 000;
+	--linkcolor: #000;
 	--menucolor: var(--linkcolor);
 	--menuhovercolor: var(--menucolor);
-	--menubordercolor:var(--menucolor);
+	--menu-border-color:var(--menucolor);
 	--menuhicolor: var(--menucolor);
-	--menugap: 4px;/* only grid modes */
-	--menucolumngap: 0;
-	--menuitempadding: 0 8px;
-	--menuvalign: center;/* used for adding icons into the item */
-	--itemborder:0;/* border width (can use e.g. 0 1px 0 0) */
+	--menu-background: --transparent;
+	--menu-gap: 4px;/* Gap between items (only grid modes: use itempadding for flex); */
+	--menu-item-padding: 0 8px;
+	--menu-item-border:0;/* single value for dividers or boxes or use normal border width (can use e.g. 0 1px 0 0) */
+	--menu-icon-valign: middle;/* used for adding icons into the item */
+	--item-grid-columns: 1fr; /* to show an icon use e.g. auto 32px */
+	--item-grid-areas: "text"; /* the areas are text and icon. YOu can reverse or omit text */
+	--menu-text-align: center;
+	--menu-anim-time: 1s;
 }
 
 .cs-menu ul {
@@ -44,18 +53,26 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 	padding-left: 0em;
     text-indent: 0px;
 	display:grid;
-	grid-template-columns: repeat(auto-fill, minmax(100px,1fr));
-	grid-gap:var(--menugap);
-	grid-column-gap:var(--menucolumngap);
+	grid-template-columns: repeat(auto-fit, minmax(100px,1fr));
+	grid-gap:var(--menu-gap);
+}
+
+.cs-menu.fill ul {
+	grid-template-columns: repeat(auto-fill, minmax(100px,1fr));	
+}
+
+
+.cs-menu a, .cs-menu a:hover {
+	color:inherit;
 }
 
 @media screen and (max-width:630px) {
 
-	.cs-menu.mobilemenu {
+	.cs-menu.menu-mobilemenu {
 		height:0;
 		overflow: hidden;
 	}
-	.cs-menu.open.mobilemenu {
+	.cs-menu.open.menu-mobilemenu {
 		max-height:400px;
 	}
 
@@ -77,11 +94,53 @@ ul.submenu {
 .cs-menu li {
 	position:relative;
 	/*min-height:100%;*/
-	padding:var(--menuitempadding);	
+	padding:var(--menu-item-padding);	
 	color:var(--menucolor);
-	border-width:var(--itemborder);
+	border-width:var(--menu-item-border);
 	border-style:solid;
-	border-color:var(--menucolor);
+	border-color:var(--menu-border-color);
+	background-color: var(--menu-background);
+	/* watch browser agent default. Can't apply to ul */
+	text-align: var(--menu-text-align);	
+	transition-property: background-color;
+    transition-duration: var(--menu-anim-time);
+    transition-timing-function: ease-in-out;
+}
+
+/* See notes about assigning behaviour via classes */
+
+.cs-menu.dividers:not(.scheme-vertical) li {
+	border-width:0;
+	border-right-width:var(--menu-item-border);
+}
+
+.cs-menu.dividers:not(.scheme-vertical) ul li:last-of-type {
+	border-right-width:0;
+}
+
+.cs-menu.boxes:not(.scheme-vertical) li {
+	border-right-width:0;
+}
+
+.cs-menu.boxes:not(.scheme-vertical) ul li:last-of-type {
+	border-right-width:var(--menu-item-border);
+}
+
+.cs-menu.scheme-vertical.dividers li {
+	border-width:0;
+	border-bottom-width:var(--menu-item-border);
+}
+
+.cs-menu.scheme-vertical.dividers ul li:last-of-type {
+	border-bottom-width:0;
+}
+
+.cs-menu.scheme-vertical.boxes li {
+	border-bottom-width:0;
+}
+
+.cs-menu.scheme-vertical.boxes li:last-of-type {
+	border-bottom-width:var(--menu-item-border);
 }
 
 .cs-menu ul.submenu li.open > ul.submenu {
@@ -89,10 +148,25 @@ ul.submenu {
 
 }
 
+.cs-menu.scheme-flex, .cs-menu.scheme-vertical {
+	--menu-text-align: left;
+}
+
+
 .cs-menu.scheme-flex ul {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
+	grid-gap:0; /* Applying a grid gap seems to work in some browsers */
+}
+
+.cs-menu.scheme-flex.stretch li {
+	flex-grow: 1;
+}
+
+.cs-menu.scheme-flex.stretch ul {
+	width: 100%;
+	--menu-text-align: center;
 }
 
 .cs-menu.scheme-flex ul li:first-of-type {
@@ -107,25 +181,25 @@ ul.submenu {
 @media screen and (max-width:630px) {
 
 
-	.cs-menu.scheme-flex:not(.mobile) ul {
+	.cs-menu.scheme-flex:not(.menu-mobile) ul {
 		flex-direction: column;
 	}
 	
 	/* reset the first and last hacks above but you'll probably
 	want to define different values for these */
 	
-	.cs-menu.scheme-flex:not(.mobile) {
-		--menuitempadding: 4px 0;
-		--itemborder: 0;
+	.cs-menu.scheme-flex:not(.menu-mobile) {
+		--menu-item-padding: 4px 0;
+		--menu-item-border: 0;
 	}
 
-	.cs-menu.scheme-flex:not(.mobile) ul li:first-of-type {
-		padding:var(--menuitempadding);	
+	.cs-menu.scheme-flex:not(.menu-mobile) ul li:first-of-type {
+		padding:var(--menu-item-padding);	
 	}
 
-	.cs-menu.scheme-flex:not(.mobile) ul li:last-of-type {
-		padding:var(--menuitempadding);	
-		border-width:var(--itemborder);
+	.cs-menu.scheme-flex:not(.menu-mobile) ul li:last-of-type {
+		padding:var(--menu-item-padding);	
+		border-width:var(--menu-item-border);
 	}
 
 }
@@ -179,7 +253,7 @@ ul.submenu {
 
 .scheme-vertical ul {
 	grid-template-columns: 1fr;
-	grid-row-gap:var(--menugap);
+	grid-row-gap:var(--menu-gap);
 }
 
 .scheme-vertical ul.submenu  {

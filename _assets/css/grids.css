@@ -9,7 +9,7 @@
 
 .scheme-grid {
 	display:grid;
-	grid-template-columns: repeat(auto-fill, minmax(var(--mingridcol),1fr));
+	grid-template-columns: repeat(auto-fit, minmax(var(--mingridcol),1fr));
 	grid-gap:var(--gridgap);
 	grid-row-gap: var(--gridrowgap);
 }
@@ -21,10 +21,10 @@
 
 /*Fixed width */
 .scheme-grid-fixed {
-	grid-template-columns:  repeat(auto-fill, var(--mingridcol));
+	grid-template-columns:  repeat(auto-fit, var(--mingridcol));
 }
 
 /* Exotica */
 .scheme-grid-test {
-	grid-template-columns: 200px repeat(auto-fill, minmax(var(--mingridcol),1fr)) 300px;
+	grid-template-columns: 200px repeat(auto-fit, minmax(var(--mingridcol),1fr)) 300px;
 }
