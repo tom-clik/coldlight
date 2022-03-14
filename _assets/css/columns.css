@@ -1,197 +1,139 @@
 :root {
-	--bodypadding: 12px;
-	--sitewidth: 1060px;
+	--sitewidth:100%;
 	--subcolwidth:25%;
 	--xcolwidth:15%;
-	--colgap:5px;
+	--columns-grid-gap:5px;
+	--content-grid-gap:5px;
+	--xcol-display:block;
+	--subcol-display:block;
+	--uber-grid-template-areas: "header"
+						 "topnav"	 
+						 "content" 
+						 "bottomnav"
+						 "footer";
+	--uber-grid-template-rows: min-content min-content auto min-content min-content;
+	--content-grid-template-areas: "content_top" "content" "content_bottom";
+	--content-grid-template-rows: min-content auto min-content;
+	--columns-grid-template-areas: "subcol maincol xcol";
+	--columns-grid-template-columns: var(--subcolwidth) auto var(--xcolwidth);
+	--columns-grid-template-rows: auto;
+	--footer-grid-template-areas:"footer_left footer_middle footer_right";
+	--footer-grid-template-columns: 33% auto 33%;
+	--maincol-grid-template-columns: 1fr 1fr;
+	--maincol-grid-gap: var(--columns-grid-gap);
+	--header-display: block;
+	--footer-display: block;
+	--topnav-display: block;
+	--bottomnav-display: block;
+	--content_top-display: block;
+	--content_bottom-display: block;
+
 }
 
-@media screen and (max-width: 800px) {
-	:root {
-		--subcolwidth:240px;
-	}
-}
-
-body {
-	padding:var(--bodypadding);
-}
-
-/* apply to spanning containers */
-body.spanning {
-	padding:0;
-	--bodypadding: 0 12px;
-}
-
-
-body.col-SM #xcol, body.col-M #xcol, body.col-MX #subcol, body.col-M #subcol {
-	display:none;
-}
-
-
-.menu div {
-	display: inline-block;
-}
-
-#uberContainer {
-	max-width: var(--sitewidth);
-	margin-left:auto;
-	margin-right:auto;
-}
-
-body.spanning #uberContainer {
-	max-width:100%;
-}
-
-body.spanning .spanning {
-	padding:var(--bodypadding);
-}
-body.spanning .spanning .inner {
-	max-width: var(--sitewidth);
-	margin-left: auto;
-	margin-right:auto;
-	position: relative;
-}
 
 #header {grid-area:header;}
-#subcol {grid-area:subcol;}
+#subcol {grid-area:subcol;display:var(--subcol-display);}
 #maincol {grid-area:maincol;}
-#xcol {grid-area:xcol;}
+#xcol {grid-area:xcol;display:var(--xcol-display);}
 #content {grid-area:content;}
+#content_top {grid-area:content_top;}
+#content_bottom {grid-area:content_bottom;}
 #footer {grid-area:footer;}
 #topnav {grid-area:topnav;}
+#bottomnav {grid-area:bottomnav;}
+
 #maincol_top {grid-area: maincol_top}
 #maincol_left{grid-area: maincol_left}
 #maincol_right{grid-area: maincol_right}
+#maincol_grid{grid-area: maincol_grid}
 #maincol_bottom{grid-area: maincol_bottom}
 #footer_left{grid-area: footer_left}
 #footer_right{grid-area: footer_right}
 #footer_middle{grid-area: footer_middle}
 
-#uberContainer {
-	min-height:100%;
-	display: grid;
-	grid-template-areas: "header"
-						 "topnav"	 
-						 "content" 
-						 "footer";
-	/*grid-template-rows: 200px auto 100px;*/
-	grid-template-rows: min-content min-content auto min-content;
-}
-
-#contentwrap {
-	display: grid;
-	grid-template-areas: "subcol maincol xcol";
-	grid-column-gap: var(--colgap);
-	grid-template-columns: var(--subcolwidth) auto var(--xcolwidth);
-}
-
-
-body:not(.spanning) #content, body.spanning #content > .inner {
+#ubercontainer {
 	min-height: 100%;
+	max-width: var(--sitewidth);
+	margin-left:auto;
+	margin-right:auto;
 	display: grid;
-	grid-template-rows: min-content auto min-content;
+	grid-template-areas: var(--uber-grid-template-areas);
+	grid-template-rows: var(--uber-grid-template-rows);
+}
+
+#header {display: var(--header-display)}
+#footer {display: var(--footer-display)}
+#topnav {display: var(--topnav-display)}
+#bottomnav {display: var(--bottomnav-display)}
+#content_top {display: var(--content_top-display)}
+#content_bottom {display: var(--content_bottom-display)}
+
+.inner {
+	min-height: 100%;	
+}
+
+#content  {
+	min-height: 100%;	
+}
+
+#content .inner {
+	display: grid;
+	grid-template-areas: var(--content-grid-template-areas);
+	grid-column-gap: var(--content-grid-gap);
+	grid-template-rows: var(--content-grid-template-rows);
+}
+
+#columns {
+	display: grid;
+	grid-template-areas: var(--columns-grid-template-areas);
+	grid-column-gap: var(--columns-grid-gap);
+	grid-template-columns: var(--columns-grid-template-columns);
+	grid-template-rows: var(--columns-grid-template-rows);
 }
 
 #footer .inner {
 	display: grid;
-	grid-template-areas: "footer_left footer_middle footer_right";
-	grid-template-columns: 33% auto 33%;
-}
-
- body.col-M #contentwrap {
-	display: block;
-}
-
-
-body.col-MX #contentwrap {
-	grid-template-areas: "maincol xcol";
-	grid-template-columns: auto var(--xcolwidth);
-}
-
-body.col-SM #contentwrap {
-	grid-template-areas: "subcol maincol";
-	grid-template-columns:  var(--subcolwidth) auto;
-}
-
-
-body.col-MSX #contentwrap {
-	grid-template-areas: "maincol subcol xcol";
-	grid-template-columns: auto var(--subcolwidth) var(--xcolwidth);
-}
-
-body.col-XMS #contentwrap {
-	grid-template-areas: "xcol maincol subcol";
-	grid-template-columns: var(--xcolwidth) auto  var(--subcolwidth);
-}
-
-body.col-SXM #contentwrap {
-	grid-template-areas: "subcol xcol maincol ";
-	grid-template-columns: var(--subcolwidth)  var(--xcolwidth) auto ;
-}
-
-body.col-XSM #contentwrap {
-	grid-template-areas: "xcol subcol maincol ";
-	grid-template-columns: var(--xcolwidth) var(--subcolwidth)   auto ;
+	grid-template-areas: var(--footer-grid-template-areas) ;
+	grid-template-columns: var(--footer-grid-template-columns);
 }
 
 #maincol {
 	display: grid;
-	grid-template-areas: "maincol_top maincol_top" "maincol_left maincol_right" "maincol_bottom maincol_bottom";
-	grid-template-rows: minmax(min-content, max-content) auto minmax(min-content, max-content);
-	grid-template-columns: repeat(1fr);
+	grid-template-areas: "maincol_top maincol_top" "maincol_left maincol_right" "maincol_grid maincol_grid" "maincol_bottom maincol_bottom";
+	grid-template-rows: min-content min-content min-content  auto ;
+	grid-template-columns: var(--maincol-grid-template-columns);
 }
 
 @media screen and (max-width: 800px) {
-	#uberContainer {
-		grid-template-rows:  minmax(min-content, max-content) minmax(min-content, max-content) auto  minmax(min-content, max-content);
-	}
-
-
-	#contentwrap {
-		display: grid;
-		grid-template-areas: "subcol maincol" "subcol xcol";
-		grid-template-columns: var(--subcolwidth) auto;
-	}
-
-	body.col-MX #contentwrap {
-		grid-template-areas: "maincol xcol";
-		grid-template-columns: auto var(--subcolwidth);
-	}
-
-	body.col-SM #contentwrap {
-		grid-template-areas: "subcol maincol";
-		grid-template-columns:  var(--subcolwidth); auto;
-	}
-
-	body.col-MSX #contentwrap {
-		grid-template-areas: "maincol subcol" "xcol subcol";
-		grid-template-columns: auto var(--subcolwidth);
-	}
-
-	body.col-XMS #contentwrap {
-		grid-template-areas: " maincol subcol" "xcol subcol";
-		grid-template-columns: auto var(--subcolwidth); 
-	}
-
-	body.col-SXM #contentwrap, body.col-XSM #contentwrap {
-		grid-template-areas: " subcol maincol " "subcol xcol";
-		grid-template-columns: var(--subcolwidth) auto;
-	}
-
-
-
-	#maincol {
-		display: block;
-		/*grid-template-areas: "maincol_top" "maincol_left" "maincol_right" "maincol_bottom";
-
-		display: grid;
-		grid-template-areas: "maincol_top"  
-							"maincol_left maincol_right"
-							"maincol_bottom";
-		grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content) minmax(min-content, max-content) minmax(min-content, max-content);*/
-		/*grid-template-columns: repeat(1fr);*/
+	:root {
+		--columns-grid-template-areas: "subcol maincol" "subcol xcol";
+		--columns-grid-template-columns: var(--subcolwidth) auto;
 	}
 }
+
+@media screen and (max-width:630px) {
+	
+	.mobile {
+		display:block;
+	}
+	.notmobile {
+		display:none;
+	}
+
+	body[class^=col] {
+		--columns-grid-template-columns: 1fr;
+	}
+
+	:root {
+		--footer-grid-template-areas: "footer_right" "footer_middle"  "footer_left";
+		--footer-grid-template-columns: 1fr;
+		--columns-grid-template-areas: "subcol" "maincol" "xcol";
+		--columns-grid-template-columns: 1fr;
+	}
+	
+}
+
+/* Legacy mobile and mid stuff */
 
 .mobile {
 	display:none;
@@ -214,10 +156,6 @@ body.col-XSM #contentwrap {
 
 @media screen and (max-width:630px) {
 	
-	.menu div {
-		display: block;
-	}
-
 	.mobile {
 		display:block;
 	}
@@ -225,43 +163,4 @@ body.col-XSM #contentwrap {
 		display:none;
 	}
 
-	#footer .inner {
-		display: grid;
-		grid-template-areas: "footer_right" "footer_left" "footer_middle" ;
-		grid-gap:2px;
-		grid-template-rows: min-content min-content min-content;
-		grid-template-columns: auto;
-	}
-
-	#contentwrap,
-	body.col-MSX #contentwrap,
-	body.col-XMS #contentwrap,
-	body.col-SXM  #contentwrap,
-	body.col-XSM  #contentwrap {
-		display: grid;
-		grid-template-areas:  "maincol" "subcol" "xcol";
-		grid-template-columns: auto;
-		grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content) minmax(min-content, max-content);
-
-	}
-	
-	body.subcoltop #contentwrap {
-		grid-template-areas: "subcol" "maincol" "xcol";
-		grid-template-columns: auto;
-		grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content) minmax(min-content, max-content);
-	}
-
-	body.col-MX #contentwrap {
-		grid-template-areas: "maincol" "xcol";
-		grid-template-columns: auto;
-		grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content);
-	}
-
-	body.col-SM #contentwrap {
-		grid-template-areas: "subcol" "maincol";
-		grid-template-columns: auto;
-		grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content) ;
-	}
-	
 }
-
