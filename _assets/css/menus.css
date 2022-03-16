@@ -68,12 +68,12 @@ but this styling should be applied directly via your stylesheet generator.
 
 @media screen and (max-width:630px) {
 
-	.cs-menu.menu-mobilemenu {
+	.cs-menu.mobilemenu {
 		height:0;
 		overflow: hidden;
 	}
-	.cs-menu.open.menu-mobilemenu {
-		max-height:400px;
+	.cs-menu.open.mobilemenu {
+		height:auto;
 	}
 
 }
