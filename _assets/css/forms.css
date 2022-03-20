@@ -1,4 +1,4 @@
-.form {
+:root {
 	--border-color: #333333;
 	--form-label-width: 33%;
 	--form-label-gap: 20px;
@@ -6,6 +6,7 @@
 	--field-padding: 4px;
 	--input-padding:2px;
 	--form-width: 100%;
+	--field-checkbox-width:28px;
 }
 
 .form {
@@ -30,12 +31,21 @@ div.fieldrow.action-find, .am_table.action-find > tbody > tr {
 	--form-label-width: 25%;
 }
 
-td.label {
+.fieldrow > label {
+	position: relative;
+	--icon-height:12px;
+}
+.fieldrow > label, td.label {
 	grid-area:label;
 }
 
+.fieldrow > label  .button {
+	position: absolute;
+	right:0;
+	top:var(--field-padding);
+}
 
-td.field {
+.fieldrow > field, td.field {
 	grid-area:field;
 }
 
@@ -79,12 +89,12 @@ td.field {
 
 }
 
-.form .label, .form .field,  .am_table td {
+div.fieldrow > label, div.fieldrow field, .form .label, .form .field,  .am_table td {
 	padding:var(--field-padding);
 }
 
 
-div.fieldrow label {
+div.fieldrow > label {
 	display: inline-block;
 	line-height: 1;
 }
@@ -109,6 +119,11 @@ td.field input[type=text], td.field input[type=password], td.field textarea, td.
 	border:1px solid var(--border-color);
 	padding:var(--input-padding);
 	width: 100%;
+}
+
+field.checkbox, field.radio {
+	display: grid;
+	grid-template-columns: var(--field-checkbox-width) auto;
 }
 
 

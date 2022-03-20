@@ -54,6 +54,7 @@ Font awesom uses unicode
 	--icon-home: "\0213F";
 	--icon-search: "\026B2";
 	--icon-account: "\02600";
+	--icon-list: "list";
 }
 
 .icon {
@@ -109,4 +110,7 @@ Font awesom uses unicode
 }
 .icon-account:before {
 	content:var(--icon-account);
+}
+.icon-list:before {
+	content:var(--icon-list);
 }

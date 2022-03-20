@@ -37,13 +37,13 @@ Better mechanism for first and last column paddings? (not pa priority).
 	--table-border-color:initial;
 	--table-margin:0;
 	--table-cell-padding:0;
-	--table-font-weight:inherit;
+	--table-font:inherit;
 	--table-text-align:inherit;
 	--table-stripe-bg: transparent;
 }
 
 th {
-	--table-font-weight:bold;
+	--table-font:bold 1em var(--text-font);
 	--table-text-align:center;
 }
 
@@ -53,6 +53,7 @@ table {
 	border-color: var(--table-border-color);
 	margin: var(--table-margin);
 	border-collapse: separate;
+	width: auto;/* will override leagcy table width= settings */
 }
 
 th, td  {
@@ -60,7 +61,7 @@ th, td  {
 	border-style: var(--table-border-style);
 	border-color: var(--table-border-color);
 	text-align: var(--table-text-align);
-	font-weight: var(--table-font-weight);
+	font: var(--table-font);
 	background-color: var(--table-bg);
 	color: var(--table-text);
 	padding: var(--table-cell-padding);
@@ -113,7 +114,14 @@ table.info td, table.info th {
 	--table-border-width: 1px;
 }
 
+table.recordlist {
+  position:relative;
+}
 
+table.recordlist th {
+  position: sticky;
+  top: 0;
+}
 
 
 
