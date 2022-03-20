@@ -15,5 +15,5 @@ body {
 	--icon-home: "home";
 	--icon-search: "search";
 	--icon-account: "account_circle";
-    --icon-font: "Material Icons"; 
+    --icon-font: normal 400 1em/1 "Material Icons"; 
 }
