@@ -1,5 +1,41 @@
+/* Standardised icon naming to allow swapping out of icon sets
+To use an icon font, you'll need to include this page and a font specific page,
+e.g. for Google which uses logatures to disaplu icons:
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.icon {
+	--icon-close: "close";
+	--icon-menu: "menu";
+	--icon-previous: "arrow_back_ios";
+	--icon-next: "arrow_forward_ios"; 
+	--icon-squares: "apps";
+	--icon-fullscreen: "fullscreen";
+	--icon-fullscreen_exit: "fullscreen_exit";
+	--icon-first_page: "first_page";
+	--icon-last_page: "last_page";
+	--icon-help: "help";
+	--icon-cart: "shopping_cart";
+	--icon-done: "done";
+	--icon-favorite: "favorite";
+	--icon-home: "home";
+	--icon-search: "search";
+	--icon-account: "account_circle";
+    --icon-font: "Material Icons"; 
+}
+
+Font awesom uses unicode
+
+.icon {
+	--icon-close: "\f410";
+	--icon-menu: "\f0c9"; 
+    --icon-font: "Font Awesome 6 Free"; 
+}
+
+*/
+
 :root {
-	--icon-font: 'Font Awesome 6 Free';
+	--icon-font: "Material Icons"; 
 	--icon-close:'x';
 	--icon-menu:'=';
 	--icon-previous:'<';
@@ -16,8 +52,6 @@
 	--icon-home: "home";
 	--icon-search: "search";
 	--icon-account: "account";
-
-    --icon-font: "Material Icons"; 
 }
 
 .icon {

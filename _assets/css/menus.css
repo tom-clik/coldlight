@@ -44,7 +44,7 @@ but this styling should be applied directly via your stylesheet generator.
 	--item-grid-columns: 1fr; /* to show an icon use e.g. auto 32px */
 	--item-grid-areas: "text"; /* the areas are text and icon. YOu can reverse or omit text */
 	--menu-text-align: center;
-	--menu-anim-time: 1s;
+	--menu-anim-time: 0.3s;
 }
 
 .cs-menu ul {
@@ -53,17 +53,19 @@ but this styling should be applied directly via your stylesheet generator.
 	padding-left: 0em;
     text-indent: 0px;
 	display:grid;
-	grid-template-columns: repeat(auto-fit, minmax(100px,1fr));
+	grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
 	grid-gap:var(--menu-gap);
 }
 
 .cs-menu.fill ul {
-	grid-template-columns: repeat(auto-fill, minmax(100px,1fr));	
+	grid-template-columns: repeat(auto-fill, minmax(140px,1fr));	
 }
 
 
 .cs-menu a, .cs-menu a:hover {
 	color:inherit;
+	display: inline-block;
+	width: 100%;
 }
 
 @media screen and (max-width:630px) {
@@ -85,6 +87,10 @@ ul.submenu {
   	height: 0;
   	overflow: hidden;
   	/*margin-top:4px; TO DO: menu gap? some sort of var */
+}
+
+ul.submenu.show  {
+	height: auto;
 }
 
 .cs-menu li.open > ul.submenu {
@@ -265,14 +271,6 @@ ul.submenu {
 	transition-property: background-color;
 	transition-duration: 1s;
 	transition-timing-function: ease-in-out;
-}
-
-.scheme-vertical .submenu a {
-	padding-left:18px;
-}
- 
-.scheme-vertical .submenu .submenu a {
-	padding-left:36px;
 }
 
 

@@ -1,0 +1,71 @@
+/* 
+
+Use this stylesheet to apply styling to itmem via classes.
+
+E.g.
+
+div class="item setting-htop"
+
+There is also a box scheme showing how to pad the content for a boxed look
+
+*/
+
+.setting-htop {
+	--item-grid-template-areas: "title" "imageWrap" "textWrap";
+}
+
+.setting-noimage .imageWrap {
+	display: none;
+}
+
+
+@media screen and (min-width: 600px) {
+
+	.setting-left {
+		--item-grid-template-areas: "imageWrap title" "imageWrap textWrap";
+		--item-grid-template-rows: minmax(0, min-content) auto;
+		--item-grid-template-columns: var(--item-image-width) auto;
+	}
+
+	.setting-right {
+		--item-grid-template-areas: "title imageWrap" "textWrap imageWrap";
+		--item-grid-template-rows: minmax(0, min-content) auto;
+		--item-grid-template-columns: auto var(--item-image-width);
+	}
+
+	.setting-htop.setting-left {
+		--item-grid-template-areas: "title title" "imageWrap textWrap";
+	}
+
+	.setting-htop.setting-right {
+		--item-grid-template-areas: "title title" "textWrap imageWrap";
+	}
+
+	.scheme-wide {
+		--item-image-width: 66%;
+	}
+}
+
+
+@media screen and (max-width: 600px) {
+	.setting-munder {
+		--item-grid-template-areas:  "imageWrap" "title" "textWrap";
+	}
+}
+
+
+:root {
+	--panel-color:#ffffff;
+	--panel-bg:#000000;
+}
+
+.scheme-box {
+	--padding:8px;
+	--item-padding:var(--padding);
+	border-radius: 4px;
+	border:1px solid var(--panel-color);
+	--item-title-margin: calc(-1 * var(--padding)) calc(-1 *var(--padding)) var(--padding) calc(-1 *var(--padding));
+	--item-title-padding:var(--padding);
+	--item-title-background: var(--panel-bg);
+	--title-color:var(--panel-color);
+}

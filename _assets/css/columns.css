@@ -14,6 +14,7 @@
 						 "bottomnav"
 						 "footer";
 	--uber-grid-template-rows: min-content min-content auto min-content min-content;
+	--uber-grid-template-columns: 1fr;
 	--content-grid-template-areas: "content_top" "content" "content_bottom";
 	--content-grid-template-rows: min-content auto min-content;
 	--columns-grid-template-areas: "subcol maincol xcol";
@@ -54,6 +55,7 @@
 #footer_middle{grid-area: footer_middle}
 
 #ubercontainer {
+	position: relative;
 	min-height: 100%;
 	max-width: var(--sitewidth);
 	margin-left:auto;
@@ -61,6 +63,7 @@
 	display: grid;
 	grid-template-areas: var(--uber-grid-template-areas);
 	grid-template-rows: var(--uber-grid-template-rows);
+	grid-template-columns: var(--uber-grid-template-columns);
 }
 
 #header {display: var(--header-display)}
@@ -78,13 +81,14 @@
 
 .inner {
 	min-height: 100%;
+	position: relative;
 }
 
 #content  {
 	min-height: 100%;	
 }
 
-#content .inner {
+#content > .inner {
 	display: grid;
 	grid-template-areas: var(--content-grid-template-areas);
 	grid-column-gap: var(--content-grid-gap);
@@ -99,7 +103,7 @@
 	grid-template-rows: var(--columns-grid-template-rows);
 }
 
-#footer .inner {
+#footer > .inner {
 	display: grid;
 	grid-template-areas: var(--footer-grid-template-areas) ;
 	grid-template-columns: var(--footer-grid-template-columns);

@@ -5,11 +5,12 @@
 	--gridgap: 10px;
 	--gridrowgap: var(--gridgap);
 	--cols: 3;
+	--fill: auto-fit;
 }
 
 .scheme-grid {
 	display:grid;
-	grid-template-columns: repeat(auto-fit, minmax(var(--mingridcol),1fr));
+	grid-template-columns: repeat(var(--fill), minmax(var(--mingridcol),1fr));
 	grid-gap:var(--gridgap);
 	grid-row-gap: var(--gridrowgap);
 }

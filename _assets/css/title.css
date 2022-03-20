@@ -1,6 +1,7 @@
 /* Now does all font handling including for headers etc
 */
 :root {
+	--text-color:initial;
 	--text-font: initial;
 	--font-size:100%;
 	--title-font:inherit;
@@ -24,24 +25,26 @@
 	--heading-margin:0;
 	--heading-padding:0;
 	--link-color:inherit;
-}
 
-body {
-	font-family: var(--text-font);
-	font-size: var(--font-size);
-}
-
-/* Need the hove to override reset.css value */
-a, a:hover, input.button, input.button:hover {
-	color:var(--link-color);
-}
-
-.button, input.button {
 	--button-border-color:var(--link-color);
 	--button-border-width:1px;
 	--button-background-color: transparent;
 	--button-border-style:solid;
 	--button-padding: 8px;
+}
+
+body {
+	font-family: var(--text-font);
+	font-size: var(--font-size);
+	color: var(--text-color);
+}
+
+/* Need the hover to override reset.css value */
+a, a:hover, input.button, input.button:hover {
+	color:var(--link-color);
+}
+
+.button, input.button {
 	display: inline-block;
 	padding:var(--button-padding);
 	background-color: var(--button-background-color);
@@ -73,6 +76,15 @@ a, a:hover, input.button, input.button:hover {
 	color:  var(--title-color);
 	font-size: var(--title-font-size);
 }
+
+.cs-title a, .cs-title a:hover {
+	color:inherit;
+}
+
+.cs-text, .textWrap {
+	color: var(--text-color);
+}
+
 
 h1, h2, h3, h4, h5, h6 {
 	margin: var(--heading-margin);

@@ -6,25 +6,77 @@
 	--field-padding: 4px;
 	--input-padding:2px;
 	--form-width: 100%;
-
 }
 
 .form {
 	max-width: var(--form-width);
 }
 
-div.fieldrow {
+div.fieldrow, .am_table > tbody > tr {
 	display:grid;
 	grid-template-columns: var(--form-label-width) auto;
-	grid-column-gap:var(--form-label-gap);
-	margin-bottom: var(--form-row-gap);
+	grid-template-areas: "label field";
 }
 
+div.fieldrow.action-find, .am_table.action-find > tbody > tr {
+	display:grid;
+	grid-template-areas: "label search field";
+	grid-template-columns: var(--form-label-width) 33% auto;
+	grid-column-gap:var(--form-label-gap);
+	grid-row-gap: var(--form-row-gap);
+}
+
+.am_table.action-find {
+	--form-label-width: 25%;
+}
+
+td.label {
+	grid-area:label;
+}
+
+
+td.field {
+	grid-area:field;
+}
+
+
+/* don't ask... */
+.am_table.action-find > tbody > tr td:nth-of-type(2) {
+	grid-area:search;
+}
+
+
+.am_table.action-find > tbody > tr {
+	grid-template-columns: var(--form-label-width) 25% auto;
+}
+
+
+.am_table  > tbody tr.colspan {
+	grid-template-columns: 1fr;
+	grid-template-areas:unset;
+
+}
+
+
+
+/*.am_table td, .am_table th {
+	display: block;
+}*/
+
 @media screen and (max-width:630px) {
-	div.fieldrow {
+	div.fieldrow, .am_table > tbody > tr {
 		display:grid;
-		grid-template-columns: auto;
+		grid-template-columns: 1fr;
+		grid-template-areas: "label" "field";
 	}
+
+	.am_table.action-find > tbody > tr:not(.colspan) {
+		display:grid;
+		grid-template-areas: "label search" "label field";
+		grid-template-columns: var(--form-label-width) auto;
+		grid-row-gap:2px;
+	}
+
 }
 
 .form .label, .form .field,  .am_table td {
@@ -93,4 +145,36 @@ label.error {
 	color:red;
 	font-size: 110%;
 	padding:8px 0;
+}
+
+.buttonreplace input[type="checkbox"],.buttonreplace input[type="radio"]  {
+	    display:none;
+}
+.buttonreplace input[type="checkbox"] + label:before, .buttonreplace input[type="radio"] + label:before {
+    display:inline-block;
+    width:18px;
+    height:17px;
+    margin:0px 10px 0 0;
+    vertical-align:middle;
+   cursor:pointer;
+    content:" ";
+}
+
+/* font version */
+.buttonreplace  input[type="checkbox"] + label:before, .buttonreplace  input[type="radio"] + label:before {
+	background:none;
+	font-family: buttonreplace;
+}
+
+.buttonreplace  input[type="checkbox"] + label:before {
+	content:"\f096";
+}
+.buttonreplace  input[type="checkbox"]:checked + label:before {
+	content:"\e800";
+}
+.buttonreplace  input[type="radio"] + label:before {
+	content:"\f10c";
+}
+.buttonreplace  input[type="radio"]:checked + label:before {
+	content:"\f192";
 }

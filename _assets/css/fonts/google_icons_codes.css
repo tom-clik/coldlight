@@ -1,8 +1,8 @@
-.icon {
+body {
 	--icon-close: "close";
 	--icon-menu: "menu";
-	--icon-previous: "arrow_back_ios";
-	--icon-next: "arrow_forward_ios"; 
+	--icon-previous: "chevron_left";
+	--icon-next: "chevron_right"; 
 	--icon-squares: "apps";
 	--icon-fullscreen: "fullscreen";
 	--icon-fullscreen_exit: "fullscreen_exit";

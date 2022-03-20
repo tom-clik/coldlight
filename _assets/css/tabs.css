@@ -1,0 +1,84 @@
+/*
+
+# Tabs styling
+
+*/
+
+:root {
+	--dark-color: #ccc;
+	--lightcolor:#e4e4e4;
+	--border-color:#ffffff;
+	--item-padding:8px;
+}
+
+:root {
+	--tab-closed-color:var(--dark-color);
+	--tab-padding:8px 4px;
+	--tab-font-size:inherit;
+	--tab-font-weight:inherit;
+	--tab-font:inherit;
+	--tab-background-color:var(--lightcolor);
+	--tab-border-width:1px;
+	--tab-border-color:var(--border-color);
+}
+
+.cs-tabs {
+	position: relative;
+	
+}
+
+
+.cs-tabs .tabs-titles {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	grid-gap:0; /* Applying a grid gap seems to work in some browsers */
+	font-size: var(--tab-font-size);
+	font-weight: var(--tab-font-weight);
+	font-family: var(--tab-font);
+	
+}
+
+.cs-tabs .tabs-titles div {
+	padding:var(--tab-padding);
+	border-style:solid;
+	border-width:var(--tab-border-width);
+	border-color:var(--tab-border-color);
+	border-top-left-radius: 8px 6px;
+	border-top-right-radius: 8px 6px;
+	position: relative;
+	margin-left:-1px;
+	top:1px;
+	z-index: 200;
+	background-color: var(--tab-closed-color);
+}
+
+.cs-tabs .tabs-titles div:first-of-type {
+	margin-left:6px;
+} 
+
+.cs-tabs .tabs-titles div.state_open {
+	border-bottom-color: var(--tab-background-color);
+	background-color: var(--tab-background-color);
+} 
+
+
+
+.cs-tabs .item {
+	visibility: hidden;
+	position:absolute;
+	max-width: 100%;
+	border-style:solid;
+	border-width:var(--tab-border-width);
+	border-color:var(--tab-border-color);
+	background-color: var(--tab-background-color);
+}
+
+.cs-tabs .item.state_open {
+	visibility: visible;
+}
+
+
+
+
+
