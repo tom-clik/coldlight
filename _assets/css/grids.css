@@ -29,3 +29,17 @@
 .scheme-grid-test {
 	grid-template-columns: 200px repeat(auto-fit, minmax(var(--mingridcol),1fr)) 300px;
 }
+
+.flex {
+	display: flex;
+	grid-gap:var(--gridgap);
+}
+
+.flex-end {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.flex-stretch > div {
+	flex-grow: 1;
+}

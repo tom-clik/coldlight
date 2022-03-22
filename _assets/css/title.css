@@ -44,29 +44,9 @@ a, a:hover, input.button, input.button:hover {
 	color:var(--link-color);
 }
 
-.button, input.button {
-	display: inline-block;
-	padding:var(--button-padding);
-	background-color: var(--button-background-color);
-	border: var(--button-border-width) var(--button-border-style) var(--button-border-color);
-}
-
 .noicon {
 	--buttonwidth:0px;
 	--buttongap: 0px;
-}
-
-.cs-button a {
-	padding: var(--buttonpadding);
-	display:grid;
-	grid-template-columns: var(--buttonwidth) auto;
-	grid-column-gap: var(--buttongap);
-	grid-template-areas: "button label";
-	color:var(--link-color);
-	stroke:var(--link-color);
-	fill:var(--link-color);
-	background-color: var(--background-color);
-	border: var(--border-width) var(--border-style) var(--border-color);	
 }
 
 .cs-title, .title {

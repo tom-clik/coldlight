@@ -54,6 +54,15 @@ The buttons are always inline-blocks, so always style the surrounding div withgr
 	text-align: var(--button-align);
 }
 
+.button.mobile {
+	--button-display:none;
+}
+
+@media screen and (max-width: 630px) {
+	.button.mobile {
+		--button-display:inline-block;
+	}
+}
 .button input {
 	width: 100%;
 }
