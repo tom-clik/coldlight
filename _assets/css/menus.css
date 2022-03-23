@@ -9,34 +9,12 @@ By default menus are horizontal grids. Change this to vertical with scheme-verti
 
 scheme-flex will use a flexbox which only makes sense for horizontal menus.
 
-## HTML
-
-
-
-## Notes
-
-This stylesheet includes lots of behaviours that are applied via classes. There is default behaviour for mobile elements
-but this styling should be applied directly via your stylesheet generator.
-
-## Issues
-
-1. First item padding etc
-   All the adjustments needed for first and last items for paddings and borders are hardwired into scheme-flex
-
-2. Submenu animations
-   Still don't have a CSS only trick for these. Can't animate to a height of auto. Potiential to look into just assigning
-   a height to them using JS and seeing if the animation will work then.
-
-
 */
 
 :root {
-	--linkcolor: #000;
-	--menucolor: var(--linkcolor);
-	--menuhovercolor: var(--menucolor);
-	--menu-border-color:var(--menucolor);
-	--menuhicolor: var(--menucolor);
-	--menu-background: --transparent;
+	--link-color: #000;
+	--menu-border-color:var(--link-color);
+	--menu-background: transparent;
 	--menu-gap: 4px;/* Gap between items (only grid modes: use itempadding for flex); */
 	--menu-item-padding: 0 8px;
 	--menu-item-border:0;/* single value for dividers or boxes or use normal border width (can use e.g. 0 1px 0 0) */
@@ -57,27 +35,20 @@ but this styling should be applied directly via your stylesheet generator.
 	grid-gap:var(--menu-gap);
 }
 
-.cs-menu.fill ul {
-	grid-template-columns: repeat(auto-fill, minmax(140px,1fr));	
-}
-
-
 .cs-menu a, .cs-menu a:hover {
 	color:inherit;
 	display: inline-block;
 	width: 100%;
+	text-decoration: none;
 }
 
-@media screen and (max-width:630px) {
-
-	.cs-menu.mobilemenu {
-		height:0;
-		overflow: hidden;
-	}
-	.cs-menu.open.mobilemenu {
-		height:auto;
-	}
-
+/* Per class behaviour applied via JS. leave for now. */
+.cs-menu.open {
+	height:auto;
+}
+.cs-menu.closed, .cs-menu.mobilemenu {
+	height:0;
+	overflow: hidden;
 }
 
 /* Watch the specifity here. JS library creates clone to get heights */
@@ -101,7 +72,7 @@ ul.submenu.show  {
 	position:relative;
 	/*min-height:100%;*/
 	padding:var(--menu-item-padding);	
-	color:var(--menucolor);
+	color:var(--link-color);
 	border-width:var(--menu-item-border);
 	border-style:solid;
 	border-color:var(--menu-border-color);
@@ -113,165 +84,50 @@ ul.submenu.show  {
     transition-timing-function: ease-in-out;
 }
 
-/* See notes about assigning behaviour via classes */
-
-.cs-menu.dividers:not(.scheme-vertical) li {
-	border-width:0;
-	border-right-width:var(--menu-item-border);
-}
-
-.cs-menu.dividers:not(.scheme-vertical) ul li:last-of-type {
-	border-right-width:0;
-}
-
-.cs-menu.boxes:not(.scheme-vertical) li {
-	border-right-width:0;
-}
-
-.cs-menu.boxes:not(.scheme-vertical) ul li:last-of-type {
-	border-right-width:var(--menu-item-border);
-}
-
-.cs-menu.scheme-vertical.dividers li {
-	border-width:0;
-	border-bottom-width:var(--menu-item-border);
-}
-
-.cs-menu.scheme-vertical.dividers ul li:last-of-type {
-	border-bottom-width:0;
-}
-
-.cs-menu.scheme-vertical.boxes li {
-	border-bottom-width:0;
-}
-
-.cs-menu.scheme-vertical.boxes li:last-of-type {
-	border-bottom-width:var(--menu-item-border);
-}
-
 .cs-menu ul.submenu li.open > ul.submenu {
 	margin-top:0px;
 
 }
 
-.cs-menu.scheme-flex, .cs-menu.scheme-vertical {
-	--menu-text-align: left;
-}
-
-
-.cs-menu.scheme-flex ul {
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	grid-gap:0; /* Applying a grid gap seems to work in some browsers */
-}
-
-.cs-menu.scheme-flex.stretch li {
-	flex-grow: 1;
-}
-
-.cs-menu.scheme-flex.stretch ul {
-	width: 100%;
-	--menu-text-align: center;
-}
-
-.cs-menu.scheme-flex ul li:first-of-type {
-	padding-left:0;
-}
-
-.cs-menu.scheme-flex ul li:last-of-type {
-	padding-right:0;
-	border-width:0;
-}
-
-@media screen and (max-width:630px) {
-
-
-	.cs-menu.scheme-flex:not(.menu-mobile) ul {
-		flex-direction: column;
-	}
-	
-	/* reset the first and last hacks above but you'll probably
-	want to define different values for these */
-	
-	.cs-menu.scheme-flex:not(.menu-mobile) {
-		--menu-item-padding: 4px 0;
-		--menu-item-border: 0;
-	}
-
-	.cs-menu.scheme-flex:not(.menu-mobile) ul li:first-of-type {
-		padding:var(--menu-item-padding);	
-	}
-
-	.cs-menu.scheme-flex:not(.menu-mobile) ul li:last-of-type {
-		padding:var(--menu-item-padding);	
-		border-width:var(--menu-item-border);
-	}
-
-}
-
-.scheme-vertical li.open > ul.submenu {
-	position: static;
-}
-
-.cs-menu a {
-	text-decoration: none;
-}
-
-.cs-menu a.hasmenu {
-	padding-right:24px;
-}
-
-.cs-menu a svg {
+.cs-menu a .openicon {
 	max-height:100%;
 	width:16px;
 	position: absolute;
 	top:0;
 	right:4px;
-	fill:var(--menucolor);
-	stroke:var(--menucolor);
+	fill:var(--link-color);
+	stroke:var(--link-color);
 	transition-property: transform;
 	transition-duration: 0.3s;
 	transition-timing-function: ease-in-out;
 }
 
-.cs-menu li:hover > a svg {
-	fill:var(--menuhovercolor);
-	stroke:var(--menuhovercolor);
-}
 
-.cs-menu li:hover > a{
-	color:var(--menuhovercolor);
-}
-
-.cs-menu li.hi > a, .cs-menu li.hi:hover  > a {
-	color:var(--menuhicolor);
-}
-
-.cs-menu li.hi > a svg, .cs-menu li.hi:hover > a svg {
-	fill:var(--menuhicolor);
-	stroke:var(--menuhicolor);
-}
-
-.cs-menu li.open > a svg {
+.cs-menu li.open > a .openicon {
 	transform: rotate(90deg);
 }
 
-.scheme-vertical ul {
-	grid-template-columns: 1fr;
-	grid-row-gap:var(--menu-gap);
+/*.
+
+TODO: check deprecation;
+cs-menu li:hover > a svg {
+	fill:var(--link-color);
+	stroke:var(--link-color);
 }
 
-.scheme-vertical ul.submenu  {
-	grid-row-gap:0px;
+.cs-menu li:hover > a {
+	color:var(--link-color);
 }
 
-.scheme-vertical a {
-	display: block;
-	transition-property: background-color;
-	transition-duration: 1s;
-	transition-timing-function: ease-in-out;
+.cs-menu li.hi > a, .cs-menu li.hi:hover  > a {
+	color:var(--link-color);
 }
+
+.cs-menu li.hi > a svg, .cs-menu li.hi:hover > a svg {
+	fill:var(--link-color);
+	stroke:var(--link-color);
+}
+*/
 
 
 
