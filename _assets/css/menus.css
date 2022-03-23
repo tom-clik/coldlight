@@ -46,9 +46,14 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 .cs-menu.open {
 	height:auto;
 }
-.cs-menu.closed, .cs-menu.mobilemenu {
-	height:0;
-	overflow: hidden;
+
+@media screen and (max-width:630px) {
+
+	.cs-menu.mobilemenu {
+		height:0;
+		overflow: hidden;
+	}
+
 }
 
 /* Watch the specifity here. JS library creates clone to get heights */

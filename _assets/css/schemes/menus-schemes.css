@@ -21,23 +21,6 @@ Settings:
 	grid-template-columns: repeat(auto-fill, minmax(140px,1fr));	
 }
 
-/* Per class behaviour. leave for now. */
-.cs-menu.open {
-	height:auto;
-}
-
-@media screen and (max-width:630px) {
-
-	.cs-menu.mobilemenu {
-		height:0;
-		overflow: hidden;
-	}
-	.cs-menu.open.mobilemenu {
-		height:auto;
-	}
-
-}
-
 .scheme-vertical li.open > ul.submenu {
 	position: static;
 }
