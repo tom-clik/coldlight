@@ -53,6 +53,10 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 		height:0;
 		overflow: hidden;
 	}
+	 /*need this. Watch specificity*/
+	.cs-menu.mobilemenu.open {
+		height:auto;
+	}
 
 }
 
