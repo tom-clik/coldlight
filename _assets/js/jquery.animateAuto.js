@@ -2,7 +2,7 @@
 # Animate to height: auto
 
 You can't animate to an auto value for height using CSS animations, so we need to
-keep using jQuery. The actual jquery.animate aslo can't do it, so we use this 
+keep using jQuery. The actual jquery.animate also can't do it, so we use this 
 simplified replacement.
 
 ## Usage

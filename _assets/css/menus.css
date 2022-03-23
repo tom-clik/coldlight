@@ -69,7 +69,7 @@ ul.submenu {
   	/*margin-top:4px; TO DO: menu gap? some sort of var */
 }
 
-ul.submenu.show  {
+ul.submenu.open  {
 	height: auto;
 }
 
