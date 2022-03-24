@@ -98,10 +98,11 @@ ul.submenu {
   	/*margin-top:4px; TO DO: menu gap? some sort of var */
 }
 
-ul.submenu.open  {
+ul.submenu.open,ul.submenu.show  {
 	height: auto;
 	overflow: visible;
 }
+
 
 .cs-menu li.open > ul.submenu {
 	display:block;
@@ -147,7 +148,6 @@ turn on with e.g.
 	display: var(--menu-label-display);	
 }
 
-
 .cs-menu a b:before {
 	content:var(--menu-icon);
 }
@@ -155,13 +155,10 @@ turn on with e.g.
 .cs-menu li.open > a .icon {
 	transform: rotate(90deg);
 }
-	
 
 .cs-menu a > span {
 	flex-grow: 1;
 }
-
-
 
 /*.
 
