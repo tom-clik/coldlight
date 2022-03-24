@@ -18,7 +18,15 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 	--menu-gap: 4px;/* Gap between items (only grid modes: use itempadding for flex); */
 	--menu-item-padding: 0 8px;
 	--menu-item-border:0;/* single value for dividers or boxes or use normal border width (can use e.g. 0 1px 0 0) */
+	--menu-icon-display: none;
+	--menu-label-display: inline-block;
 	--menu-icon-valign: middle;/* used for adding icons into the item */
+	--menu-icon-gap: 8px;
+	--menu-openicon-adjust: -4px;
+	--icon-width:32px;
+	--icon-height:32px;	
+	--menu-openicon-width:32px;
+	--menu-openicon-height:32px;	
 	--item-grid-columns: 1fr; /* to show an icon use e.g. auto 32px */
 	--item-grid-areas: "text"; /* the areas are text and icon. YOu can reverse or omit text */
 	--menu-text-align: center;
@@ -35,11 +43,32 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 	grid-gap:var(--menu-gap);
 }
 
+
+.cs-menu li {
+	position:relative;
+	/*min-height:100%;*/
+}
+
+
 .cs-menu a, .cs-menu a:hover {
-	color:inherit;
-	display: inline-block;
+	white-space: nowrap;
+	color:var(--link-color);
+	display:flex;
+	align-items: center;
+	grid-gap: var(--menu-icon-gap);
 	width: 100%;
 	text-decoration: none;
+	padding:var(--menu-item-padding);	
+	color:var(--link-color);
+	border-width:var(--menu-item-border);
+	border-style:solid;
+	border-color:var(--menu-border-color);
+	background-color: var(--menu-background);
+	/* watch browser agent default. Can't apply to ul */
+	text-align: var(--menu-text-align);	
+	transition-property: background-color;
+    transition-duration: var(--menu-anim-time);
+    transition-timing-function: ease-in-out;
 }
 
 /* Per class behaviour applied via JS. leave for now. */
@@ -63,7 +92,7 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 /* Watch the specifity here. JS library creates clone to get heights */
 ul.submenu {
 	z-index: 100;
-  	width:100%;
+  	min-width:100%;
   	height: 0;
   	overflow: hidden;
   	/*margin-top:4px; TO DO: menu gap? some sort of var */
@@ -71,39 +100,26 @@ ul.submenu {
 
 ul.submenu.open  {
 	height: auto;
+	overflow: visible;
 }
 
 .cs-menu li.open > ul.submenu {
 	display:block;
 }
 
-.cs-menu li {
-	position:relative;
-	/*min-height:100%;*/
-	padding:var(--menu-item-padding);	
-	color:var(--link-color);
-	border-width:var(--menu-item-border);
-	border-style:solid;
-	border-color:var(--menu-border-color);
-	background-color: var(--menu-background);
-	/* watch browser agent default. Can't apply to ul */
-	text-align: var(--menu-text-align);	
-	transition-property: background-color;
-    transition-duration: var(--menu-anim-time);
-    transition-timing-function: ease-in-out;
-}
-
 .cs-menu ul.submenu li.open > ul.submenu {
 	margin-top:0px;
-
 }
 
-.cs-menu a .openicon {
+/* sub menu indicator */
+.cs-menu a .icon {
+	flex-grow: 0;
+	position: relative;
+	right:var(--menu-openicon-adjust);
 	max-height:100%;
-	width:16px;
-	position: absolute;
 	top:0;
-	right:4px;
+	--menu-openicon-width:32px;
+	--menu-openicon-height:32px;	
 	fill:var(--link-color);
 	stroke:var(--link-color);
 	transition-property: transform;
@@ -111,10 +127,41 @@ ul.submenu.open  {
 	transition-timing-function: ease-in-out;
 }
 
+/* menu icons 
 
-.cs-menu li.open > a .openicon {
+Requires icons.css andnavbuttons.css
+
+turn on with e.g.
+*/
+.cs-menu a b  {
+	display: var(--menu-icon-display);
+	font:var(--icon-font);
+	width:var(--icon-width);
+	height:var(--icon-height);
+	line-height:var(--icon-height);
+	font-size: var(--icon-height);
+	overflow: hidden;
+}
+
+.cs-menu a span {
+	display: var(--menu-label-display);	
+}
+
+
+.cs-menu a b:before {
+	content:var(--menu-icon);
+}
+
+.cs-menu li.open > a .icon {
 	transform: rotate(90deg);
 }
+	
+
+.cs-menu a > span {
+	flex-grow: 1;
+}
+
+
 
 /*.
 
