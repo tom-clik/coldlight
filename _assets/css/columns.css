@@ -24,12 +24,23 @@
 	--footer-grid-template-columns: 33% auto 33%;
 	--maincol-grid-template-columns: 1fr 1fr;
 	--maincol-grid-gap: var(--columns-grid-gap);
-	--header-display: block;
-	--footer-display: block;
-	--topnav-display: block;
-	--bottomnav-display: block;
+	--header-position: static;
+	--footer-position: static;
+	--header-display: flex;
+	--footer-display: flex;
+	--topnav-display: flex;
+	--bottomnav-display: flex;
 	--content_top-display: block;
 	--content_bottom-display: block;
+	--topnav-width: 100%;
+	--header-width: 100%;
+	--footer-width: 100%;
+	--fixed-header-height:0px;
+	--fixed-footer-height:0px;
+	--body-margin-top:0px;
+	--body-margin-bottom:0px;
+	--body-margin-left:0px;
+	--body-margin-right:0px;
 
 }
 
@@ -54,6 +65,14 @@
 #footer_right{grid-area: footer_right}
 #footer_middle{grid-area: footer_middle}
 
+body {
+	padding-top: calc(var(--fixed-header-height) + var(--body-margin-top));
+	padding-bottom: calc(var(--fixed-footer-height) + var(--body-margin-bottom));
+	padding-left:var(--body-margin-left);
+	padding-right:var(--body-margin-right);
+}
+
+
 #ubercontainer {
 	position: relative;
 	min-height: 100%;
@@ -66,20 +85,26 @@
 	grid-template-columns: var(--uber-grid-template-columns);
 }
 
-#header {display: var(--header-display)}
-#footer {display: var(--footer-display)}
-#topnav {display: var(--topnav-display)}
+#header {display: var(--header-display);position:var(--header-position);top:var(--body-margin-top);width: var(--header-width);min-height:var(--fixed-header-height);z-index: 200}
+#footer {display: var(--footer-display);position:var(--footer-position);bottom:var(--body-margin-bottom);width: var(--footer-width);min-height:var(--fixed-footer-height);z-index: 200}
+#topnav {display: var(--topnav-display);width: var(--topnav-width);}
 #bottomnav {display: var(--bottomnav-display)}
 #content_top {display: var(--content_top-display)}
 #content_bottom {display: var(--content_bottom-display)}
 
-/* spanning substitute */
-#ubercontainer > div .inner {
-	max-width: var(--inner-width);
-	margin: var(--inner-margin);
+#ubercontainer > div {
+	align-items: stretch;
+	width: 100%;
 }
 
-.inner {
+#ubercontainer > div > div.inner {
+	flex-grow: 1;
+}
+
+/* spanning substitute */
+#ubercontainer > div .inner {
+	width: var(--inner-width);
+	margin: var(--inner-margin);
 	min-height: 100%;
 	position: relative;
 }
