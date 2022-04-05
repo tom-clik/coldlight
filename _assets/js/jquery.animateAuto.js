@@ -20,7 +20,7 @@ Note it's good practice to reset the height to auto in the callback.
 ## Notes
 
 Originally this created a clone of the element and then got the height. This didn't
-get the correct width. As a quick fix I tried not cloing and it seems to work fine.
+get the correct width. As a quick fix I tried not cloning and it seems to work fine.
 
 It might be that it causes FOUCs and then we will need to revert to cloning and assign
 the correct width.
