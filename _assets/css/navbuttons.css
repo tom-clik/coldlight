@@ -12,7 +12,7 @@ To assign icons we can use icons or svgs. For icons, always use our standard ico
 # Notes
 
 There is no "width" for a whole button, only the icon. In common with much modern styling the widths
-should be assigned by the containg vid through grid or flexbox.
+should be assigned by the containg div through grid or flexbox.
 
 The buttons are always inline-blocks, so always style the surrounding div withgrid or flexbox to control
  the whitespace between the them.
@@ -71,12 +71,6 @@ The buttons are always inline-blocks, so always style the surrounding div withgr
 .button label {
 	background-color: var(--button-background-color);
 }
-
-/*.button:hover {
-	color:var(--link-hover-color);
-	stroke:var(--link-hover-color);
-	fill:var(--link-hover-color);
-}*/
 
 .button a, .button a:hover, .button input {
 	display:flex;
@@ -137,13 +131,10 @@ The buttons are always inline-blocks, so always style the surrounding div withgr
 	text-align: right;
 }
 
-.button:not(.state_close) > a.state_close {
-	display: none;
+.button.state_close > a.state_close, .button.state_open > a.state_open  {
+	display:none;	
 }
 
-.button.state_close > a:not(.state_close) {
-	display: none;
-}
 .button.setting-popout{
 	--label-gap:0;
 }
