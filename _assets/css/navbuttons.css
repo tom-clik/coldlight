@@ -131,8 +131,8 @@ The buttons are always inline-blocks, so always style the surrounding div withgr
 	text-align: right;
 }
 
-.button.state_close > a.state_close, .button.state_open > a.state_open  {
-	display:none;	
+.button > a:not(:first-child) {
+    display: none;
 }
 
 .button.setting-popout{
