@@ -135,8 +135,13 @@ $.validator.addMethod("code",function(value,element){
 			},
 			options = $.extend({},defaults,ops);
 
-		function showErrors($form, validator, errorMap) {
-			console.log(errorMap);
+		function showErrors($form, validator, errorMap, errorlist) {
+			console.log("Show error running");
+			// console.log(errorMap);
+			console.log(errorlist);
+			// issue here with it showing every error 
+			// simple fix of showing only the first won't clear older errors.
+			
 			let data = $form.serializeData();
 			console.log(data);
 			for (let field in data) {
@@ -183,6 +188,11 @@ $.validator.addMethod("code",function(value,element){
 			if ($panel.length != 0) {
 				$cs = $panel;
 			}
+			
+			// TODO: call these on individual fields with proper options
+			$('select').select2();
+			
+			$('textarea.elastic').elastic();
 			
 			validator = $form.validate({
 				rules: options.rules,

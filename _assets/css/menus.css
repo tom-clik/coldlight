@@ -56,6 +56,7 @@ hi      li.hi a
 	white-space: nowrap;
 	color:var(--link-color);
 	display:flex;
+	flex-grow: 1;
 	align-items: center;
 	grid-gap: var(--menu-icon-gap);
 	width: 100%;
