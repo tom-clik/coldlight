@@ -9,6 +9,10 @@ By default menus are horizontal grids. Change this to vertical with scheme-verti
 
 scheme-flex will use a flexbox which only makes sense for horizontal menus.
 
+# usage
+
+hover   li a:hover
+hi      li.hi a
 */
 
 :root {
@@ -18,18 +22,16 @@ scheme-flex will use a flexbox which only makes sense for horizontal menus.
 	--menu-gap: 4px;/* Gap between items (only grid modes: use itempadding for flex); */
 	--menu-item-padding: 0 8px;
 	--menu-item-border:0;/* single value for dividers or boxes or use normal border width (can use e.g. 0 1px 0 0) */
-	--menu-icon-display: none;
-	--menu-label-display: inline-block;
-	--menu-icon-valign: middle;/* used for adding icons into the item */
-	--menu-icon-gap: 8px;
-	--menu-openicon-adjust: -4px;
-	--icon-width:32px;
+	--menu-icon-display: none;/* none or inline-block */
+	--menu-label-display: inline-block;/* text part of menu item:; none or inline-block */
+	--icon-width:32px;/* normal menu icons */
 	--icon-height:32px;	
-	--menu-openicon-width:32px;
+	--menu-icon-valign: middle;/* WIP */
+	--menu-icon-gap: 8px;/* gap between label and icon */
+	--menu-openicon-width:32px;/* "openicon" is the automatic icon applied for sub menus. Needs work */
 	--menu-openicon-height:32px;	
-	--item-grid-columns: 1fr; /* to show an icon use e.g. auto 32px */
-	--item-grid-areas: "text"; /* the areas are text and icon. YOu can reverse or omit text */
-	--menu-text-align: center;
+	--menu-openicon-adjust: -4px;
+	--menu-text-align: center;/* alignment of text in menu items */
 	--menu-anim-time: 0.3s;
 }
 

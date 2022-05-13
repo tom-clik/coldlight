@@ -66,7 +66,12 @@ $.validator.addMethod("code",function(value,element){
 			$field = $(this);
 			let type = $field.attr('type');
 			let name = $field.attr("name");
-			
+			console.log("Field ", name, type);
+			// have weird bug where multiple submissions
+			// create hidden field with no name and value of submit button
+			if (name == "") {
+				return;
+			}
 			switch(type) {
 				case "checkbox":
 					// do we have multiple values?
@@ -92,6 +97,8 @@ $.validator.addMethod("code",function(value,element){
 					if ($field.is(':checked')) {
 						data[name] = $field.val();
 					}
+					break;
+				case "button":case "select":case "cancel":
 					break;
 				default:
 					data[name] = $field.val();
@@ -131,9 +138,17 @@ $.validator.addMethod("code",function(value,element){
 		function showErrors($form, validator, errorMap) {
 			console.log(errorMap);
 			let data = $form.serializeData();
+			console.log(data);
 			for (let field in data) {
 				let val = data[field];
 				let $input = $form.find("[name=" + field + "]");
+				let type = $input.attr("type");
+				if ((type && type == "hidden") || $input.is(":hidden")) {
+					continue;
+				}
+				else {
+					console.log("type  is ", type);
+				}
 				let $row = $input.closest(".fieldrow");
 				// #DEBUG
 				if (options.debug) {
@@ -144,7 +159,7 @@ $.validator.addMethod("code",function(value,element){
 				// This happens when you focus our or keyup or click an invalid
 				// field to correct the error
 				
-				if (! (field in errorMap) && validator.check($input)) {
+				if (! (field in errorMap) && validator.check($input[0])) {
 					console.log("removing error");
 					$row.removeClass("error").addClass("valid");
 					$row.find(".error").remove();

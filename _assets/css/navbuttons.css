@@ -12,10 +12,12 @@ To assign icons we can use icons or svgs. For icons, always use our standard ico
 # Notes
 
 There is no "width" for a whole button, only the icon. In common with much modern styling the widths
-should be assigned by the containg vid through grid or flexbox.
+should be assigned by the containg div through grid or flexbox.
 
-The buttons are always inline-blocks, so always style the surrounding div withgrid or flexbox to control
+The buttons are always inline-blocks, so always style the surrounding div with grid or flexbox to control
  the whitespace between the them.
+
+# Exmaples
 
 
 

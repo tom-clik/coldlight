@@ -103,7 +103,7 @@ body {
 
 /* spanning substitute */
 #ubercontainer > div .inner {
-	width: var(--inner-width);
+	max-width: var(--inner-width);
 	margin: var(--inner-margin);
 	min-height: 100%;
 	position: relative;

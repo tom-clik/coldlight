@@ -41,37 +41,37 @@ Settings:
 	transition-timing-function: ease-in-out;
 }
 
-.cs-menu.dividers:not(.scheme-vertical) li {
+.cs-menu.dividers:not(.scheme-vertical) li a {
 	border-width:0;
 	border-right-width:var(--menu-item-border);
 }
 
-.cs-menu.dividers:not(.scheme-vertical) ul li:last-of-type {
+.cs-menu.dividers:not(.scheme-vertical) ul li:last-of-type a {
 	border-right-width:0;
 }
 
-.cs-menu.boxes:not(.scheme-vertical) li {
+.cs-menu.boxes:not(.scheme-vertical) li a {
 	border-right-width:0;
 }
 
-.cs-menu.boxes:not(.scheme-vertical) ul li:last-of-type {
+.cs-menu.boxes:not(.scheme-vertical) ul li:last-of-type a {
 	border-right-width:var(--menu-item-border);
 }
 
-.cs-menu.scheme-vertical.dividers li {
+.cs-menu.scheme-vertical.dividers li a {
 	border-width:0;
 	border-bottom-width:var(--menu-item-border);
 }
 
-.cs-menu.scheme-vertical.dividers ul li:last-of-type {
+.cs-menu.scheme-vertical.dividers ul li:last-of-type a {
 	border-bottom-width:0;
 }
 
-.cs-menu.scheme-vertical.boxes li {
+.cs-menu.scheme-vertical.boxes li a {
 	border-bottom-width:0;
 }
 
-.cs-menu.scheme-vertical.boxes li:last-of-type {
+.cs-menu.scheme-vertical.boxes li:last-of-type a {
 	border-bottom-width:var(--menu-item-border);
 }
 
@@ -112,11 +112,11 @@ Settings:
 	--menu-text-align: center;
 }
 
-.cs-menu.scheme-flex.adjust ul li:first-of-type {
+.cs-menu.scheme-flex.adjust ul li:first-of-type a {
 	padding-left:0;
 }
 
-.cs-menu.scheme-flex.adjust ul li:last-of-type {
+.cs-menu.scheme-flex.adjust ul li:last-of-type a {
 	padding-right:0;
 }
 
