@@ -28,6 +28,9 @@ Ensure your styling hides the buttons as required. E.g.
 }
 ```
 
+For openclose buttons a class state_<state> is applied.
+
+
 ## Usage
 
 Typically apply to all relevant elements by a standardised class, e.g.
@@ -57,20 +60,29 @@ Typical actions are open, close (or the special case openclose which can be appl
 */
 
 $.fn.button = function() {
- 
+ 	
     return this.each(function() {
 
     	var $button = $(this);
+    	 
     	var $links = $(this).find("a");
 
     	let state = $button.data("state");
     	
     	$button.find("a").each(function() {
     		let $link  = $(this);
-    		let attrs = $link.attr("href").split(".");
-    		$link.data("action",attrs[1]);
-    		$link.data("target",$(attrs[0]));
-    		console.log("Adding ", attrs[0], attrs[1]);
+    		let href = $link.attr("href");
+    		if (href !== undefined) {
+    			let attrs = $link.attr("href").split(".");
+	    		$link.data("action",attrs[1]);
+	    		$link.data("target",$(attrs[0]));
+	    		console.log("Adding ", attrs[0], attrs[1]);
+    		}
+    		// DEBUG
+    		else {
+    			console.log("No href tag found for <a> tag in button");
+    		}
+    		// /debug
     	});
 
     	$(this).on("click","a",function(e) {

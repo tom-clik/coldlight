@@ -30,12 +30,17 @@ Settings:
 	grid-row-gap:var(--menu-gap);
 }
 
+.scheme-vertical ul > li > a, .scheme-vertical ul > li > a:hover {
+	justify-content: flex-start;
+}
+	
+
+
 .scheme-vertical ul.submenu  {
 	grid-row-gap:0px;
 }
 
 .scheme-vertical a {
-	display: block;
 	transition-property: background-color;
 	transition-duration: 1s;
 	transition-timing-function: ease-in-out;
@@ -87,7 +92,6 @@ Settings:
 	--menu-text-align: center;
 }
 
-
 .cs-menu.scheme-flex.right ul {
 	justify-content: flex-end;
 }
@@ -126,6 +130,10 @@ Settings:
 
 	.cs-menu.scheme-flex:not(.menu-mobile) ul {
 		flex-direction: column;
+	}
+
+	.cs-menu.scheme-flex:not(.menu-mobile) ul > li > a {
+		justify-content: flex-start;
 	}
 	
 	/* reset the first and last hacks above but you'll probably

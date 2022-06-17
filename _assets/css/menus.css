@@ -9,6 +9,11 @@ By default menus are horizontal grids. Change this to vertical with scheme-verti
 
 scheme-flex will use a flexbox which only makes sense for horizontal menus.
 
+## Notes
+
+The a tags are actually set to display flex themselves in order to accomodate icons. To align the lext you have to set
+the justify-content property.
+
 # usage
 
 hover   li a:hover
@@ -58,6 +63,7 @@ hi      li.hi a
 	display:flex;
 	flex-grow: 1;
 	align-items: center;
+	justify-content: center; /* needs formalising. This is the align mechanism as the a tags themselves are now flexboxes */
 	grid-gap: var(--menu-icon-gap);
 	width: 100%;
 	text-decoration: none;

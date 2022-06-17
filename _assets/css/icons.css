@@ -1,6 +1,6 @@
 /* Standardised icon naming to allow swapping out of icon sets
 To use an icon font, you'll need to include this page and a font specific page,
-e.g. for Google which uses logatures to disaplu icons:
+e.g. for Google which uses ligatures to display icons:
 
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
