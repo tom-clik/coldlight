@@ -2,6 +2,6 @@
 @import url('lato_local.css');
 
 :root {
-	--titlefont:Lato;
-	--bodyfont:Open Sans;
+	--title-font:Lato;
+	--text-font:Open Sans;
 }

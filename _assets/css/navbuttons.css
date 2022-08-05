@@ -1,56 +1,166 @@
+/*
+
+Buttons get complicated through the problem of <a> tags and inputs.
+
+Both of these get styled through the browser defaults and reset.
+
+To get around this and preserve inheritance, all buttons need to be wrapped in
+another div which allows us to provide the consistency.
+
+To assign icons we can use icons or svgs. For icons, always use our standard icon vars, see icons.css.
+
+# Notes
+
+There is no "width" for a whole button, only the icon. In common with much modern styling the widths
+should be assigned by the containg div through grid or flexbox.
+
+The buttons are always inline-blocks, so always style the surrounding div with grid or flexbox to control
+ the whitespace between the them.
+
+# Exmaples
+
+
+
+*/
+
 :root {
-	--linkcolor: #000;
-	--bordercolor:#eee;
-	--buttoncolor: var(--linkcolor);
-	--buttonhicolor: var(--buttoncolor);
-	--buttonwidth: 32px;
-	--buttonheight: var(--buttonwidth);
-	--buttongap: 10px;
+	--link-color: inherit;
+	--button-border-color:initial;
+	--button-border-width:0px;
+	--button-border-style:solid;
+	--button-background-color: transparent;
+	--button-font:inherit;
+	--icon-width: 32px; /* size of icon */
+	--icon-height: var(--icon-width); /* size of icon */
+	--label-gap: 10px;
+	--button-padding: 8px;
+	--button-label-padding: 4px;
+	--label-display:inline-block;
+	--icon-display:inline-block;
+	--button-display:inline-block;/* reserved */
+	--button-align:center; /* align button contents with panel, e.g when stretch by grid or flexbox */
 }
 
-.cs-button a {
-	display:grid;
-	grid-template-columns: var(--buttonwidth) auto;
-	grid-column-gap: var(--buttongap);
-	grid-template-areas: "button label";
-	color:var(--buttoncolor);
-	stroke:var(--buttoncolor);
-	fill:var(--buttoncolor);
+.button {
+	display: var(--button-display);
+	cursor: pointer;
+	font-family:var(--button-font);
+	padding: var(--button-padding);
+	color:var(--link-color);
+	stroke:var(--link-color);
+	fill:var(--link-color);
+	background-color: var(--button-background-color);
+	border-width: var(--button-border-width);
+	border-color: var(--button-border-color);
+	position: relative;
+	text-align: var(--button-align);
 }
 
-.cs-button svg {
+.button.mobile {
+	--button-display:none;
+}
+
+@media screen and (max-width: 630px) {
+	.button.mobile {
+		--button-display:inline-block;
+	}
+}
+.button input {
+	width: 100%;
+}
+
+/* problem with popup labels is that they won't get the bg color */
+.button label {
+	background-color: var(--button-background-color);
+}
+
+.button a, .button a:hover, .button input {
+	display:flex;
+	color:inherit;
+	stroke: inherit;
+	fill:inherit;
+	justify-content: center;
+  	align-content: center;
+
+}
+
+.button svg {
 	width:100%;
 	height:100%;
 	display:block;
 }
 
-.cs-button .icon {
-	grid-area:button;
-	width:var(--buttonwidth);
-	height:var(--buttonheight);
+.button .icon {
+	display: var(--icon-display);
+	width:var(--icon-width);
+	height:var(--icon-height);
+	
+	line-height:var(--icon-height);
+	font-size: var(--icon-height);
+	
 }
 
-.cs-button label {
-	grid-area:label;
+.button .icon + label {
+	margin-left:var(--label-gap);
+}
+.button.right .icon + label {
+	margin-left:0;
+	margin-right:var(--label-gap);
 }
 
-.cs-button.right  a{
-	grid-template-columns:  auto var(--buttonwidth);
-	grid-template-areas: "label button";
+.button label {
+	display:  var(--label-display);
+	line-height: var(--icon-height);
+	padding:var(--button-label-padding);
+	text-align: left;
 }
 
 
-.cs-button a:hover {
-	color:var(--buttonhicolor);
-	stroke:var(--buttonhicolor);
-	fill:var(--buttonhicolor);
+.button.setting-align a {
+	justify-content: flex-start;
 }
 
-.cs-button label {
-	display: inline-block;
-	padding:4px;
+.button.right.setting-align a {
+	justify-content: flex-start;
 }
 
-.cs-button.right label {
+
+.button.right  a {
+	flex-direction: row-reverse;
+}
+
+.button.right label {
 	text-align: right;
+}
+
+.button > a:not(:first-child) {
+    display: none;
+}
+
+.button.setting-popout{
+	--label-gap:0;
+}
+.button.setting-popout a {
+	display: block;
+	position: relative;
+}
+.button.setting-popout label {
+	visibility: hidden;
+	position: absolute;
+	width: 0;
+	overflow: hidden;
+	top: calc(-1 * var(--button-padding));
+	left:calc(var(--icon-width) + var(--button-padding));
+	transition: width 0.3s ease-in-out;
+	white-space: nowrap;
+}
+
+.button.right.setting-popout label {
+	left:unset;
+	right:0;
+}
+
+.button.setting-popout:hover label {
+	visibility: visible;
+	width:200px;
 }

@@ -1,0 +1,121 @@
+/* Static CSS for new var style grid styling of "items" */
+:root {
+	--item-grid-template-areas: "imageWrap" "title"  "textWrap";
+	--item-grid-template-rows: min-content min-content auto;
+	--item-grid-auto-rows: auto;
+	--item-gridgap: 10px;
+	--item-rowgap: 0px;
+	--item-image-width: 40%;
+	--item-grid-template-columns: 1fr;
+	--item-border-width:0;
+	--item-border-color:transparent;
+	--item-padding:0;
+	--item-title-margin:0;
+	--item-title-padding:0;
+	--item-title-background:none;
+	--item-background:none;
+	--item-image-margin:0;
+	--item-image-padding:0;
+	--item-image-border-width:0;
+	--item-image-border-color:transparent;
+	--item-text-font:inherit;
+}
+
+.imageWrap img {
+	max-width: 100%;
+	height: auto;
+}
+
+.textWrap > p {
+	margin-top:0;
+	font:var(--item-text-font);
+}
+
+.item {
+	display: grid;
+	grid-auto-flow: row;
+	grid-template-areas: var(--item-grid-template-areas);
+	grid-column-gap: var(--item-gridgap);
+	grid-row-gap:  var(--item-rowgap);
+	grid-template-rows: var(--item-grid-template-rows);
+	grid-template-columns:   var(--item-grid-template-columns);
+	grid-auto-rows: var(--item-grid-auto-rows);
+	padding: var(--item-padding);
+	background: var(--item-background);
+}
+
+.item.noimage {
+	--item-grid-template-areas: "title"  "textWrap";
+}
+
+.item.noimage .imageWrap {
+	display: none;
+	--item-grid-template-areas: "title"  "textWrap";
+}
+
+
+
+@media screen and (min-width: 600px) {
+
+	.item.flow {
+		display: block;
+	}
+
+	.item.flow:after {
+	  content: " ";
+	  display: block;
+	  height: 0;
+	  clear: both;
+	  visibility: hidden;
+	  overflow: hidden;
+	}
+
+	.item.flow .imageWrap {
+		float:left;
+		margin-right: var(--item-gridgap);
+		margin-bottom: var(--item-gridgap);
+		width:var(--item-image-width);
+	}
+
+	.item.flow.setting-right .imageWrap {
+		float:right;
+		margin-right: 0;
+		margin-left: var(--item-gridgap);
+	}
+
+}
+
+.item .title {
+	grid-area: title;
+	padding:var(--item-title-padding);
+	margin:var(--item-title-margin);
+	border:var(--item-border-width) solid var(--item-title-border-color);
+	background: var(--item-title-background);
+}
+
+.item .imageWrap {
+	grid-area: imageWrap;
+	padding:var(--item-image-margin);
+}
+
+.item .imageWrap img {
+	padding:var(--item-image-padding);
+	border-width:var(--item-image-border-width);
+	border-style:solid;
+	border-color: var(--item-image-border-color);
+}
+
+.item .textWrap{
+	grid-area: textWrap;
+	padding:var(--item-text-padding);
+	font:var(--item-text-font);
+}
+
+
+
+@media screen and (max-width: 600px) {
+	.item .imageWrap {
+		margin-bottom: var(--item-gridgap);
+	}
+}
+

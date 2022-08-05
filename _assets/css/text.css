@@ -1,4 +1,14 @@
-/* Deprecated. All new versions to use text.css. To be removed when FOEC site is checked.
+/* 
+
+# Styling for text items
+
+Getting the inheritance right for this is a bit of a nightmare.
+
+In the end, I went for the maybe inelegant solution of having title fonts and headings fonts
+as separate entities.
+
+Otherwise there's just too much fiddling around.
+
 */
 :root {
 	--text-color:initial;

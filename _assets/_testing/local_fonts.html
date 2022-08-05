@@ -2,9 +2,8 @@
 <html>
 <head>
 	<title>Local font test</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<link rel="stylesheet" href="../css/fonts/fonts_local.css">
-	<!-- <link rel="stylesheet" href="../css/fonts/font-awesome-local.css"> -->
+	<link rel="stylesheet" href="../css/fonts/font-awesome-local.css">
 	<link rel="stylesheet" href="../css/fonts/google_icons_local.css">
 	<link rel="stylesheet" href="../css/icons.css">
 	<meta charset="UTF-8">
@@ -18,6 +17,13 @@
 			font-family: 'Lato';
   
 		}
+		#test:before {
+			font: normal 400 1em/1 "Font Awesome";
+			content:"\f556";
+		}
+
+	/*--icon-menu: "\f0c9";  */
+}
 	</style>
 </head>
 <body>
@@ -29,7 +35,7 @@
 	Test local font stylesheets. Ideally this would use a local() definition for the font but it
 	doesn't seem to work for Font Awesome.</p>
 	<p>
-		
+	<a id="test">Font awesome only working for tiny number of useless icons in free version</a>
 	</p>
 
 </div>
