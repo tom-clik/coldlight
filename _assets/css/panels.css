@@ -1,4 +1,4 @@
-/* Static CSS for new var style grid styling */
+/* Static CSS for new var style grid styling of "items" */
 :root {
 	--item-grid-template-areas: "imageWrap" "title"  "textWrap";
 	--item-grid-template-rows: min-content min-content auto;
