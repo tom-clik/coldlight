@@ -416,25 +416,18 @@ component name="coldlight" {
 	 */
 	public string function pubMenu(string pub="", string selected="", string id="main_menu",boolean cache=false) {
 
-		local.menu = "<nav id='#arguments.id#' class='#this.menuClasses#'>";
+		local.menu = "<ul>";
 		
 		local.multiMode = (ArrayLen(variables.publist) > 1);
 
 		for (local.pub in variables.publist) {
 
-			local.isSelected = arguments.pub == local.pub;
-			local.class = local.isSelected ? " selected" : " notselected";
-			if (! local.multiMode) {
-				local.class  = listAppend(local.class, "single", " ");
-			}
-			local.menu &= "<div class='menuItem #local.class#'>";
-
-			
+			local.menu &= "<ul>";
 
 			if (local.multiMode) {
 
 				try {
-					local.menu &= "<a class='nav-link scrollto' href='" & getLink(pub=local.pub,code="index",cache=arguments.cache) & "'>#variables.pubs[local.pub].title#</a>";
+					local.menu &= "<li><a class='scrollto' href='" & getLink(pub=local.pub,code="index",cache=arguments.cache) & "'>#variables.pubs[local.pub].title#</a>";
 				}
 
 				catch (Any e) {
@@ -457,13 +450,13 @@ component name="coldlight" {
 				for (local.id in local.pages) {
 
 					local.page = getPageData(local.pub, local.id);
-					local.submenu &= "<a class='nav-link scrollto' href='" & getLink(pub=local.pub,code=local.id,cache=arguments.cache) & "'>#local.page.meta.meta.title#</a>";
+					local.submenu &= "<li><a class='nav-link scrollto' href='" & getLink(pub=local.pub,code=local.id,cache=arguments.cache) & "'>#local.page.meta.meta.title#</a></li>";
 					
 				}
 
 				if (local.submenu != "") {
 					if (local.multiMode) {
-						local.menu &= "<nav class='doc-sub-menu nav flex-column'>" & local.submenu & "</nav>";
+						local.menu &= "<ul>" & local.submenu & "</ul>";
 					}
 					else {
 						local.menu &= 	local.submenu;
@@ -471,12 +464,12 @@ component name="coldlight" {
 				}
 			}
 
-			local.menu &= "</div>";
+			local.menu &= "</li>";
 
 
 		}
 
-		local.menu &= "</nav>";
+		local.menu &= "</ul>";
 		
 			
 		return local.menu;

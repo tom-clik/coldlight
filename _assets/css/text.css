@@ -2,14 +2,18 @@
 
 # Styling for text items
 
-Getting the inheritance right for this is a bit of a nightmare.
+This is for complex styling of textual content such as headings, lists, tables, quotes, pull outs etc.
 
-In the end, I went for the maybe inelegant solution of having title fonts and headings fonts
-as separate entities.
+If you just want to set fonts etc you do it by just applying the settings to the cs or one of its panels in the normal way.
 
-Otherwise there's just too much fiddling around.
+Text items work slightly differently to other styling, in that we only ever create schemes and then apply a class to the text content panel.
+
+Lists, tables, and boxouts can also have their own class.
+
+None of this is actually in place yet but here is the POC.
 
 */
+
 :root {
 	--text-color:initial;
 	--text-font: initial;
@@ -75,7 +79,6 @@ a, a:hover, input.button, input.button:hover {
 	color: var(--text-color);
 }
 
-
 h1, h2, h3, h4, h5, h6 {
 	margin: var(--heading-margin);
 	font-family:  var(--heading-font);
@@ -85,11 +88,9 @@ h1, h2, h3, h4, h5, h6 {
 	font-size: var(--heading-font-size);
 }
 
-
 /* Standard Class styling */
 
 /* 1. Headings within text items */
-
 .textWrap, .cs-text {
 	--heading-font: var(--title-font);
 	--heading-margin: 0 0 0.2em 0;

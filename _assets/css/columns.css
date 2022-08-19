@@ -2,6 +2,7 @@
 	--sitewidth:100%;
 	/* spanning now set by these. No classes */
 	--inner-width:100%;
+	--inner-margin:auto;
 	--subcolwidth:25%;
 	--xcolwidth:15%;
 	--columns-grid-gap:5px;
@@ -50,20 +51,15 @@
 	--body-margin-bottom:0px;
 	--body-margin-left:0px;
 	--body-margin-right:0px;
-	/* ignore unless providing editing functionality */
-	--overlay-margin-top:0px;
-	--overlay-margin-bottom:0px;
-	--overlay-margin-left:0px;
-	--overlay-margin-right:0px;
 }
 
 #header {
 	grid-area:header;
 	display: var(--header-display);
 	position:var(--header-position);
-	top:calc(var(--body-margin-top) + var(--overlay-margin-top));
-	left:calc(var(--body-margin-left) + var(--overlay-margin-left));
-	width: calc(var(--header-width) - var(--header-fixed) * (var(--overlay-margin-left) + var(--overlay-margin-right)));
+	top:var(--body-margin-top);
+	left:var(--body-margin-left);
+	width: var(--header-width);
 	min-height:var(--header-height);
 	z-index: 200;
 }
@@ -93,9 +89,9 @@
 	grid-area:footer;
 	display: var(--footer-display);
 	position:var(--footer-position);
-	bottom:calc(var(--body-margin-bottom) + var(--overlay-margin-bottom));
-	left:calc(var(--body-margin-left) + var(--overlay-margin-left));
-	width: calc(var(--footer-width) - var(--footer-fixed) * (var(--overlay-margin-left) + var(--overlay-margin-right)));
+	bottom:var(--body-margin-bottom);
+	left:var(--body-margin-left);
+	width: var(--footer-width);
 	min-height:var(--footer-height);
 	z-index: 200
 }
@@ -129,12 +125,11 @@
 #footer_right{grid-area: footer_right}
 #footer_middle{grid-area: footer_middle}
 
-/* calc(var(--body-margin-top) + var(--overlay-margin-top)); */
 body {
-	padding-top: calc(var(--header-fixed-height) + var(--body-margin-top) + var(--overlay-margin-top));
-	padding-bottom: calc(var(--footer-fixed-height) + var(--body-margin-bottom) + var(--overlay-margin-bottom));
-	padding-left:calc(var(--body-margin-left) + var(--overlay-margin-left));
-	padding-right:calc(var(--body-margin-right) + var(--overlay-margin-right));
+	padding-top: calc(var(--header-fixed-height) + var(--body-margin-top));
+	padding-bottom: calc(var(--footer-fixed-height) + var(--body-margin-bottom));
+	padding-left:calc(var(--body-margin-left));
+	padding-right:calc(var(--body-margin-right));
 }
 
 

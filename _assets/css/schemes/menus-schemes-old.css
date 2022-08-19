@@ -117,11 +117,11 @@ Settings:
 	--menu-text-align: center;
 }
 
-.cs-menu.adjust:not(.right) ul li:first-of-type a, .cs-menu.adjust.right ul li:last-of-type a {
+.cs-menu.scheme-flex.adjust ul li:first-of-type a {
 	padding-left:0;
 }
 
-.cs-menu.adjust:not(.right) ul li:last-of-type a, .cs-menu.adjust.right) ul li:first-of-type a {
+.cs-menu.scheme-flex.adjust ul li:last-of-type a {
 	padding-right:0;
 }
 

@@ -1,0 +1,61 @@
+/*
+Styling for photog grids
+*/
+
+:root {
+	--caption-padding: 2px;
+	--image-opacity: 1;
+	--image-hover-opacity: 1;
+	--caption-background: transparent;
+	--caption-align:center;
+	--caption-display:block;
+	--caption-hover-display: var(--caption-display);
+}
+
+
+figure img {
+	max-width: 100%;
+	height:auto;
+	opacity: var(--caption-opacity);
+}
+
+figure:hover img {
+	opacity: var(--image-hover-opacity);
+}
+
+figcaption {
+	font: var(--font);
+	padding: var(--caption-padding);
+	background: var(--caption-background);
+	--text-align: center;
+	display: var(--caption-display);
+}
+
+figure:hover figcaption {
+	display: var(--caption-hover-display);
+}
+
+.caption-overlay figure {
+	position: relative;
+}
+
+.caption-overlay {
+	--image-hover-opacity: 0.6;
+}
+
+.caption-overlay figure figcaption {
+	position: absolute;
+	top:0px;
+	left:0px;
+	width: 100%;
+}
+
+.caption-overlay.caption-middle figure figcaption {
+	top:50%;
+	transform: translateY(-50%);
+}
+
+.caption-overlay.caption-bottom figure figcaption {
+	top:reset;
+	bottom:0px;
+}

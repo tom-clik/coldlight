@@ -1,4 +1,4 @@
-<div id="uberContainer">
+<div id="ubercontainer">
 	<div id="header" class="header spanning">
 		<div class="inner">
 			<div id="sitetitle" class="scheme-title">
@@ -28,56 +28,57 @@
 	<div id="content" class="spanning">
 		
 		<div class="inner">
-			
-			<div id="subcol" class="hasSticky">
-					<div id="mainmenu" class="cs-menu menu-vertical">
-						<div id="mobileclose" class="icon icon-big">
-							<a href="#top">M</a>
+			<div id="columns">
+				<div id="subcol" class="hasSticky">
+						<div id="mainmenu" class="cs-menu menu-vertical">
+							<div id="mobileclose" class="icon icon-big">
+								<a href="#top">M</a>
+							</div>
+							<div class="cs-menu scheme-vertical scheme-main">
+								<cfoutput>#application.coldLight.pubMenu(pub=request.pub,selected=request.code,cache=request.cache)#</cfoutput>
+							</div>
 						</div>
-						<nav class="nav doc-menu">
-							<cfoutput>#application.coldLight.pubMenu(pub=request.pub,selected=request.code,cache=request.cache)#</cfoutput>
-						</nav>
-					</div>
-				
-			</div>
-
-			<div id="maincol">
 					
-				<div id="maincol_top">	
-					<div id="pageContent">
-						<div class="pageTitle">
-							<h1><cfoutput>#request.page.title#</cfoutput></h1>
-						</div>
-						<div class="pageBody">
-							<cfoutput>#request.page.content_html#</cfoutput>
-						</div>
-					</div>
-
 				</div>
-				<div id="maincol_bottom">		
-					<div class="navButtons">
-						<div id="previous" class="previousnext previous">
-							<cfif request.page.previous neq "">
-								<cfoutput><a href=#request.page.previous_link#>#request.page.previous#</a></cfoutput>
-							</cfif>
-						</div>
-						<div id="next" class="previousnext next">
-							<cfif request.page.next neq "">
-								<cfoutput><a href=#request.page.next_link#>#request.page.next#</a></cfoutput>
-							</cfif>
-						</div>
-					</div>
-				</div>	
-				
-			</div>
 
-			<div id="xcol" class="hasSticky">
-				
+				<div id="maincol">
+						
+					<div id="maincol_top">	
+						<div id="pageContent">
+							<div class="pageTitle">
+								<h1><cfoutput>#request.page.title#</cfoutput></h1>
+							</div>
+							<div class="pageBody">
+								<cfoutput>#request.page.content_html#</cfoutput>
+							</div>
+						</div>
+
+					</div>
+					<div id="maincol_bottom">		
+						<div class="navButtons">
+							<div id="previous" class="previousnext previous">
+								<cfif request.page.previous neq "">
+									<cfoutput><a href=#request.page.previous_link#>#request.page.previous#</a></cfoutput>
+								</cfif>
+							</div>
+							<div id="next" class="previousnext next">
+								<cfif request.page.next neq "">
+									<cfoutput><a href=#request.page.next_link#>#request.page.next#</a></cfoutput>
+								</cfif>
+							</div>
+						</div>
+					</div>	
+					
+				</div>
+
+				<div id="xcol" class="hasSticky">
+					
 					<div id="pagemenu" class="cs-menu menu-vertical">
 						<cfoutput>#application.coldLight.getPageHeadings(page=request.page)#</cfoutput>
 					</div>
+						
 					
-				
+				</div>
 			</div>
 			
 		</div>	
