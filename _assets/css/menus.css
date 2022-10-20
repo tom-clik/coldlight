@@ -56,7 +56,6 @@ hi      li.hi a
 	/*min-height:100%;*/
 }
 
-
 .cs-menu a, .cs-menu a:hover {
 	white-space: nowrap;
 	color:var(--link-color);
@@ -104,10 +103,11 @@ ul.submenu {
   	min-width:100%;
   	height: 0;
   	overflow: hidden;
-  	/*margin-top:4px; TO DO: menu gap? some sort of var */
+  	grid-template-columns: 1fr;
+	--menu-gap:0px;
 }
 
-ul.submenu.open,ul.submenu.show  {
+ul.submenu.open, ul.submenu.show  {
 	height: auto;
 	overflow: visible;
 }
@@ -139,9 +139,10 @@ ul.submenu.open,ul.submenu.show  {
 
 /* menu icons 
 
-Requires icons.css andnavbuttons.css
+Requires icons.css and navbuttons.css
 
-turn on with e.g.
+
+
 */
 .cs-menu a b  {
 	display: var(--menu-icon-display);

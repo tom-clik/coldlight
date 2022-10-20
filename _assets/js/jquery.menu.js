@@ -22,18 +22,31 @@ $.fn.menu = function(ops) {
 		options = $.extend({},defaults,ops);
 
 	$(".submenu").on("open",function() {
-		console.log("opening " + $(this).attr("id"));
-		$(this).animateAuto("height", options.menuAnimationTime, function() {
-			console.log("Animation complete");	
-			$(this).css({"height":""}).addClass("open");
+		var id = $(this).attr("id");
+		console.log("opening " + id);
+		
+		// close children
+		$(this).find("ul.submenu").each(function() {
+			let $childmenu = $(this);
+			if ($childmenu.hasClass("open")) {
+				$childmenu.trigger("close");
+			}
 		});
 
+		$(this).animateAuto("height", options.menuAnimationTime, function() {
+			console.log("Open animation complete for " + id);	
+			$(this).css({"height":""}).addClass("open");
+		});
+		return false;
+
 	}).on("close",function() {
-		console.log("closing " + $(this).attr("id"));
+		var id = $(this).attr("id");
+		console.log("closing " + id);
 		$(this).animate({"height":0}, options.menuAnimationTime, function() {
-			console.log("Animation complete");	
+			console.log("Close animation complete for " + id);	
 			$(this).removeClass("open").css({"height":""});
 		});
+		return false;
 	});
 	
 
@@ -45,6 +58,7 @@ $.fn.menu = function(ops) {
 		});
 
 		$(self).on("click",".hasmenu",function(e) {
+			
 			console.log("opening submenu");
 
 			e.preventDefault();
@@ -53,16 +67,27 @@ $.fn.menu = function(ops) {
 			var $li = $(this).closest("li");
 			var open = $li.hasClass("open");
 			
-			$(this).closest("ul").find("li").removeClass("open");
+			// close siblings
+			$(this).closest("ul").find("li").each(function() {
+				if ($(this).hasClass("open")) {
+					let $submenu = $(this).find("> ul").first();
+					$submenu.trigger("close");
+					$(this).removeClass("open");
+				}
+			});
 			
+			var $submenu = $li.find("> ul").first();
+
 			if (!open) {
 				$li.addClass("open");
-				$li.find("> ul").first().trigger("open");
+				console.log($submenu.html());
+				$submenu.trigger("open");
 			}
 			else {
-				$li.find("> ul").first().trigger("close");	
+				$submenu.trigger("close");	
 			}
 			
+			return false;
 
 		});
 
