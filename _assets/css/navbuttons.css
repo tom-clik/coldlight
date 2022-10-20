@@ -38,7 +38,7 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 	--label-display:inline-block;
 	--icon-display:inline-block;
 	--button-display:inline-block;/* reserved */
-	--button-align:center; /* align button contents with panel, e.g when stretch by grid or flexbox */
+	--button-align:center;
 }
 
 .button {
@@ -53,7 +53,8 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 	border-width: var(--button-border-width);
 	border-color: var(--button-border-color);
 	position: relative;
-	text-align: var(--button-align);
+	/* incompatible with flex settings. trying flex setting
+	/*text-align: var(--button-align); */
 }
 
 .button.mobile {
@@ -79,8 +80,8 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 	color:inherit;
 	stroke: inherit;
 	fill:inherit;
-	justify-content: center;
-  	align-content: center;
+	justify-content: var(--button-align);
+  	align-items: center;
 
 }
 
