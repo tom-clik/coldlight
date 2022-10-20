@@ -45,12 +45,16 @@ $.fn.menu = function(ops) {
 		});
 
 		$(self).on("click",".hasmenu",function(e) {
+			console.log("opening submenu");
+
 			e.preventDefault();
 			e.stopPropagation(); 
+			
 			var $li = $(this).closest("li");
 			var open = $li.hasClass("open");
 			
 			$(this).closest("ul").find("li").removeClass("open");
+			
 			if (!open) {
 				$li.addClass("open");
 				$li.find("> ul").first().trigger("open");

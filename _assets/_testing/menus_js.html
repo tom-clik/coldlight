@@ -6,49 +6,49 @@
 	<link rel="stylesheet" href="../css/fonts/fonts_local.css">
 	<link rel="stylesheet" href="../css/grids.css">
 	<link rel="stylesheet" href="../css/menus.css">
+	<link rel="stylesheet" href="../css/icons.css">
+	<link rel="stylesheet" href="../css/schemes/menus-schemes.css">
 	<meta charset="UTF-8">
 	<style>
-		body {
-			--title-font:font-family: 'Open Sans';
-		}
+	body {
+		--title-font:font-family: 'Open Sans';
+	}
 
-		.cs-title {
-			font-size: 200%;
-			font-weight: bold;
-		}
+	.cs-title {
+		font-size: 200%;
+		font-weight: bold;
+	}
 
-		.title {
-			font-size: 140%;
-			font-weight: bold;
-		}
+	.title {
+		font-size: 140%;
+		font-weight: bold;
+	}
 
-		.cs-menu {
-			margin-bottom: 12px;
-		} 
+	.cs-menu {
+		margin-bottom: 12px;
+	} 
 
-		.scheme-main {
-			--menu-item-padding:8px;
-			--menucolor:#ff00ff;
-			--menu-background: #c3c3c3;
-			--menu-item-border: 1px;
-			--menu-gap:0;
-		}
-		.scheme-main li:hover {
-			--menucolor:#ffff00;
-			--menu-background: #efefef;
-		}
+	.scheme-main {
+		--menu-item-padding:8px;
+		--menucolor:#ff00ff;
+		--menu-background: #c3c3c3;
+		--menu-item-border: 1px;
+		--menu-gap:0;
+	}
 
-		.scheme-plain {
-			--menu-item-border: 1px;
-		}
+	.scheme-main li:hover {
+		--menucolor:#ffff00;
+		--menu-background: #efefef;
+	}
 
-		#test1 {
-			--menu-item-border: 0 12px 0 0;
-			--menu-gap:4px;
+	.scheme-plain {
+		--menu-item-border: 1px;
+	}
 
-		}
-
-		
+	#test1 {
+		--menu-item-border: 0 12px 0 0;
+		--menu-gap:4px;
+	}
 	</style>
 </head>
 <body>
@@ -56,6 +56,17 @@
 <div class="cs-title">
 Menu Testing
 </div>
+<div id="side_menu" class="cs-menu mobilemenu  scheme-vertical"><ul class="show section-"><li class="menu_articles first"><a href="articles_list.cfm">Articles</a></li><li class="menu_events"><a href="events_list.cfm">Events</a><ul class="submenu section-"><li class="menu_events_bookings first"><a href="events_bookings_list.cfm">Events bookings</a></li><li class="menu_events_guests"><a href="events_guests_list.cfm">Events guests</a></li><li class="menu_events_tables last"><a href="events_tables_list.cfm">Events tables</a></li></ul></li><li class="menu_images"><a href="images_list.cfm">Images</a></li><li class="menu_manage_sections"><a href="manage_sections_list.cfm">Manage sections</a></li><li class="menu_users_messages"><a href="users_messages_list.cfm">Messages</a><ul class="submenu section-"><li class="menu_users_messages_templates first last"><a href="users_messages_templates_list.cfm">Message templates</a></li></ul></li><li class="menu_resources"><a href="resources_list.cfm">Resources</a></li><li class="menu_site_sections"><a href="site_sections_list.cfm">Site sections</a></li><li class="menu_users"><a href="users_list.cfm">Users</a></li><li class="menu_logout last"><a href="login.cfm?action=logout">Log out</a></li></ul></div>
+
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../js/jquery.animateAuto.js"></script>
+<script src="../js/jquery.menu.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#side_menu").menu();
+	});
+</script>
 
 </body>
 </html>
