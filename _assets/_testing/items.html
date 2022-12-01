@@ -21,26 +21,20 @@
 		.item {
 			margin:20px;
 			border:1px solid #ccc;
-			--item-padding:8px;
+			padding:8px;
 		}
 
-		.scheme-box {
-			--item-image-padding:2px;
-			--item-image-border-width:1px;
-			--item-image-border-color:var(--border-color);
-		}
-
-		.scheme-box:hover {
+		.item.scheme-box:hover {
 			--title-color: #00C0F9;
 		}
 
-		.scheme-underline {
-			--item-image-padding:0 0 2px 0;
-			--item-image-border-width:0px 0px 8px 0;	
+		.item.scheme-underline .imageWrap {
+			padding:0 0 2px 0;
+			border-width:0px 0px 8px 0;	
 		}
 
-		.scheme-underline:hover {
-			--item-image-border-color:var(--accent-color);
+		.item.scheme-underline:hover .imageWrap {
+			border-color:var(--accent-color);
 		}
 		
 	</style>
@@ -56,7 +50,7 @@ item Testing
 
 	<div class="item setting-htop scheme-box" id="test1">
 
-		<h3 class="title">Htop item left</h3>
+		<h3 class="title">setting-htop scheme-box</h3>
 
 		<div class="imageWrap">
 			<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
@@ -68,236 +62,168 @@ item Testing
 	
 	</div>
 	
+	<div class="item setting-htop setting-left setting-munder" id="test2">
+
+		<h3 class="title">Headline before image except in mobile</h3>
+
+		<div class="imageWrap">
+			<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
+		</div>
+		
+		<div class="textWrap">
+			<p>Set munder to put a heading under the image in mobile (if its got htop for main view)</p>
+		</div>
+	
+	</div>
+
+	<div class="item setting-htop setting-left scheme-wide" id="test3">
+
+		<h3 class="title">Larger image</h3>
+
+		<div class="imageWrap">
+			<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
+		</div>
+		
+		<div class="textWrap">
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>				
+		</div>
+	
+	</div>
+
+	<div class="item setting-htop setting-right scheme-wide" id="test4">
+
+		<h3 class="title">Larger image right</h3>
+
+		<div class="imageWrap">
+			<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
+		</div>
+		
+		<div class="textWrap">
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>		
+		</div>
+	
+	</div>
+			
+	<div class="item setting-left" id="test5">
 
 	
-		
-			<div class="item setting-htop setting-left setting-munder scheme-underline" id="test2">
+		<h3 class="title">No image with space still showing</h3>
 
+		<div class="imageWrap">
 			
-				<h3 class="title">Headline before image except in mobile</h3>
-
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>Set munder to but a heading under the image in mobile (if its got htop for main view)</p>
-					
-				</div>
-			
-			</div>
+		</div>
 		
+
+		<div class="textWrap">
+			<p>Actualy here you just assign the image alignment class.</p>
+		</div>
+	
+	</div>
+
+	<div class="item  setting-noimage" id="test6">
+		
+		<h3 class="title">No image with no space</h3>
+
+		<div class="imageWrap">
+			
+		</div>
+
+		<div class="textWrap">
+			<p>You can just do nothing but noimage will set the imageWrap to display:none</p>
+		</div>
+	
+	</div>
+
+	<div class="item setting-left scheme-underline " id="test7">
 
 	
-		
-			<div class="item setting-htop setting-left scheme-wide" id="test3">
+		<h3 class="title">Headline is inline</h3>
 
+		<div class="imageWrap">
 			
-				<h3 class="title">Larger image</h3>
+				<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
+			
+		</div>
+		
 
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
+		<div class="textWrap">
+			<p>This is actually the default. You have to put htop on to change it.</p>
 				
+		</div>
+	
+	</div>
 
-				<div class="textWrap">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					
-						
-				</div>
+	<div class="item setting-flowleft scheme-wide " id="test8">
+
+		<h3 class="title">Flow settings</h3>
+
+		<div class="imageWrap">
 			
-			</div>
+				<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
+			
+		</div>
 		
+
+		<div class="textWrap">
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+				
+		</div>
+	
+	</div>
+
+	<div class="item setting-flowright " id="test8">
 
 	
-		
-			<div class="item setting-htop setting-right scheme-wide" id="test4">
+		<h3 class="title">Flow settings right</h3>
 
+		<div class="imageWrap">
 			
-				<h3 class="title">Larger image right</h3>
-
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					
-				</div>
+				<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
 			
-			</div>
-					
-			<div class="item setting-left" id="test5">
-
-			
-				<h3 class="title">No image with space still showing</h3>
-
-				<div class="imageWrap">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>Actualy here you just assign the image alignment class.</p>
-				</div>
-			
-			</div>
+		</div>
 		
 
+		<div class="textWrap">
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. </p>
+			
+				
+		</div>
 	
-		
-			<div class="item  setting-noimage" id="test6">
-
-				
-				<h3 class="title">No image with no space</h3>
-
-				<div class="imageWrap">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>You can just do nothing but noimage will set the imageWrap to display:none</p>
-				</div>
-			
-			</div>
-		
-
-	
-		
-			<div class="item setting-left scheme-underline " id="test7">
-
-			
-				<h3 class="title">Headline is inline</h3>
-
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>This is actually the default. You have to put htop on to change it.</p>
-						
-				</div>
-			
-			</div>
-		
-
-	
-		
-		
-
-	
-			<div class="item setting-left flow scheme-underline " id="test8">
-
-			
-				<h3 class="title">Flow settings</h3>
-
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-						
-				</div>
-			
-			</div>
-
-			<div class="item setting-right flow" id="test8">
-
-			
-				<h3 class="title">Flow settings right</h3>
-
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. </p>
-					
-						
-				</div>
-			
-			</div>
-
-			<div class="item setting-right flow" id="test8">
-
-			
-				<div class="imageWrap">
-					
-						<img src="//d2033d905cppg6.cloudfront.net/tompeer/images/Graphic_111.jpg">
-					
-				</div>
-				
-
-				<div class="textWrap">
-					<h3 class="title">Flow settings move headline</h3>
-
-					<p>Here you actually have to change the html</p>
-					
-						
-				</div>
-			
-			</div>
-
-
+	</div>
 
 </div>
 

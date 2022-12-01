@@ -115,13 +115,6 @@ div.inner {
 }
 
 @media screen and (max-width:630px) {
-	
-	.mobile {
-		display:block;
-	}
-	.notmobile {
-		display:none;
-	}
 
 	#columns , #footer > .inner, #maincol, #maincol_grid {
 		display:block;
@@ -159,3 +152,4 @@ div.inner {
 	}
 
 }
+
