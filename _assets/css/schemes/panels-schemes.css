@@ -29,10 +29,6 @@ There is also a box scheme showing how to pad the content for a boxed look
 		display: block;
 	}
 
-	.item.setting-flowright, .item.setting-flowleft {
-		display: block;
-	}
-
 	.item.setting-flowright  .imageWrap, .item.setting-flowleft  .imageWrap {
 		float:left;
 		width:var(--item-image-width);

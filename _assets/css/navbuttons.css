@@ -5,9 +5,22 @@ Buttons get complicated through the problem of <a> tags and inputs.
 Both of these get styled through the browser defaults and reset.
 
 To get around this and preserve inheritance, all buttons need to be wrapped in
-another div which allows us to provide the consistency.
+another div with a class of .div which allows us to provide the consistency.
+
+Styling should be applied to the .button element.
 
 To assign icons we can use icons or svgs. For icons, always use our standard icon vars, see icons.css.
+
+Either way the icon needs a class of "icon".
+
+```
+<div class="button"><a href="#"><i class="icon icon-close"></i><label>Button text</label></a></div>
+
+<div class="button"><input type="submit" value="">Button text
+Button text</div>
+
+<div class="button"><svg class="icon" viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#cart" /><label>Button text</label></svg></div>
+```
 
 # Notes
 
@@ -17,62 +30,37 @@ should be assigned by the containing div through grid or flexbox.
 The buttons are always inline-blocks, so always style the surrounding div with grid or flexbox to control
  the whitespace between the them.
 
-# Examples
+# Usage
 
+The main vars should be set for a selector .button with hover state .button:hover
 
+.button 
+.button label
 
 */
 
 :root {
-	--link-color: inherit;
-	--button-border-color:initial;
-	--button-border-width:0px;
-	--button-border-style:solid;
-	--button-background-color: transparent;
-	--button-font:inherit;
 	--icon-width: 32px; /* size of icon */
 	--icon-height: var(--icon-width); /* size of icon */
 	--label-gap: 10px;
-	--button-padding: 8px;
-	--button-label-padding: 4px;
-	--label-display:inline-block;
-	--icon-display:inline-block;
-	--button-display:inline-block;/* reserved */
-	--button-align:center;
+	--label-display:inline-block;/* Turn button or label off with inline-block|none */
+	--icon-display:inline-block;/* ---- " ---- */
+	--button-align:center; /* flex-start|center|flex-end */
+	--button-direction: row;/* row or row reverse to align left or right */
+	--link-color:inherit;
 }
 
 .button {
-	display: var(--button-display);
+	display: inline-block;
 	cursor: pointer;
-	font-family:var(--button-font);
-	padding: var(--button-padding);
+	position: relative;
 	color:var(--link-color);
 	stroke:var(--link-color);
 	fill:var(--link-color);
-	background-color: var(--button-background-color);
-	border-width: var(--button-border-width);
-	border-color: var(--button-border-color);
-	position: relative;
-	/* incompatible with flex settings. trying flex setting
-	/*text-align: var(--button-align); */
 }
 
-.button.mobile {
-	--button-display:none;
-}
-
-@media screen and (max-width: 630px) {
-	.button.mobile {
-		--button-display:inline-block;
-	}
-}
 .button input {
 	width: 100%;
-}
-
-/* problem with popup labels is that they won't get the bg color */
-.button label {
-	background-color: var(--button-background-color);
 }
 
 .button a, .button a:hover, .button input {
@@ -82,7 +70,8 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 	fill:inherit;
 	justify-content: var(--button-align);
   	align-items: center;
-
+  	flex-direction: var(--button-direction);
+  	grid-gap:var(--label-gap);
 }
 
 .button svg {
@@ -95,45 +84,16 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 	display: var(--icon-display);
 	width:var(--icon-width);
 	height:var(--icon-height);
-	
 	line-height:var(--icon-height);
 	font-size: var(--icon-height);
-	
-}
-
-.button .icon + label {
-	margin-left:var(--label-gap);
-}
-.button.right .icon + label {
-	margin-left:0;
-	margin-right:var(--label-gap);
 }
 
 .button label {
 	display:  var(--label-display);
 	line-height: var(--icon-height);
-	padding:var(--button-label-padding);
-	text-align: left;
 }
 
-
-.button.setting-align a {
-	justify-content: flex-start;
-}
-
-.button.right.setting-align a {
-	justify-content: flex-start;
-}
-
-
-.button.right  a {
-	flex-direction: row-reverse;
-}
-
-.button.right label {
-	text-align: right;
-}
-
+/** See auto button functionality */
 .button > a:not(:first-child) {
     display: none;
 }
@@ -141,10 +101,12 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 .button.setting-popout{
 	--label-gap:0;
 }
+
 .button.setting-popout a {
 	display: block;
 	position: relative;
 }
+
 .button.setting-popout label {
 	visibility: hidden;
 	position: absolute;

@@ -1,8 +1,22 @@
+<!--
+
+# Notes
+
+Still a bit of a mess
+
+The help icons use absolute positioning which is fine except that they don't work. Probably need to wrap the labels in a span or something
+
+Currently still uses lots of things like `field-background-color` and `button-border-color`. Possibly revert to using actual panels.
+
+-->
+
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Table tests</title>
+	<title>Form tests</title>
 	<link rel="stylesheet" href="../css/reset.css">
+	<link rel="stylesheet" href="../css/select2.min.css">
 	<link rel="stylesheet" href="../css/fonts/fonts_local.css">
 	<link rel="stylesheet" href="../css/grids.css">
 	<link rel="stylesheet" href="../css/icons.css">
@@ -10,11 +24,26 @@
 	<link rel="stylesheet" href="../css/navbuttons.css">
 	<meta charset="UTF-8">
 	<style>
-	.form .error {
 
+	#testform {
+		max-width: 800px;
+		margin:80px auto;
+		border:1px solid var(--border-color);
+		background-color: #efefef;
+		--field-background-color: white;
+		--field-border-color: #aaa;
+		--input-padding: 8px;
+	}
+	.button {
+		--button-border-color:var(--border-color);
+		--button-border-width:1px;
+		--button-border-style:solid;
+		--button-background-color: white;
 	}
 
-		
+	#testform .fieldrow:nth-child(even) {
+		background-color: #e3e3e3;
+	}
 	</style>
 </head>
 
@@ -26,12 +55,23 @@
 			<div class="fieldrow">
 				<label>
 					
-					Email address
+					Auto grow text
 
 					<div class="button"><a class="icon icon-help"></a></div>
 				</label>
 				<field>
-					<textarea name="field1" class="autogrow markitup"></textarea>
+					<textarea name="field1" rows="1" class="elastic markitup"></textarea>
+				</field>
+			</div>
+			<div class="fieldrow">
+				<label>
+					
+					Email
+
+					<div class="button"><a class="icon icon-help"></a></div>
+				</label>
+				<field>
+					<input type="text" name="email"></textarea>
 				</field>
 			</div>
 			<div class="fieldrow">
@@ -128,9 +168,15 @@
 
 				</label>
 				<field>
-					<input type="button" value="Submit"  onclick="getOk(this);">
-					<input type="button" value="Get validation errors" onclick="getErrors(this);">
-					<input type="button" value="Network errors" onclick="failError(this);">
+					<div class="button">
+						<input type="button" value="Submit"  onclick="getOk(this);">
+					</div>
+					<div class="button">
+						<input type="button" value="Get validation errors" onclick="getErrors(this);">
+					</div>
+					<div class="button">
+						<input type="button" value="Network errors" onclick="failError(this);">
+					</div>
 				</field>
 			</div>
 		</form>
@@ -138,6 +184,8 @@
 	</div>
 
 <script src="../js/jquery-3.4.1.js"></script>
+<script src="../js/select2.min.js"></script>
+<script src="../js/jquery.elastic.1.6.11.js"></script>
 <script src="../js/jquery.validate.js"></script>
 <script src="../js/jquery.form.js"></script>
 <script src="../js/jquery.clikForm.js"></script>
@@ -175,7 +223,7 @@
 		$("#testform").clikForm({
 			debug:false,
 			rules : {
-				field1: {
+				email: {
 			    	required: true,
 			    	email: true
 			    },

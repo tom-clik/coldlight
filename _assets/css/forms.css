@@ -1,5 +1,8 @@
 :root {
 	--border-color:#8f8f8f;
+}
+
+.form {
 	--field-border-color: var(--border-color);
 	--form-stripe-background-color: transparent;
 	--form-label-width: 33%;
@@ -11,7 +14,7 @@
 	--field-checkbox-width:28px;
 	--field-border-width: 1px;
 	--field-border-style:solid;
-	--form-background-color: transparent;
+	--field-background-color: transparent;
 	--form-font:1em inherit;
 	--form-color:inherit;
 }
@@ -156,7 +159,7 @@ td.field input[type=text], td.field input[type=password], td.field textarea, td.
 	border-width: var(--field-border-width);
 	border-style: var(--field-border-style);
 	border-color: var(--field-border-color);
-	background-color: var(--form-background-color);
+	background-color: var(--field-background-color);
 	padding:var(--input-padding);
 	width: 100%;
 }
@@ -164,7 +167,8 @@ td.field input[type=text], td.field input[type=password], td.field textarea, td.
 
 field.checkbox, field.radio {
 	display: grid;
-	grid-template-columns: var(--field-checkbox-width) auto;
+	grid-template-columns: var(--field-checkbox-width) auto ;
+	grid-row-gap: 2px;
 }
 
 

@@ -4,16 +4,38 @@
 
 Getting the inheritance right for this is a bit of a nightmare.
 
-In the end, I went for the maybe inelegant solution of having title fonts and headings fonts
-as separate entities.
+In the end, I went for the maybe inelegant solution of having title fonts and headings fonts as separate entities.
 
 Otherwise there's just too much fiddling around.
+
+## Usage
+
+Define standard vars as so
+
+--text-color:xxx;
+--text-font: xxx;
+--font-size:80%;
+
+Note that just defining a color or font with this name will take care of this.
+
+To set title or heading styling, redfined the VARs. DON'T set the values explicity
+
+E.g.
+
+.scheme-crosshead {
+	--heading-margin:0 0 1em  0;
+	--heading-font: var(--title-font);
+	--heading-font-weight:300;
+	--heading-font-align:center;
+	--heading-color:teal;
+}
 
 */
 :root {
 	--text-color:initial;
 	--text-font: initial;
 	--font-size:100%;
+
 	--title-font:inherit;
 	--title-font-weight:bold;
 	--title-color:inherit;
@@ -36,11 +58,6 @@ Otherwise there's just too much fiddling around.
 	--heading-padding:0;
 	--link-color:inherit;
 
-	--button-border-color:var(--link-color);
-	--button-border-width:1px;
-	--button-background-color: transparent;
-	--button-border-style:solid;
-	--button-padding: 8px;
 }
 
 body {
@@ -75,7 +92,6 @@ a, a:hover, input.button, input.button:hover {
 	color: var(--text-color);
 }
 
-
 h1, h2, h3, h4, h5, h6 {
 	margin: var(--heading-margin);
 	font-family:  var(--heading-font);
@@ -93,6 +109,7 @@ h1, h2, h3, h4, h5, h6 {
 .textWrap, .cs-text {
 	--heading-font: var(--title-font);
 	--heading-margin: 0 0 0.2em 0;
+	--heading-font-weight: bold;
 }
 
 .textWrap h1, .cs-text  h1 {

@@ -91,7 +91,20 @@ $.fn.menu = function(ops) {
 
 		});
 
-		
+		$(self).on("open",function(){
+			console.log(options);
+			console.log("opening " + $(self).attr("id"));
+			$(self).show().animateAuto("height", options.menuAnimationTime, function() {
+				console.log("Animation complete");	
+				$(self).css({"height":"auto"});
+			});
+		}).on("close",function(){
+			console.log("closing " + $(self).attr("id"));
+			$(self).animate({"height":0}, options.menuAnimationTime, function() {
+				console.log("Animation complete");	
+				$(self).css({"height":0}).hide();
+			});
+		});
 		
 	});
 }

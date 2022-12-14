@@ -41,58 +41,71 @@
 		}
 		/* Button defaults */
 		.button  {
-			--link-color:red;
-			--button-font:var(--text-font);
+			color:red;
+			font-family:var(--text-font);
 		}
 		
-		.button:hover  {
-			--link-color:magenta;
+		.button label {
+			padding:4px;
 		}
+
+		.button:hover  {
+			color:magenta;
+		}
+		
+
 		/* Scheme no font */
-		/* note that --icon-font is set when we include a fonts css, cf. */
 		.scheme-no-font .button {
-			--icon-font:var(--text-font);
-			--link-color:teal;
+			color:teal;
 			--icon-width:16px;
 			--icon-height:16px;
-			--button-padding:2px;
+			padding:2px;
 
 		}
-		.scheme-no-font {
-			--icon-font:verdana;
-		}
 
-		.button-font {
-			font: ;
+		.scheme-no-font .icon {
+			font-family: verdana;
 		}
-
 		/* Scheme panel */
 		.scheme-panel .button {
-			--button-background-color: #c5c5c5;
-			--button-border-width: 1px;
-			--color:#ffff00;
-			--button-border-color:hotpink;
-		}
+			background-color: #c5c5c5;
+			border-width: 1px solid hotpink;
+			color:red;
+			fill:red;
+			stroke:red;
+			padding:4px 18px;
 
+		}
 		.scheme-panel .button:hover {
-			--color: #ff00ff;
-			--button-background-color: #ffff00;
+			color: #ff00ff;
+			fill:#ff00ff;
+			stroke:#ff00ff;
+			background-color: #ffff00;
 		}
 		/* Scheme rollout */
 		.scheme-rollout .button {
-			--link-color:teal;
+			color:teal;
 			--icon-width:16px;
 			--icon-height:16px;
-			--button-padding:2px;
+			padding:2px;
 		}
 		.scheme-rollout .button:hover  {
-			--link-color:white;
-			--button-background-color:teal;
+			color:white;
+			background-color:teal;
 		}
 		
+		.setting-align-left {
+			--button-align:flex-start; 
+			--button-direction: row;	
+		}
+		.setting-align-right {
+			--button-align:flex-start; 
+			--button-direction: row-reverse;		
+		}
+		.setting-align-center {
+			--button-align:	center;
+		}
 
-
-		
 		/* container styling */
 		/* icons are always a list of inline blocks.
 		Use a wrapper and a flexbox to align them */
@@ -124,8 +137,8 @@
 
 	<div>
 		<div class="cs-title"><a href="#test1">SVGs with labels</a></div>
-		<div class="test" id="test1">
-			<div class="cs-button button scheme-panel">
+		<div class="test  scheme-panel" id="test1">
+			<div class="button">
 				<a href="#">
 					<svg class="icon"   viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#cart" /></svg>
 					<labeL>
@@ -134,7 +147,7 @@
 				</a>
 			</div>
 
-			<div class="cs-button button right">
+			<div class="button right">
 				<a href="#">
 					<svg  class="icon"  viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#cart" /></svg>
 					<labeL>
@@ -193,7 +206,7 @@
 	<div class="">
 		<div class="cs-title"><a href="#test4">Rollout labels</a></div>
 		<div class="test scheme-rollout flex-column" id="test4">
-			<div class="button setting-popout"><a href="#"><i class="icon icon-close"></i><label>icon-close spaces !^&!% fref</label></a></div>
+			<div class="button  setting-popout"><a href="#"><i class="icon icon-close"></i><label>icon-close spaces !^&!% fref</label></a></div>
 			<div class="button setting-popout"><a href="#"><i class="icon icon-menu"></i><label>icon-menu spaces !^&!% fref</label></a></div>
 			<div class="button setting-popout"><a href="#"><i class="icon icon-previous"></i><label>icon-previous  spaces !^&!% fref</label></a></div>
 			<div class="button setting-popout"><a href="#"><i class="icon icon-next"></i><label>icon-next  spaces !^&!% fref</label></a></div>
@@ -272,15 +285,15 @@
 		<div class="cs-title"><a href="#test9">Icons, labels with grid</a></div>
 		<div class="test button-menu scheme-panel scheme-grid" id="test9">
 			<!-- setting-align takes the class left or right and justfies the content accordingly -->
-			<div class="button setting-align left"><a href="#"><i class="icon icon-home"></i><label>Home</label></a></div>
-			<div class="button setting-align left"><a href="#"><i class="icon icon-search"></i><label>Search</label></a></div>
-			<div class="button setting-align left"><a href="#"><i class="icon icon-account"></i><label>Account</label></a></div>
-			<div class="button setting-align left"><a href="#"><i class="icon icon-home"></i><label>Home</label></a></div>
-			<div class="button setting-align right"><a href="#"><i class="icon icon-search"></i><label>Search</label></a></div>
-			<div class="button setting-align right"><a href="#"><i class="icon icon-account"></i><label>Account</label></a></div>
-			<div class="button setting-align right"><a href="#"><i class="icon icon-home"></i><label>Home</label></a></div>
-			<div class="button setting-align right"><a href="#"><i class="icon icon-search"></i><label>Search</label></a></div>
-			<div class="button setting-align right"><a href="#"><i class="icon icon-account"></i><label>Account</label></a></div>
+			<div class="button setting-align-left"><a href="#"><i class="icon icon-home"></i><label>Home</label></a></div>
+			<div class="button setting-align-left"><a href="#"><i class="icon icon-search"></i><label>Search</label></a></div>
+			<div class="button setting-align-left"><a href="#"><i class="icon icon-account"></i><label>Account</label></a></div>
+			<div class="button setting-align-center"><a href="#"><i class="icon icon-home"></i><label>Home</label></a></div>
+			<div class="button setting-align-center"><a href="#"><i class="icon icon-search"></i><label>Search</label></a></div>
+			<div class="button setting-align-center"><a href="#"><i class="icon icon-account"></i><label>Account</label></a></div>
+			<div class="button setting-align-right"><a href="#"><i class="icon icon-home"></i><label>Home</label></a></div>
+			<div class="button setting-align-right"><a href="#"><i class="icon icon-search"></i><label>Search</label></a></div>
+			<div class="button setting-align-right"><a href="#"><i class="icon icon-account"></i><label>Account</label></a></div>
 		</div>
 	</div>
 </div>
