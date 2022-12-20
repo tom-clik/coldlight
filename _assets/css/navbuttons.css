@@ -5,7 +5,7 @@ Buttons get complicated through the problem of <a> tags and inputs.
 Both of these get styled through the browser defaults and reset.
 
 To get around this and preserve inheritance, all buttons need to be wrapped in
-another div with a class of .div which allows us to provide the consistency.
+another div with a class of .button which allows us to provide the consistency.
 
 Styling should be applied to the .button element.
 
@@ -32,10 +32,18 @@ The buttons are always inline-blocks, so always style the surrounding div with g
 
 # Usage
 
-The main vars should be set for a selector .button with hover state .button:hover
+Styling should be applied to `.button` with hover state `.button:hover`
 
-.button 
-.button label
+The label itself can also be styles with a selector of `.button label`.
+
+E.g.
+
+```
+.scheme-button.button 
+.scheme-button.button label
+.scheme-button.button:hover label
+
+```
 
 */
 

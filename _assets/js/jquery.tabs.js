@@ -1,10 +1,17 @@
 /*
 
-Tabs function
+# Tabs function
 
 Fancy new semantic markup based tabs system. Place as many items as you like next to each other
 and call this on the container. No need for separate header div
 
+## Synopsis
+
+Works by positioning the tab content absolutely. On seleting a tab, has to work out the height of the tab and expand the container. Other that that it's all CSS.
+
+## Usage
+
+```html
 <div class="cs-tabs">
 	<div class="tab state_open" id="test1" title="Test 1">
 
@@ -23,6 +30,7 @@ and call this on the container. No need for separate header div
 	</div>
 	...rinse and repeat
 </div>
+```
 
 ## Details
 
@@ -34,11 +42,12 @@ and call this on the container. No need for separate header div
 $.fn.tabs = function(ops) {
  	
  	var defaults = {
-			vertical: false,
-			accordian: false,
-			resize: "resize",
+			vertical: false, // tab hedings in vertical list
+			accordian: false, // use accordion mode (vertical ignored)
+			resize: "resize", // window event to trigger resize. use e.g. throttledresize
+			fixedheight:true,// height is always maximum size
 			menuAnimationTime: 600,
-			allowClosed: true
+			allowClosed: true // all tabs can close in accordion
 		},
 		options = $.extend({},defaults,ops);
 
@@ -58,16 +67,30 @@ $.fn.tabs = function(ops) {
 
     	$(window).on(options.resize, function( event ) {
     		$tabs.trigger("resize");
-
-		});
+    	});
 
     	function setHeight($tab) {
     		if (accordian) return;
     		$tabs.css({"height":"auto"});
-    		let t_height = vertical ? 0 : $tab.outerHeight();
-    		let $item = $tab.find(".item").first();
-    		t_height += $item.outerHeight();
-    		if (vertical && t_height < $tabs.outerHeight()) { 
+    		let t_height = vertical ? 0 : $tab.outerHeight(); // add height of tab panel if horizontal
+    		console.log("tab panel height: " + t_height);
+    		var maxheight = 0;
+    		if (options.fixedheight) {
+	    		$tabs.find(".item").each(function() {
+	    			let height = $(this).outerHeight();
+	    			if (height > maxheight) maxheight = height;
+	    		});
+    		}
+    		else {
+    			// adjust height to selected item
+    			let $item = $tab.find(".item").first();
+    			maxheight = $item.outerHeight();
+    		}
+    		t_height += maxheight;
+    		
+    		
+    		// make sure height is enough to accomadate vertical tab panel
+    		if (vertical && ( t_height < $tabs.outerHeight() ) ) { 
     			t_height = $tabs.outerHeight();
     		}
     		$tabs.outerHeight(t_height);

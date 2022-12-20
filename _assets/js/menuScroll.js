@@ -1,36 +1,30 @@
 /*
+
 Scroll a menu to match a heading in the main content
 
 ## Details
 
-Apply to a sub menu and supply the main content ID in options
+Loops over all h2 and h3 tags in the text and generates a menu from them.
 
-As the page scrolls it will search for the first h2 or h3 tag in view. It expects these to have an 
-anchor with an ID. This is the format that gets psat out of Flexmakr markdown converted
+As the page scrolls, the current heading is highlighted (class=hi added).
 
-<h2><a id="heading1">Heading 1</a><h2>
-
-In the menu it will apply a headingselected class to an item with a id
-of #headingmenu_{id} where {id} is the id of heading in the main content.
-
-It will also manually scroll the page to the heading when you click on the menu if the
-link is to the anchor. This a) allows for a slower scroll to get around the last anchor usability issue[^last]
-and b) allows us to supply a header height to cope with fixed headers.
-
-[^last]: When you click to an anchor that is near the bottom of the page, often it seems like nothing has
-happened. The anchor will not be at the top of the page and often it moves too fast, if at all. By slowing the 
-anim, we can provide visual feedback for most scroll ranges.
+Clicking on the menu will scroll to the heading selected with an animation.
 
 ## Usage
 
-$("#mymeny").menuScroll({"maincontent":"#maincol", $("#header").height()});
+Create an empty div to hold the menu and ensure your text has h2 and h3 tags for the headings.
 
+Apply this to the empty div with a selector for the content and an offset height.
+
+E.g. 
+
+```
+$("#mymenu").menuScroll({"maincontent":"#maincol", $("#header").height()});
+```
 */
 
 $.fn.menuScroll = function(options) {
 	
-	console.log("working");
-
 	var $menu = this;
 
 	var settings = $.extend({
@@ -43,8 +37,10 @@ $.fn.menuScroll = function(options) {
 	if (settings.headerheight == "auto") {
 		settings.headerheight = $maincontent.offset().top;
 	}
-	console.log("headerheight:", settings.headerheight);
 
+	// check main content headings for anchors
+	generateMenu();
+	
 	// trigger immediate run
 	scrollMenu($menu,$maincontent);
 
@@ -56,16 +52,69 @@ $.fn.menuScroll = function(options) {
 	$menu.on("click","a", function(e) {
 		e.preventDefault();
 	   	var id = $(this).attr("href");
-	   	scrollToAnchor(id)
-
+	   	scrollToAnchor(id.replace("#",""));
 	});
 
 	function scrollToAnchor(aid){
-	    var aTag = $(aid);
+	    var aTag = $("a[name=" + aid + "]");
 	    $('html,body').animate({scrollTop: aTag.offset().top - settings.headerheight},'slow',function() {
 	    	scrollMenu($menu,$maincontent);	
 	    });
-	    
+	}
+
+	function generateMenu() {
+		var count = 1;
+		var menuItems = [];
+		var currentId = "";
+		$maincontent.find("h2,h3").each(function() {
+			
+			var $heading = $(this);
+			var tagName = $heading.prop("tagName");
+			var id = $heading.attr('id') || "heading_" + (count++);
+			
+			if (tagName == "H2") {
+				menuItems.push({"id":id,"text":$heading.text(),"submenus":[]});
+			}
+			else {
+				if (! menuItems.length) {
+					menuItems.push({"id":"top","text":"Top","submenus":[]});
+				}
+				menuItems[menuItems.length-1].submenus.push({"id":id,"text":$heading.text()});
+			}
+
+			// check headings in main content have an anchor
+			var a = $heading.find("a").first();
+			
+			if (! a.length) {
+				$heading.html("<a name='" + id + "'>" + $heading.html() + "</a>") ;
+			}
+			else {
+				var aid = a.attr('id') || id;
+				var name = a.attr("name");
+				if (! name) {
+					a.attr("name",aid);
+				}
+			}
+
+		});
+
+		var menuHtml = "<ul>";
+		console.log(menuItems);
+		for (let menu of menuItems) {
+			menuHtml += "<li id='headingmenu_" + menu.id + "'><a href='#" + menu.id + "'>" + menu.text + "</a>";
+			if (menu.submenus.length) {
+				menuHtml += "<ul class='submenu open'>";
+				for (let submenu of menu.submenus) {
+					menuHtml += "<li id='headingmenu_" + submenu.id + "'><a href='#" + submenu.id + "'>" + submenu.text + "</a></li>";
+				}
+				menuHtml += "</ul>";
+			}
+			menuHtml += "</li>";
+		}
+		menuHtml += "</ul>";
+		
+		$menu.html(menuHtml);
+
 	}
 	
 	function scrollMenu($menu, $maincontent) {
@@ -79,12 +128,12 @@ $.fn.menuScroll = function(options) {
 			var anchor_offset = $(this).offset().top;
 			var top = $(window).scrollTop() + settings.headerheight;
 
-			id = $(this).attr('id');
+			name = $(this).attr('name');
 			
-			console.log(id, "top=", top, "anchor_offset=", anchor_offset);
+			console.log(name, "top=", top, "anchor_offset=", anchor_offset);
 
 			if (first && (top <= anchor_offset ))  {
-	    		selected = id;
+	    		selected = name;
 	        	first = false;
 	        	console.log("Setting selected to " + selected);
 
@@ -96,12 +145,16 @@ $.fn.menuScroll = function(options) {
 	        // /#DEBUG
 	    });
 
-	    $menu.find('.headingselected').each(function() {
-	    	$(this).removeClass('headingselected');
+	    $menu.find('.hi').each(function() {
+	    	$(this).removeClass('hi');
 	    });
+	    // $menu.find('.submenu.open').each(function() {
+	    // 	$(this).removeClass('open');
+	    // });
 	    
 	    if (selected != '') {
-	    	$menu.find('#headingmenu_' + selected).addClass('headingselected');
+	    	$menu.find('#headingmenu_' + selected).addClass('hi');
+	    	// $menu.find('#headingmenu_' + selected + " .submenu").addClass('open');
 	    }
 
 	}

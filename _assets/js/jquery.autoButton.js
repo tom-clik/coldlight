@@ -88,7 +88,7 @@ $.fn.button = function() {
 			var $self = $(this);
 			let action = $self.data("action");
 			let $target = $self.data("target");
-			
+
 			if ($target && action) {
 				let index = 0;
 		    	if (action == "openclose") {
@@ -113,7 +113,7 @@ $.fn.button = function() {
 				}
 				
 				console.log("triggering " + action + " on " + $target.attr("id"));
-
+				
 				$target.trigger(action);
 
 				if ($links.length > 1) {
