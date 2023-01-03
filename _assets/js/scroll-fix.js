@@ -19,8 +19,8 @@ $("#topnav").scrollFix();
 
 		var defaults = {
 			resize: "resize", // window event to trigger resize. use e.g. throttledresize
-			onFix: function() {console.log("fix")},
-			onUnfix: function() {console.log("unfix")}
+			onFix: function() {},
+			onUnfix: function() {}
 		}
 
 		var plugin = this;
@@ -41,28 +41,30 @@ $("#topnav").scrollFix();
 			width = $parent.width();
 			$body = $('body');  
 			isScroll = false;
-		}
+			
 
-		$(window).on("scroll.scrollFix", function () {  
-			var scrollTop = $(window).scrollTop(); // check the visible top of the browser  
-			if (offset.top < scrollTop) {
-				isScroll = true;
-				$body.addClass('scroll');
-				$element.css("width",width + "px");
-				plugin.settings.onFix();
-			}
-			else {
-				$body.removeClass('scroll'); 
-				$element.css("width","auto");
-				isScroll = false;
-				plugin.settings.onUnfix();
-			}
-		}).on(plugin.settings.resize,function() {
-			width = $parent.width();
-			if (isScroll) {
-				$element.css("width",width + "px");
-			}
-		});
+			$(window).on("scroll.scrollFix", function () {  
+				var scrollTop = $(window).scrollTop(); // check the visible top of the browser  
+				if (offset.top < scrollTop) {
+					isScroll = true;
+					$body.addClass('scroll');
+					$element.css("width",width + "px");
+					plugin.settings.onFix();
+				}
+				else {
+					$body.removeClass('scroll'); 
+					$element.css("width","auto");
+					isScroll = false;
+					plugin.settings.onUnfix();
+				}
+			}).on(plugin.settings.resize,function() {
+				console.log("resize");
+				width = $parent.width();
+				if (isScroll) {
+					$element.css("width",width + "px");
+				}
+			});
+		}
 
 		plugin.init();
 

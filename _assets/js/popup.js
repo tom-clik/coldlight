@@ -6,6 +6,7 @@
 		var defaults = {
 			index: 0,
 			imagepath: "",
+			data:[],// array of image objects
 			onNext: function() {},
 			onPrevious: function() {},
 			onOpen: function() {},
@@ -19,6 +20,8 @@
 		plugin.settings = {};
 		plugin.images = [];// image objects
 
+		
+
 		var $element = $(element),
 					   element = element; 
 
@@ -26,7 +29,7 @@
 		plugin.init = function() {
 
 			plugin.settings = $.extend({}, defaults, options);
-
+			console.log(plugin.settings.data);	
 			$inner = $element.find(".popup_inner");
 			$inner.html(plugin.html());
 			$image = $element.find(".popup_image img");

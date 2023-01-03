@@ -64,7 +64,6 @@ hi      li.hi a
 	align-items: center;
 	justify-content: center; /* needs formalising. This is the align mechanism as the a tags themselves are now flexboxes */
 	grid-gap: var(--menu-icon-gap);
-	width: 100%;
 	text-decoration: none;
 	padding:var(--menu-item-padding);	
 	color:var(--link-color);
