@@ -53,9 +53,10 @@ E.g.
 	--label-gap: 10px;
 	--label-display:inline-block;/* Turn button or label off with inline-block|none */
 	--icon-display:inline-block;/* ---- " ---- */
-	--button-align:center; /* flex-start|center|flex-end */
+	--button-align:center; /* icon valign flex-start|center|flex-end */
 	--button-direction: row;/* row or row reverse to align left or right */
 	--link-color:inherit;
+	--label-align:left;
 }
 
 .button {
@@ -99,6 +100,7 @@ E.g.
 .button label {
 	display:  var(--label-display);
 	line-height: var(--icon-height);
+	text-align: var(--label-align);
 }
 
 /** See auto button functionality */

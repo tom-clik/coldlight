@@ -1,48 +1,36 @@
 /* Static CSS for new var style grid styling */
 
 :root {
-	--mingridcol: 200px;
-	--gridgap: 10px;
-	--gridrowgap: var(--gridgap);
-	--cols: 3;
-	--fill: auto-fit;
+	--grid-gap:0;
+	--grid-fit:auto-fit;
+	--grid-width:180px;
+	--grid-max-width:1fr;
+	--grid-max-height:auto;
+	--grid-columns:2;
+	--flex-direction:row;
+	--justify-content:flex-start;
+	--align-items:center;
+	--align-content:flex-start;/* alignment for multiple rows */
+	--flex-stretch:0;/* treat as boolean */
+	--flex-wrap: wrap;
 }
 
-.scheme-grid {
+
+.cs-grid {
 	display:grid;
-	grid-template-columns: repeat(var(--fill), minmax(var(--mingridcol),1fr));
-	grid-gap:var(--gridgap);
-	grid-row-gap: var(--gridrowgap);
-}
-
-/*Set number of columns */
-.scheme-grid-fixedcols {
-	grid-template-columns: repeat(var(--cols), 1fr);
-}
-
-/*Fixed width */
-.scheme-grid-fixed {
-	grid-template-columns:  repeat(auto-fit, var(--mingridcol));
-}
-
-/* Exotica */
-.scheme-grid-test {
-	grid-template-columns: 200px repeat(auto-fit, minmax(var(--mingridcol),1fr)) 300px;
+	grid-template-columns: repeat(var(--grid-fit), minmax(var(--grid-width),var(--grid-max-width)));
+	grid-gap:var(--grid-gap);
+	/*grid-row-gap: var(--gridrowgap); too hard -- need to think about how this will work and inherit */
 }
 
 .flex {
 	display: flex;
-	grid-gap:var(--gridgap);
-}
-.flex.middle {
-	align-items: center;
-}
-
-.flex-end {
-	display: flex;
-	justify-content: flex-end;
+	flex-direction: var(--flex-direction);
+	align-items: var(--align-items);
+	justify-content: var(--justify-content);
+	flex-wrap: var(--flex-wrap);
 }
 
-.flex-stretch > div {
-	flex-grow: 1;
+.flex > * {
+	flex-grow: var(--flex-stretch);
 }
