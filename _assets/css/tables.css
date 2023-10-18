@@ -111,9 +111,6 @@ body tbody  tr:last-of-type td {
 	border-bottom-width: 0;
 }
 
-
-
-
 table.info {
 	--table-border-width: 1px;
 	--table-cell-padding: 2px;
