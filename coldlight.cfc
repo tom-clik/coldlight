@@ -6,314 +6,124 @@ component name="coldlight" {
 	 * @filepath  File path of app definition. 
 	 *
 	 */
-	public coldlight function init(required array appDef) {
+	public coldlight function init() {
 
-		variables.markdown = CreateObject("component", "markdown.flexmark").init();
-		
-		this.menuClasses = "nav doc-menu";
-		this.metaVars = {};
-		
+		variables.markdown = new markdown.flexmark(attributes=true);
+		variables.coldsoup = new coldsoup.coldsoup();
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
-		variables.pattern = variables.patternObj.compile("(?m)^@[\w\[\]]+\.?\w*\s+.+?\s*$",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
-		variables.varpattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
-
-		parseAppDef(arguments.appDef);
+		variables.include_pattern = variables.patternObj.compile("\[include\s+file\s*\=\s*[\""\']?(\S+?)[\""\']\s*\]",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
+		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
 		
 		return this;
 	}
 
-	private void function parseAppDef(required array appDef) {
+	public struct function load(required string filePath) {
 
-		variables.pubs = {};
-		variables.publist = [];
-		this.data = {};
-
-		for (local.pub in arguments.appDef) {
-			checkPub(local.pub);
-			ArrayAppend(variables.publist,local.pub.code);
-			variables.pubs[local.pub.code] = local.pub;
+		if (NOT FileExists(arguments.filePath)) {
+			throw("File #arguments.filePath# not found");
 		}
-	}
-
-	/** Check validity for publication definition
-	*/
-	private void function checkPub(required struct pubDef) {
-		local.err = "";
-		if (! StructKeyExists(arguments.pubDef, "code")) {
-			local.err &= "<p>No code defined</p>";
-		}
-		if (! StructKeyExists(arguments.pubDef, "title")) {
-			local.err &= "<p>No title defined</p>";
-
-		}
-		if (! StructKeyExists(arguments.pubDef, "path")) {
-			local.err &= "<p>No path defined</p>";
-		}
-
-		if (! DirectoryExists(arguments.pubDef["path"])) {
-			local.err &= "<p>Path not found</p>";
-		}
-
-		if (local.err != "") {
-			local.err = local.err & serializeJSON(arguments.pubDef);
-			throw(message="Error parsing pubDef",detail=local.err);
-		}
-	}
-	/**
-	 * @hint      Check any @meta vars and add to meta struct
-	 * 
-	 * Variables can be added to the documentscope with the syntax @varname  Value
-	 * 
-	 * 
-	 * @text  The text
-	 * @meta  Meta struct to update
-	 *
-	 * @return     text with vars removed
-	 */
-	private string function checkAlphaMeta(required string text, required struct meta) {
 		
-		local.sectionsObj = variables.pattern.matcher(text); 
-		
-		local.tags = [];
-		local.str = false;
+		local.doc = {"text"="","docs"=[=],"meta"={}, "headings"=[]};
 
-		// get all alphmeta definiions
-		while (local.sectionsObj.find()){
-		    ArrayAppend(local.tags, local.sectionsObj.group());
-		}
+		local.doc.text = FileRead(arguments.filePath,"utf-8");
+		local.includes = getIncludes(local.doc.text);
+		local.rootPath =  getDirectoryFromPath(arguments.filePath);
 
-		// VARS shouldn't have underscores in them. In case they do we have to do this
-		local.dodgyVarsToReplace = {}; 
-		local.dodgyVars = variables.varpattern.matcher(text); 
-		while (local.dodgyVars.find()){
-			local.dodgyVarsToReplace[local.dodgyVars.group()] =1;
-		}
-
-		for (local.str in local.dodgyVarsToReplace) {
-			local.replaceStr = Replace(local.str,"_","%%varUndrscReplace%%","all");
-			arguments.text = Replace(arguments.text,local.str,local.replaceStr,"all");	
-		}
-
-		for (local.str in local.tags) {
-			//split on first whitespace
-			local.trimStr = Trim(local.str);
-			local.tag = ListFirst(local.trimStr," 	");
-			local.data = ListRest(local.trimStr," 	");
-			local.tagRoot = ListFirst(local.tag,"@.[]");
-			if (ListLen(local.tag,"@.") gt 1) {
-				// Struct property assignement
-				local.tagProperty = ListRest(local.tag,"@.");
-				if (NOT StructKeyExists(arguments.meta,local.tagRoot)) {
-					arguments.meta[local.tagRoot] = {};
-				}
-				if (NOT IsStruct(arguments.meta[local.tagRoot])) {
-					throw('You have tried to assign a property a value that is not in an struct [#local.tag#]')
-				}
-				arguments.meta[local.tagRoot][local.tagProperty] = local.data;
+		for (local.file in local.includes) {
+			
+			local.filename = local.rootpath & local.includes[local.file];
+			local.meta = {};
+			if ( FileExists( local.filename ) ) {
+				local.text = FileRead( local.filename,"utf-8" );
+				local.html = variables.markdown.toHtml(local.text,local.meta);
 			}
 			else {
-				// array append value
-				if (right(local.tag,2) eq "[]") {
-					if (NOT structKeyExists(arguments.meta,local.tagRoot)) {
-						arguments.meta[local.tagRoot] = [];
-					}
-					if (NOT isArray(arguments.meta[local.tagRoot])) {
-						throw('You have tried to append array data to a value that is not an array [#local.tag#]')
-					}
-					ArrayAppend(arguments.meta[local.tagRoot],local.data);
-				}
-				else {
-					// simple value
-					arguments.meta[local.tagRoot] = local.data;
-				}
+				local.html = "";
 			}
-
-			arguments.text = Replace(arguments.text,local.str,"",1);
+			
+			local.doc.text = Replace(local.doc.text,local.file,local.html);
+			StructAppend(local.doc.meta,local.meta,true);
+			
 		}
 
-		return arguments.text;
+		local.doc.text = variables.markdown.toHtml(local.doc.text,local.doc.meta);
+
+		local.doc.headings = getHeadings( local.doc.text );
+
+		for (local.heading in local.doc.headings) {
+			local.doc.meta["#local.heading.attributes.id#"] = local.heading.html;
+		}
+
+
+
+		return local.doc;
 
 	}
 
-	public string function replaceAlphaMeta(required string text, required struct meta) {
-		
-		arguments.text = REReplace(arguments.text,"%%varUndrscReplace%%","_","all");
-
-		local.arrVarNames = REMatch("\{\$[^}]+\}",arguments.text);
-		
-		local.sVarNames = {};
-
-		
-		// create lookup struct of all vars present in text. Only defined ones are replaced.
-		for (local.i in local.arrVarNames) {
-			local.varName = ListFirst(local.i,"{}$");			
-			
-			if (ListLen(local.varName,".") gt 1) {
-				// syntax with e.g. meta.title not brilliant to work with
-				local.parentName = ListFirst(local.varName,".");
-				local.keyName = ListLast(local.varName,".");
-				if (StructKeyExists(arguments.meta, local.parentName)) {
-					if (StructKeyExists(arguments.meta[local.parentName],local.keyName)) {
-						local.sVarNames[local.varName] = arguments.meta[local.parentName][local.keyName];
-					}
-				}
-			}
-			else {
-				if (StructKeyExists(arguments.meta, local.varName)) {
-					local.sVarNames[local.varName] = arguments.meta[local.varName];
-				}
-			}
-		
-		}
-		
-		for (local.varName in local.sVarNames) {
-			// possible problem with referencing complex values.
-			if (IsSimpleValue(local.sVarNames[local.varName])) {
-				arguments.text = ReplaceNoCase(arguments.text,"{$#local.varName#}", local.sVarNames[local.varName],"all");
-			}
-		}
-		
-		return arguments.text;
-
-	}
-
-	/**
-	 * @hint      Parse a folder of docs
-	 *
-	 * Requires toc.md and index.md
-	 * 
-	 * @path  The path
-	 *
-	 */
-	private void function parseFolder(required string path, required string pub) {
-
-		this.data[arguments.pub] = {"pages"={},"orderedIndex"=[],"metaVars"={}};
-
-		if (NOT DirectoryExists(arguments.path)) {
-			throw("Path #arguments.path# not found");
-		}
-
-		// writeOutput(arguments.path & "\toc.md");
-		// abort;
-
-		local.autotoc = NOT FileExists(arguments.path & "\toc.md");
-		local.hasIndex = FileExists(arguments.path & "\index.md");
-
-		local.meta = {};
-
-		if (local.hasIndex) {
-			local.mdtext =  FileRead(arguments.path & "\index.md","utf-8");
-			local.mdtext = checkAlphaMeta(text=local.mdtext,meta=this.data[arguments.pub].metaVars);
-			this.data[arguments.pub]["pages"]["index"] = markdownToHTML(local.mdtext);
-		}
-
-		if (!local.autotoc) {
-			local.doc = parse(arguments.path & "\toc.md");
-			local.tocDom = variables.markdown.coldsoup.parse(local.doc.html);
-		}
-		else {
-			throw(message="Auto toc func not complete",detail="The functionality to create a toc def automaticaly is WIP. Please create toc.md file and add it to your doc root");
-		}
-
-		var nodes = local.tocDom.getElementsByTag("a");
-		
-		var currentLevel = 1;
-		var parent = "";
-		var row = false;
-
-		// loop over each entry in the toc and parse
-		for (var node in nodes) {
-			row = variables.markdown.coldsoup.getAttributes(node);
-			local.entry = Duplicate(row);
-
-			// extension optional
-			if (ListLen(local.entry.href,".") < 2 ) {
-				local.filename = local.entry.href &  ".md";
-				local.id = local.entry.href;
-			} else {
-				local.id = ListFirst(local.entry.href,".");
-				local.filename = local.entry.href;
-			}
-			if (! StructKeyExists(local.entry,"id")) {
-				local.entry.id = local.id;
-			}
-
-			local.doc =  parse(arguments.path & "\" & local.filename);
-
-			// meta data comes from here
-			// e.g. meta.title
-			StructAppend(local.entry,local.doc);
-			
-			this.data[arguments.pub]["pages"][local.entry.id] = local.entry;
-
-			ArrayAppend(this.data[arguments.pub].orderedIndex,local.entry.id);
-		}
-
-		this.data[arguments.pub].metaVars["toc"] = getTOChtml(pub=arguments.pub, id="toc");
 	
-	}
+	private array function getHeadings(required string text) {
+		local.headings = [];
+		local.temp = variables.coldsoup.parse(arguments.text);
+		variables.coldsoup.unwrapHeaders(local.temp);
+		local.nodes = local.temp.select("h1,h2,h3,h4,h5,h6");
+		for (local.node in local.nodes) {
+			local.headings.append( variables.coldsoup.nodeInfo(local.node) );
+		}
+		return local.headings;
+	} 
+	private struct function getIncludes(required string text) {
 
+		local.vals = variables.include_pattern.matcher(arguments.text);
+
+		local.fileNames  = {};
+		while (local.vals.find()){
+		    local.fileNames[local.vals.group()] = local.vals.group(javacast("int",1));
+		}
+		
+		return local.fileNames;
+
+	}
+	
+	
 	/**
 	 * @hint Create markdown doc struct
 	 * 
 	 * Also apply any coldlight specific formatting
 	 *
 	 */
-	public struct function markdownToHTML(string text) {
-		local.retVal = variables.markdown.markdown(arguments.text);
-		local.retVal.html = Replace(local.retVal.html," -- ", " &ndash; ","all");
-		return local.retVal;
-	}
-
-	/**
-	 * @hint      Parse an indivdual file
-	 *
-	 */
-	public struct function parse(required string path) {
-		if (NOT FileExists(arguments.path)) {
-			throw("File #arguments.path# not found");
-		}
-		local.data = FileRead(arguments.path,"utf-8");
-		return markdownToHTML(local.data);
+	public string function markdownToHTML(required string text, required struct data ) {
+		local.html = variables.markdown.toHtml(arguments.text, arguments.data);
+		local.html = Replace(local.html," -- ", " &ndash; ","all");
+		return local.html;
 	}
 
 	/** get an HTML list representation of the TOC
 	*/
-	public string function getTOChtml(required string pub, string selected="", string id="main_menu",boolean cache=false) {
+	public string function TOChtml(required struct doc) {
 
-		local.menu = "<nav id='#arguments.id#' class='#this.menuClasses#'>";
-		local.pubdata = this.data[arguments.pub];
+		local.menu = "<nav id='toc'>";
+		local.toc_level = arguments.doc.meta.toc_level ? : 3;
 
-		for (local.id in local.pubdata.orderedIndex) {
-
-			local.isSelected = arguments.selected == local.id;
-			// do submenu first as selected may be a sub item (functionality not complete)
-			local.submenu = "";
-			local.page = getPageData(arguments.pub, local.id);
-
-			for (local.row in local.page.meta.toclist) {
-				local.rowdata = local.page.meta[local.row];
-				if (local.rowdata.level == 2) {
-					local.submenu &= "<a class='nav-link scrollto toc2' href='" & getLink(pub=arguments.pub,code=local.id,anchor=local.row,cache=arguments.cache) &"'>#local.rowdata.text#</a>";
-				}
-			}
-
-			local.selectedClass = local.isSelected ? " selected" : " notselected";
-			local.menu &= "<div class='menuItem #local.selectedClass#'>";
-
-			try {
-			local.menu &= "<a class='nav-link scrollto toc1' href='" & getLink(pub=arguments.pub,code=local.id,cache=arguments.cache) & "'>#local.page.meta.meta.title#</a>";
-			}
-			catch (Any e) {
-				writeOutput("Unable to generate toc entry for this file");
-				writeDump(local.page);
-				abort;
-			}
+		for (local.heading in arguments.doc.headings) {
 			
-			if (local.submenu != "") {
-				local.menu &= "<nav class='doc-sub-menu nav flex-column'>" & local.submenu & "</nav>";
+			local.level = Replace(local.heading.tagName,"h","");
+			// TODO: needs wrapping
+			if (local.level lte local.toc_level) {
+				
+				local.menu &= "<p class='toc#local.level#'>" & local.heading.html & "</p>";
 			}
-			local.menu &= "</div>";
+			// TODO: resurrect what is needed here
+			// local.selectedClass = local.isSelected ? " selected" : " notselected";
+			// local.menu &= "<div class='menuItem #local.selectedClass#'>";
+
+			// local.menu &= "<a class='nav-link scrollto toc1' href='" & getLink(pub=arguments.pub,code=local.id,cache=arguments.cache) & "'>#local.page.meta.meta.title#</a>";
+			// }
+			
+			
+			// if (local.submenu != "") {
+			// 	local.menu &= "<nav class='doc-sub-menu nav flex-column'>" & local.submenu & "</nav>";
+			// }
+			
 
 		}
 
@@ -409,96 +219,7 @@ component name="coldlight" {
 		return local.toc;
 	}
 
-	/** @hint get an HTML for publication menu
-	 * 
-	 * If there is only one publication the CSS needs to take care of this. Func TBC
-	 * 
-	 */
-	public string function pubMenu(string pub="", string selected="", string id="main_menu",boolean cache=false) {
-
-		local.menu = "<nav id='#arguments.id#' class='#this.menuClasses#'>";
-		
-		local.multiMode = (ArrayLen(variables.publist) > 1);
-
-		for (local.pub in variables.publist) {
-
-			local.isSelected = arguments.pub == local.pub;
-			local.class = local.isSelected ? " selected" : " notselected";
-			if (! local.multiMode) {
-				local.class  = listAppend(local.class, "single", " ");
-			}
-			local.menu &= "<div class='menuItem #local.class#'>";
-
-			
-
-			if (local.multiMode) {
-
-				try {
-					local.menu &= "<a class='nav-link scrollto' href='" & getLink(pub=local.pub,code="index",cache=arguments.cache) & "'>#variables.pubs[local.pub].title#</a>";
-				}
-
-				catch (Any e) {
-					throw("Unable to generate toc entry for this file");
-				}
-			
-			}
-
-			if (StructKeyExists(this.data,local.pub)) {
-
-				local.pubdata = this.data[local.pub];
-				local.pages = Duplicate(local.pubdata.orderedIndex);
-				
-				if (!local.multiMode) {
-					ArrayPrepend(local.pages,"index");
-				}
-				
-				local.submenu = "";
-
-				for (local.id in local.pages) {
-
-					local.page = getPageData(local.pub, local.id);
-					local.submenu &= "<a class='nav-link scrollto' href='" & getLink(pub=local.pub,code=local.id,cache=arguments.cache) & "'>#local.page.meta.meta.title#</a>";
-					
-				}
-
-				if (local.submenu != "") {
-					if (local.multiMode) {
-						local.menu &= "<nav class='doc-sub-menu nav flex-column'>" & local.submenu & "</nav>";
-					}
-					else {
-						local.menu &= 	local.submenu;
-					}
-				}
-			}
-
-			local.menu &= "</div>";
-
-
-		}
-
-		local.menu &= "</nav>";
-		
-			
-		return local.menu;
-	}
-
-	/**
-	 * @hint   Get array of publication codes
-	 *
-	 * @reset  Reload the docs
-	 *
-	 * @return  Arry of codes
-	 */
-	public array function getPubs(boolean reset=false) {
-		if (arguments.reset) {
-			for (local.code in variables.publist) {
-				local.pubDef = variables.pubs[local.code];
-				parseFolder(local.pubDef.path, local.pubDef.code);
-			}
-		}
-		return variables.publist;
-	}
-
+	
 	public array function getPages(required string pub) {
 
 		if (! StructKeyExists(this.data, arguments.pub)) {
@@ -540,214 +261,7 @@ component name="coldlight" {
 		return variables.pubs[arguments.pub];
 	}
 
-	/**
-	 * @brief      Gets the page.
-	 *
-	 * @pub        The publication code
-	 * @code       The page code
-	 * @cache      Cache result (not implemented)
-	 * @footnotes  Use HTML footnotes (false will inline footnotes for PDF)
-	 *
-	 * @return     The page.
-	 */
-	public struct function getPage(required string pub, required string code, boolean cache=0, boolean footnotes=1) {
-
-		local.page = getPageData(pub=arguments.pub,code=arguments.code);
-		
-		var retVal = {
-			"meta" = local.page.meta,
-			"publication" = variables.pubs[arguments.pub].title,
-			"code" = arguments.code,
-			"title" = local.page.meta.meta.title,
-			"content" = "",
-			"content_html" = local.page.html,
-			"chapter_link" = "",
-			"level" = 1,
-			"next" = "",
-			"next_link" = "",
-			"chapter_link" = "",
-			"previous" = "",
-			"previous_link" = "",
-			"next_chapter" = "",
-			"nextchapterlink" = "",
-			"previous_chapter" = "",
-			"previouschapterlink" = ""
-		};
-
-		retVal.linksDebug = "";
-		
-		local.node = variables.markdown.coldsoup.parse(retVal.content_html);
-
-		// remove heading
-		local.node.select("h1").first().remove();
-		
-		// get automatic cross references
-		local.links = local.node.select("a");
-		
-		for (local.link in local.links) {
-			
-			retVal.linksDebug &= "<p>Link found #local.link.attr("href")#: #local.link.text()#</p>";
-			local.href = local.link.attr("href");
-
-
-			
-			if (Left(local.href,1) == "##") {
-				// flexmark does a weird thing where it adds an href to all anchors 
-				// that link to themselves
-				local.id = local.link.attr("id");
-				if (IsDefined("local.id")) {
-					if (local.id == ListFirst(local.href,"##")) {
-						local.link.removeAttr("href");
-						continue;
-					}
-				}
-				// if it's an anchor, make it a consistent format
-				// with the page code before the anchor
-				local.href = arguments.code & local.href;
-			}
-
-			if (! Left(local.href,4) == "http" ) {
-				
-				local.code = ListFirst(local.href,"##");
-				
-				local.link_text = Trim(local.link.text());
-
-
-				// get cross refs if poss
-				local.autotext = (local.link_text == "");
-				
-				retVal.linksDebug &= "<p>autotext: " & local.autotext  & "</p>";
-				
-				if (local.autotext) {
-					
-					try {
-						local.linkpage = getPageData(pub=arguments.pub,code=local.code);
-					}
-					catch (any e) {
-						throw(message="Unable to get auto text for link #local.href#",detail="If this format is correct the publication may not be loaded. Either supply the text explicitly or preload the publication");
-					}
-
-					local.link_text = local.linkpage.meta.meta.title;
-					retVal.linksDebug &= "<p>page text is: " & local.link_text  & "</p>";
-
-				}
-
-				if (ListLen(local.href,"##") > 1) {
-					local.anchor = ListLast(local.href,"##");
-					// update autotext with correct text for anchor heading
-					if (local.autotext) {
-						if (StructKeyExists(local.linkpage.meta, local.anchor)) {
-							local.link_text = local.linkpage.meta[local.anchor].text;
-							retVal.linksDebug &= "<p>anchor text is: " & local.link_text  & "</p>";
-						}
-						else {
-
-							retVal.linksDebug &= "<p>no anchor text found for #local.anchor# in page #local.code#</p>";
-							retVal.linksDebug &= serializeJSON(local.linkpage.meta);
-						}
-					}
-				}
-				else {
-					local.anchor = "";
-				}
-
-				local.link.html(local.link_text);
-				
-				local.link.attr("href",getLink(pub=arguments.pub,code=local.code,anchor=local.anchor,cache=arguments.cache));
-				
-				if (local.autotext) {
-					retVal.linksDebug &= local.link.outerHtml();
-				}
-
-			}
-
-		}
-
-		/**
-		 *
-		 * Footnotes look like this. 
-		 * 
-		 * Loop over each one, find the "call" (sup id="fnref-1") and replace tje whole node
-		 * 
-		 * <div class="footnotes"> 
-			 <hr> 
-			 <ol> variables.markdown.coldsoup.
-			  <li id="fn-1"> <p>You may want to investigate something like a CSS <em>pre-processor</em> to solve this problem or just write your own code in PhP or similar to reduce the amount of duplication</p> <a href="../princeguide/headers_footers.html#fnref-1" class="footnote-backref">↩</a> </li> 
-			 </ol> 
-			</div>
-
-		 */
-		if (! arguments.footnotes) {
-			local.footnotesDiv = local.node.select(".footnotes");
-			if (ArrayLen(local.footnotesDiv)) {
-				local.footnotes = local.footnotesDiv.first().select("li");
-				if (ArrayLen(local.footnotes)) {
-					for (local.footnote in local.footnotes) {
-						// fn-1
-						local.num = ListLast(local.footnote.attr("id"),"-");
-						// remove backlink
-						local.backref =  local.footnote.select(".footnote-backref");  
-						for (local.link in local.backref) {
-							local.link.remove();
-						}
-						local.paras =  local.footnote.select("p");  
-						for (local.para in local.paras) {
-							local.para.unwrap();
-						}
-
-						local.marker = local.node.select("##fnref-#local.num#").first();
-						if (IsDefined("local.marker")) {
-							local.fnNode = variables.markdown.coldsoup.createNode("a",local.footnote.html());
-							local.fnNode.addClass("footnote");
-							// writeDump(local.fnNode);
-							// writeDump(local.marker);
-							// abort;
-							local.marker.replaceWith(local.fnNode);
-
-						}
-					}
-				}
-				local.footnotesDiv.remove();
-			}
-
-
-
-
-
-		}
-
-
-		// get fixed html back from jsoup
-		retVal.content_html = local.node.body().html();
-
-		// replace meta vars
-		retVal.content_html = replaceAlphaMeta(retVal.content_html,this.data[arguments.pub].metaVars);
-
-		local.orderedIndex = this.data[arguments.pub].orderedIndex;
-
-		// previous and next links
-		local.index = ArrayFind(local.orderedIndex,arguments.code);
-
-		if (local.index == -1) {
-			throw("#arguments.code# not found in #ArrayToList(local.orderedIndex)#");
-		}
-		
-		if (local.index < ArrayLen(local.orderedIndex)) {
-			local.nextCode = local.orderedIndex[local.index + 1];
-			retVal.next_link = getLink(pub=arguments.pub,code=local.nextCode,cache=arguments.cache);
-			retVal.next = getPageData(pub=arguments.pub,code=local.nextCode).meta.meta.title;
-		}
-
-		if (local.index > 1) {
-			local.previousCode = local.orderedIndex[local.index - 1];
-			retVal.previous_link = getLink(pub=arguments.pub,code=local.previousCode,cache=arguments.cache);
-			retVal.previous = getPageData(pub=arguments.pub,code=local.previousCode).meta.meta.title;
-		}
-
-		return retVal;
 	
-	}
-
 	/**
 	 * @hint Get HTML for internal link
 	 *
@@ -760,16 +274,7 @@ component name="coldlight" {
 	 */
 	public string function getLink(required string pub, required string code,string anchor="", boolean cache=0) {
 		
-		local.multiMode = (ArrayLen(variables.publist) > 1);
-
-		if (arguments.cache) {
-			local.link = (local.multiMode ? "../#arguments.pub#/" : "" ) & "#arguments.code#.html";
-		}
-		else {
-			local.link = "?pub=#arguments.pub#&code=#arguments.code#";
-		}
-
-		local.link &= (arguments.anchor == "" ? "" : "##" & arguments.anchor );
+		
 		
 		return local.link;
 
