@@ -1,7 +1,12 @@
-# Introduction to ColdLight
+---
+title:	Cold Light Userguide
+author: Tom Peer
+toc_level: 1
+---
 
-ColdLight is a Markdown based CFML documentation application. It was designed to allow instant preview of edited pages in large document sets without rebuilding.
+[include file="intro.md"]
+[include file="gettingstarted.md"]
+[include file="coldLightmarkdown.md"]
+[include file="ColdLight_Documents.md"]
+[include file="fuzzy.md"]
 
-It builds HTML from a collection of documents with automatic cross referencing.
-
-It also builds data objects that can be used to construct data sets for Clikpage or your own web application.

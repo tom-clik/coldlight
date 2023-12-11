@@ -1,23 +1,23 @@
 # ColdLight Publications
 
-A ColdLight publication is specified via a "toc" file, which includes simple markdown, e.g.
+A markdown "publication" consists of multiple markdown files that are combined using a single "index" file.
 
-```
-[](gettingstarted)
-[](coldLightmarkdown)
-[](ColdLight_Documents)
-[](coldlightdata)
-[](pageObj)
-[](fuzzy)
-```
+This uses a proprietary extension `[include file='']`. The path is relative or defined via a [mapping]()
 
-Each entry links to one markdown file with a single h1 tag. The order determines the order in which the entries appear in the menu.
+The following is generated for use in your own application or with Clikpage:
 
-You can also create an index file in the same folder name index.md. You don't have to do this and the first entry in the list will be used if not specified.
+1. An ordered struct of [documents](#documents)
+2. An array of [heading data]()
+3. A struct of meta data
+4. An HTML table of contents
 
-The toc links can be relative to the toc folder specified for the toc file.
+In addition, it will automatically update cross references with the text of the reference (if left blank) and a file reference if it's in a different file.
 
-## Loading ColdLight publications
+Variable subsitutions can be made using `{$fieldname}` syntax. These can either be supplied as YAML or else it will use the text of a heading with the specified ID.
 
-### TBC
+## Documents
+
+
+## Headings
+
 

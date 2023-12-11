@@ -1,8 +1,12 @@
 <cfscript>
 coldLightObj = new coldlight.coldlight();
-data = coldLightObj.load( ExpandPath("../_docs/userguide/toc.md"));
+// filePath = ExpandPath("../_docs/userguide/index.md");
+filePath = ExpandPath("source/index.md");
+data = coldLightObj.load( filePath );
 writeDump(data);
-FileWrite(ExpandPath("output/test.html"),data.text);
+
+FileWrite(ExpandPath("output/test.html"), coldLightObj.html(data) );
+
 writeDump(coldLightObj.TOChtml(data));
 
 </cfscript>
