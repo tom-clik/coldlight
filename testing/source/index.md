@@ -1,10 +1,10 @@
 ---
 Author: Tom Peer
 AppName: Test app
-toc_level: 2
+toclevel: 2
 ---
 
-[include file="testing.md"]
-[include file="test4.md"]
-[include file="test2.md"]
-[include file="test3.md"]
+<div href="testing.md" id="testing" meta="true" />
+<div href="test4.md" />
+<div href="test2.md" />
+<div href="test3.md" />
