@@ -1,0 +1,15 @@
+:root {
+--body-font: "Crimson Text";
+--title-font: "Steelfish Rg";
+}
+@page {
+	font-family: var(--body-font);
+}
+
+body {
+	font-family: var(--body-font);
+}
+
+h1, h2, .title {
+	font-family:var(--title-font);
+}	

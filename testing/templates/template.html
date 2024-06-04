@@ -1,0 +1,62 @@
+<html>
+<head>
+	<title>{{title}}</title>
+	{{#author}}<meta name="Author" value="{{author}}" />{{/author}}
+	{{#description}}<meta name="Description" value="{{description}}" />{{/description}}
+	{{#ISBN}}<meta name="ISBN" value="{{ISBN}}" />{{/ISBN}}
+	
+	<meta charset="UTF-8" />
+	
+	<link rel="stylesheet" type="text/css" href="testcss.css">
+	
+</head>
+<body>
+
+<div id="frontmatter">
+
+	<div id="titlepage" class="section">
+
+		{{#author}}<p class="author">{{author}}</p>{{/author}}
+		<p class="title">{{title}}</p>
+		{{#subtitle}}<p>&mdash; or &mdash;</p>
+		<p class="subtitle">{{subtitle}}</p>{{/subtitle}}
+		{{#publisher}}
+		<div class="publisherinfo">
+			<p>{{publisher}}</p> 
+		</div>{{/publisher}}
+		
+	</div>
+	{{#publisher_info}}
+	<div id="copyright" class="section">
+		
+		{{{publisher_info}}}
+	
+	</div>
+	{{/publisher_info}}
+	
+	{{#toc}}
+	<div id="contents" class="section">
+		<h1>Contents</h1>
+
+		{{{toc}}}
+
+	</div>
+	{{/toc}}
+</div>
+<div id="content">
+
+{{{body}}}
+
+</div>
+<!--
+<div id="endmatter">
+	<div class="section">
+		<h1 id="acknow">Acknowledgements</h1>
+
+		{{meta.acknowledgements}}
+
+	</div>
+</div>
+-->
+</body>
+</html>

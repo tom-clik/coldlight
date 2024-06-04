@@ -4,13 +4,13 @@ LoremNulla dolore in sed velit officia deserunt aute irure enim dolore magna dui
 
 ## Test heading 2 { #heading2 }
 
-{$appname} used here
+{$title} used here
 
 ### Test heading 3 { #heading3 }
 
-{$appname} used here
+{$title} used here
 
 
 ## Test heading mp toc { #headingnotoc .notoc }
 
-{$appname} used here
+{$title} used here

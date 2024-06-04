@@ -1,6 +1,7 @@
 ---
-Author: Tom Peer
-AppName: Test app
+author: Tom Peer
+title: Test app
+description: Testing application
 toclevel: 2
 ---
 

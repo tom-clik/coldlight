@@ -299,7 +299,7 @@ component name="coldlight" {
 		html = variables.mustache.render(template=doc.template, context=doc.meta);
 		
 		// FileWrite(arguments.filename, html);
-
+		
 		return html;
 
 	}
@@ -613,7 +613,7 @@ component name="coldlight" {
 	public struct function epub(
 		required string indexFile,
 		required string template,
-		required string epub
+		required string filename
 
 		) localmode=true {
 
@@ -628,12 +628,12 @@ component name="coldlight" {
 
 		doc.meta.body = epub_html(doc);
 
-		if (fileExists(arguments.epub)) {
+		if (fileExists(arguments.filename)) {
 			try{
-				fileDelete(arguments.epub);
+				fileDelete(arguments.filename);
 			} 
 			catch (any e) {
-				local.extendedinfo = {"tagcontext"=e.tagcontext,"filenmae":arguments.epub};
+				local.extendedinfo = {"tagcontext"=e.tagcontext,"filename":arguments.filename};
 				throw(
 					extendedinfo = SerializeJSON(local.extendedinfo),
 					message      = "Unable to delete exising file:" & e.message, 
@@ -646,22 +646,22 @@ component name="coldlight" {
 		// Epub toc file
 		outputFile = "OPS/toc.xhtml";
 		html = OpfTOC(contents=doc.contents);
-		zipFile(arguments.epub, outputFile, html);
+		zipFile(arguments.filename, outputFile, html);
 
 		// mime type file
 		outputFile = "mimetype";
 		html = OPFMimeType();
-		zipFile(arguments.epub, outputFile, html);
+		zipFile(arguments.filename, outputFile, html);
 		
 		// container file
 		outputFile = "META-INF/container.xml";
 		html = OPFContainer();
-		zipFile(arguments.epub, outputFile, html);
+		zipFile(arguments.filename, outputFile, html);
 		
 		// manifest file
 		outputFile = "OPS/package.opf";
 		html = OPFPackage(doc=doc);
-		zipFile(arguments.epub, outputFile, html);
+		zipFile(arguments.filename, outputFile, html);
 
 
 		// this isn't great. IMages assumed to be in /images but see below, stylesheets have paths
@@ -669,20 +669,20 @@ component name="coldlight" {
 		for (item in doc.manifest["images"]) {
 			source = getCanonicalPath( filePath & item );
 			data = fileReadBinary(source);
-			zipFile(arguments.epub,"OPS/" & item, data);
+			zipFile(arguments.filename,"OPS/" & item, data);
 		}
 
 		for (item in doc.manifest.styles) {
 			source = getCanonicalPath( filePath & doc.manifest.styles[item] );
 			data = fileRead(source);
-			zipFile(arguments.epub,"OPS/css/" & item, data);
+			zipFile(arguments.filename,"OPS/css/" & item, data);
 		}
 
 		// output html
 		html = variables.mustache.render(template=doc.template, context=doc.meta);
 		outputFile = "OPS/content.xhtml";
 
-		zipFile(arguments.epub, outputFile, html);
+		zipFile(arguments.filename, outputFile, html);
 
 		return doc;
 

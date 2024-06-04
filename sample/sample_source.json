@@ -1,0 +1,10 @@
+{
+	"indexFile": "../testing/source/index.md",
+	"pdf_template": "../testing/templates/template.html",
+	"epub_template": "../testing/templates/template.html",
+	"epub": "../testing/output/sample.epub",
+	"pdf": "../testing/output/sample.pdf"
+}
+
+
+
