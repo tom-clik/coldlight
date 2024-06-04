@@ -1,99 +1,60 @@
 <cfscript>
 /**
- * Create epub from Markdown "index"
+ * Save kindle epup (all files added to zip) and html for PDF
+ *
+ * The PDF version ends up in the root for the relative file paths. This could be better, we could adjust the paths as per the epub version and still save to _generated, a bit neater.
  *
  * Status:
  *
- * Working but needs to be formalised. Parameterise inputs and put the body into
- * ColdLight as methods.
+ * Working as far as it goes.
+ * 
+ * We've lost the idea of parsing a document and then using the data object.
  *
- * TODO: cover images. Do these with a meta tag (yaml). 
+ * These methods do the parsing twice. I think we need a single parse and the pass the document in as a reference.
+ *
+ * Also all the params could use some work. 
+ *
+ * 
+ * 
  */
 
-filePath = ExpandPath("../../../dm/thedigitalmethod/");
+filePath = ExpandPath("../../../dm/");
 
-indexFile = filePath & "index.md";
-mytemplate = filePath & "_template/thedm_kindle.html";
-outputFolder = filePath & "_generated";
 
-mustache = new mustache.Mustache();
+
+args.indexFile = filePath & "thedigitalmethod/index.md";
+args.template = filePath & "thedigitalmethod/_template/thedm_print.html";
+args.etemplate = filePath & "thedigitalmethod/_template/thedm_kindle.html";
+args.epub = filePath & "thedigitalmethod/_generated/thedigitalmethod.epub";
+args.filename = filePath & "thedigitalmethod/thedigitalmethod.pdf";
+
+// args.indexFile = filePath & "clikwriter/hayekfa/fatalconceipt/index.md";
+// args.template = filePath & "clikwriter/hayekfa/fatalconceipt/_template/fatalconceipt_print.tmpl";
+// args.pdf = filePath & "clikwriter/hayekfa/fatalconceipt/fatalconceipt_print.html";
+// args.etemplate = filePath & "clikwriter/hayekfa/fatalconceipt/_template/kindle.tmpl";
+// args.epub = filePath & "clikwriter/hayekfa/fatalconceipt/_generated/thefatalconceipt.epub";
+
+checkDirectory(filePath);
+checkDirectory(filePath & "_generated");
+
+
+
 coldLightObj = new coldlight.coldlight();
-
-doc = coldLightObj.load( indexFile );
-
-doc["template"] = FileRead(mytemplate,"utf-8");
-
-doc["manifest"] = {"styles"={}};
-doc["template"] = coldLightObj.processStylesheets(doc["template"],doc.manifest.styles);
-
-doc.meta.body = coldLightObj.html(doc);
+html = coldLightObj.pdf(argumentCollection = args);
+fileWrite(Replace(args.filename ,".pdf",".html"), html);
 
 
-checkDirectory(outputFolder);
-for (dir in ["/epub","/epub/META-INF","/epub/OPS","/epub/OPS/css","/epub/OPS/images"]) {
-	checkDirectory(outputFolder & dir);
-}
-
-// Epub toc file
-outputFile = outputFolder & "/epub/OPS/toc.xhtml";
-html = coldLightObj.OpfTOC(contents=doc.contents);
-FileWrite( outputFile, html);
-
-// container file
-outputFile = outputFolder & "/epub/mimetype";
-	if (! fileExists( outputFile ) ) {
-	html = coldLightObj.OPFMimeType();
-	FileWrite( outputFile, html);
-}
-
-// container file
-outputFile = outputFolder & "/epub/META-INF/container.xml";
-	if (! fileExists( outputFile ) ) {
-	html = coldLightObj.OPFContainer();
-	FileWrite( outputFile, html);
-}
-
-// manifest file
-outputFile = outputFolder & "/epub/OPS/package.opf";
-html = coldLightObj.OPFPackage(doc=doc);
-FileWrite( outputFile, html);
-
-for (item in doc.manifest["images"]) {
-	filename = outputFolder & "/epub/OPS/" & item;
-	if (! fileExists(filename) ) {
-		source = getCanonicalPath( filePath & item );
-		fileCopy(source, filename);
-	}
-	else {
-		writeOutput("File #filename# already exists<br>");
-	}
-}
-
-for (item in doc.manifest.styles) {
-	filename = getCanonicalPath(outputFolder & "/epub/OPS/css/" & item);
-	if (! fileExists(filename) ) {
-		source = getCanonicalPath( filePath & doc.manifest.styles[item] );
-		fileCopy(source, filename);
-	}
-	else {
-		writeOutput("File #filename# already exists<br>");
-	}
-}
-
-
-// output html
-html = mustache.render(template=doc.template, context=doc.meta);
-outputFile = outputFolder & "/epub/OPS/content.xhtml";
-
-FileWrite( outputFile, html);
-
+// args.template = args.etemplate;
+// doc = coldLightObj.epub(argumentCollection = args);
 
 WriteOutput("Done");
 
-function checkDirectory(dir) {
+public void function checkDirectory(dir) {
 	if (! DirectoryExists(arguments.dir)) {
 		DirectoryCreate(arguments.dir);
 	}
 }
+
+
 
 </cfscript>

@@ -215,7 +215,7 @@ component name="coldlight" {
 	}
 
 	/**
-	 * @hint Generate full html for kindle (Still very prototype)
+	 * @hint Generate full html for epub
 	 *
 	 * NB this previously tried to do all the manifest etc. Will use different
 	 * functions for that.
@@ -225,7 +225,7 @@ component name="coldlight" {
 	 * @doc  The document Objects
 	 * @stylesheets   List of stylesheets to add
 	 */
-	public string function html(required struct document) {
+	public string function epub_html(required struct document) {
 		
 		local.html = "";
 		local.meta = arguments.document.meta ? : {};
@@ -279,6 +279,70 @@ component name="coldlight" {
 	}
 
 	/**
+	 * Not working yet. Needs to call princeXML. Currently just returns HTML
+	 * 
+	 */
+	public string function pdf(
+		required string indexFile,
+		required string template,
+		required string filename) localmode=true {
+
+		doc = load( arguments.indexFile );
+
+		doc["template"] = FileRead(arguments.template,"utf-8");
+
+		doc.meta.body = pdf_html(doc);
+		toclevel = doc.meta.toclevel ? : 1;
+
+		doc.meta.toc = TOC(doc.contents,toclevel)
+
+		html = variables.mustache.render(template=doc.template, context=doc.meta);
+		
+		// FileWrite(arguments.filename, html);
+
+		return html;
+
+	}
+
+	public string function pdf_html(required struct document) {
+		
+		local.html = "";
+		local.meta = arguments.document.meta ? : {};
+		
+
+		for (local.id in arguments.document.data) {
+			local.doc = arguments.document.data[local.id];
+
+			StructAppend(local.meta, local.doc.meta, false);
+
+			local.doc.node.outputSettings().charset("UTF-8");
+
+			local.links = local.doc.node.select("a[href]");
+
+			for (local.link in local.links) {
+			
+				local.linkid = ListLast(local.link.attr("href"),"##");
+				
+				if (StructKeyExists(arguments.document.contents,local.linkid)) {
+					local.text = local.link.text();
+					if (trim(local.text) eq "") {
+						local.link.html(arguments.document.contents[local.linkid].text);
+					}
+				}
+				
+			}
+
+			local.html &= "<section id='#local.id#'>" & local.doc.node.body().html() & "</section>";
+			
+		}
+
+		local.html = replaceVars(local.html, local.meta);
+
+		return local.html;
+
+	}
+
+	/**
 	 * Get list of images from all files
 	 */
 	private array function getImages(required any document format="") localmode=true {
@@ -286,6 +350,9 @@ component name="coldlight" {
 		// (returned in manifest argument).
 		returnVal = [];
 		
+		if ( arguments.document.meta.keyExists("cover") ) {
+			returnVal.append( arguments.document.meta.cover );
+		}
 		for (id in arguments.document.data) {
 
 			images = arguments.document.data[id].node.select( "img" );
@@ -342,7 +409,7 @@ component name="coldlight" {
 		local.html.append("</head>");
 		local.html.append("<body>");
 		local.html.append("  <nav xmlns:epub=""http://www.idpf.org/2007/ops"" epub:type=""toc"" id=""toc"">");
-		local.html.append("    <ol>" & TOChtml(contents=arguments.contents,filename="content.xhtml") & "</ol>");
+		local.html.append("    <ol>" & epubTOC(contents=arguments.contents,filename="content.xhtml") & "</ol>");
 		local.html.append("  </nav>");
 		local.html.append("  <nav xmlns:epub=""http://www.idpf.org/2007/ops"" epub:type=""landmarks"" id=""guide"">");
 		local.html.append("    <ol>");
@@ -358,11 +425,12 @@ component name="coldlight" {
 	}
 
 	/**
-	 * Simple HTML for a epub table of contents.
+	 * HTML for a epub table of contents.
 	 *
 	 * @contents      Struct of headings
+	 * @filename      Name of file containing headings. Note this is geared to our system of only having one combined HTML file.
 	 */
-	private string function TOChtml(required struct contents, required string filename) localmode=true {
+	private string function epubTOC(required struct contents, required string filename) localmode=true {
 		
 		html = "";
 
@@ -372,6 +440,29 @@ component name="coldlight" {
 			if (toc && heading.level eq 1) {
 				
 				html &= "    <li><a href=""#arguments.filename####heading.id#"">#heading.text#</a></li>" & newLine();
+			}
+			
+		}
+		
+		return html;
+
+	}
+
+	/**
+	 * HTML for a normal table of contents.
+	 *
+	 * @contents      Struct of headings
+	 */
+	private string function TOC(required struct contents, numeric toclevel=3) localmode=true {
+		
+		html = "";
+
+		for (id in arguments.contents) {
+			heading = arguments.contents[id];
+			toc = heading.toc ? : true; // toc can be set to false via notoc mechanism
+			if (toc && ( heading.level <= arguments.toclevel ) ) {
+				
+				html &= "    <p class='toc toc#heading.level#'><a href=""###heading.id#"">#heading.text#</a></p>" & newLine();
 			}
 			
 		}
@@ -519,5 +610,111 @@ component name="coldlight" {
 		
 	}
 
+	public struct function epub(
+		required string indexFile,
+		required string template,
+		required string epub
+
+		) localmode=true {
+
+		filePath = GetDirectoryFromPath(indexFile);
+
+		doc = load( arguments.indexFile );
+
+		doc["template"] = FileRead(arguments.template,"utf-8");
+
+		doc["manifest"] = {"styles"={}};
+		doc["template"] = processStylesheets(doc["template"],doc.manifest.styles);
+
+		doc.meta.body = epub_html(doc);
+
+		if (fileExists(arguments.epub)) {
+			try{
+				fileDelete(arguments.epub);
+			} 
+			catch (any e) {
+				local.extendedinfo = {"tagcontext"=e.tagcontext,"filenmae":arguments.epub};
+				throw(
+					extendedinfo = SerializeJSON(local.extendedinfo),
+					message      = "Unable to delete exising file:" & e.message, 
+					detail       = e.detail
+				);
+			}
+			
+		}
+
+		// Epub toc file
+		outputFile = "OPS/toc.xhtml";
+		html = OpfTOC(contents=doc.contents);
+		zipFile(arguments.epub, outputFile, html);
+
+		// mime type file
+		outputFile = "mimetype";
+		html = OPFMimeType();
+		zipFile(arguments.epub, outputFile, html);
+		
+		// container file
+		outputFile = "META-INF/container.xml";
+		html = OPFContainer();
+		zipFile(arguments.epub, outputFile, html);
+		
+		// manifest file
+		outputFile = "OPS/package.opf";
+		html = OPFPackage(doc=doc);
+		zipFile(arguments.epub, outputFile, html);
+
+
+		// this isn't great. IMages assumed to be in /images but see below, stylesheets have paths
+		// TODO: standardise, use one methodology
+		for (item in doc.manifest["images"]) {
+			source = getCanonicalPath( filePath & item );
+			data = fileReadBinary(source);
+			zipFile(arguments.epub,"OPS/" & item, data);
+		}
+
+		for (item in doc.manifest.styles) {
+			source = getCanonicalPath( filePath & doc.manifest.styles[item] );
+			data = fileRead(source);
+			zipFile(arguments.epub,"OPS/css/" & item, data);
+		}
+
+		// output html
+		html = variables.mustache.render(template=doc.template, context=doc.meta);
+		outputFile = "OPS/content.xhtml";
+
+		zipFile(arguments.epub, outputFile, html);
+
+		return doc;
+
+	}
+
+	/**
+	 * Add to zip file
+	 * 
+	 * @zipfile   full path of zip file to add to
+	 * @entrypath  entry path of file
+	 * @content    content to save (binary or string)
+	 * 
+	 */
+	public void function zipFile(zipfile, entrypath, content) {
+		try{
+			cfzip(action="zip",file=arguments.zipfile) {
+				cfzipparam( entrypath = arguments.entrypath, content=arguments.content );
+			};
+		} 
+		catch (any e) {
+			local.extendedinfo = {
+				"tagcontext" = e.tagcontext,
+				"entrypath"  = arguments.entrypath, 
+				"content"    = arguments.content
+			};
+			throw(
+				extendedinfo = SerializeJSON(local.extendedinfo),
+				message      = "Unable to add to zip file:" & e.message, 
+				detail       = e.detail
+			);
+		}
+		
+	}
 
 }
