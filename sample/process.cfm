@@ -1,22 +1,12 @@
 <cfscript>
-/**
- * Save kindle epub (all files added to zip) and html for PDF (supposed to do converion but this isn't working).
- *
- * The PDF version ends up in the root for the relative file paths. This could be better, we could adjust the paths as per the epub version and still save to _generated, a bit neater.
- *
- * Status:
- *
- * Working as far as it goes.
- * 
- * We've lost the idea of parsing a document and then using the data object.
- *
- * These methods do the parsing twice. I think we need a single parse and the pass the document in as a reference.
- *
- * Also all the params could use some work. 
- * 
- */
+/*
+Save kindle epub (all files added to zip) and html for PDF (supposed to do converion but this isn't working).
 
-url.code = "fatalconceipt";
+The html for PDF version ends up in the root for the relative file paths. This could be better, we could adjust the paths as per the epub version.
+
+
+
+*/
 
 param name="url.code" default="sample_source";
 
@@ -32,8 +22,9 @@ for (field in config) {
     config[field] = ExpandPath(config[field]);
 }
 
-args.indexFile = config.indexFile;
 coldLightObj = new coldlight.coldlight();
+args.document = coldlightObj.load(config.indexFile);
+args.filepath = getDirectoryFromPath(config.indexFile);
 
 for (type in ['epub','pdf']) {
     if (config.keyExists(type)) {
@@ -46,7 +37,6 @@ for (type in ['epub','pdf']) {
             fileWrite(Replace(args.filename,".pdf",".html"), doc)
         }
     }
-
 }
 
 WriteOutput("Done");

@@ -225,7 +225,7 @@ component name="coldlight" {
 	 * @doc  The document Objects
 	 * @stylesheets   List of stylesheets to add
 	 */
-	public string function epub_html(required struct document) {
+	private string function epub_html(required struct document) {
 		
 		local.html = "";
 		local.meta = arguments.document.meta ? : {};
@@ -283,11 +283,11 @@ component name="coldlight" {
 	 * 
 	 */
 	public string function pdf(
-		required string indexFile,
+		required struct document,
 		required string template,
 		required string filename) localmode=true {
 
-		doc = load( arguments.indexFile );
+		doc = duplicate(arguments.document);
 
 		doc["template"] = FileRead(arguments.template,"utf-8");
 
@@ -299,12 +299,12 @@ component name="coldlight" {
 		html = variables.mustache.render(template=doc.template, context=doc.meta);
 		
 		// FileWrite(arguments.filename, html);
-		
+
 		return html;
 
 	}
 
-	public string function pdf_html(required struct document) {
+	private string function pdf_html(required struct document) {
 		
 		local.html = "";
 		local.meta = arguments.document.meta ? : {};
@@ -368,7 +368,7 @@ component name="coldlight" {
 
 	// replace all stylesheet urls with /styles/filename
 	// Return struct of original file names
-	public string function processStylesheets(
+	private string function processStylesheets(
 		required string html, 
 		required struct stylesheets) localmode=true {
 
@@ -399,7 +399,7 @@ component name="coldlight" {
      *
      * See the epub notes. We're creating a separate file that doesn't really get used.
       */
-	public string function OpfTOC(required struct contents) {
+	private string function OpfTOC(required struct contents) {
 		local.html = [];
 		local.html.append("<?xml version=""1.0"" encoding=""UTF-8""?>");
 		local.html.append("<html xmlns=""http://www.w3.org/1999/xhtml"" xmlns:epub=""http://www.idpf.org/2007/ops"">");
@@ -471,7 +471,7 @@ component name="coldlight" {
 
 	}
 
-	public string function OPFPackage(required struct doc, struct manifest={}) {
+	private string function OPFPackage(required struct doc, struct manifest={}) {
 		
 		StructAppend(arguments.doc.meta,{"author"="","pub-id"=createUUID(), "language"="EN-US"},false);
 		
@@ -553,7 +553,7 @@ component name="coldlight" {
 	}
 
 	// return a container definition for EPUB
-	public string function OPFContainer() {
+	private string function OPFContainer() {
 		local.html = [];
 		local.html.append("<?xml version=""1.0"" encoding=""UTF-8""?><container xmlns=""urn:oasis:names:tc:opendocument:xmlns:container"" version=""1.0"">");
 		local.html.append("<rootfiles>");
@@ -605,22 +605,20 @@ component name="coldlight" {
 
 		}
 
-
 		return local.retVal;
 		
 	}
 
 	public struct function epub(
-		required string indexFile,
+		required struct document,
+		required string filepath,
 		required string template,
 		required string filename
 
 		) localmode=true {
 
-		filePath = GetDirectoryFromPath(indexFile);
-
-		doc = load( arguments.indexFile );
-
+		doc = duplicate(arguments.document);
+		
 		doc["template"] = FileRead(arguments.template,"utf-8");
 
 		doc["manifest"] = {"styles"={}};
@@ -663,17 +661,16 @@ component name="coldlight" {
 		html = OPFPackage(doc=doc);
 		zipFile(arguments.filename, outputFile, html);
 
-
 		// this isn't great. IMages assumed to be in /images but see below, stylesheets have paths
 		// TODO: standardise, use one methodology
 		for (item in doc.manifest["images"]) {
-			source = getCanonicalPath( filePath & item );
+			source = getCanonicalPath( arguments.filePath & item );
 			data = fileReadBinary(source);
 			zipFile(arguments.filename,"OPS/" & item, data);
 		}
 
 		for (item in doc.manifest.styles) {
-			source = getCanonicalPath( filePath & doc.manifest.styles[item] );
+			source = getCanonicalPath( arguments.filePath & doc.manifest.styles[item] );
 			data = fileRead(source);
 			zipFile(arguments.filename,"OPS/css/" & item, data);
 		}
