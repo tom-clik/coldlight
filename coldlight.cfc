@@ -573,34 +573,14 @@ component name="coldlight" {
 	 *  Used for inclusion in symbols (see fuzzy search functionality) and manual toc generation
 	 *  
 	 */
-	public array function getHeadingData() {
-
-		// TODO: this function no longer required, just use contents
-		throw("needs redoing");
+	public array function getHeadingData(required struct document) {
 
 		local.retVal = [];
 
-		for (local.pub in variables.publist) {
-
-			ArrayAppend(local.retVal,{"level"=1,"pub"=local.pub,"code"="index","title":variables.pubs[local.pub].title});
-
-			if (StructKeyExists(this.data,local.pub)) {
-
-				local.pubdata = this.data[local.pub];
-				
-				for (local.id in local.pubdata.orderedIndex) {
-
-
-					local.page = getPageData(local.pub, local.id);
-
-					for (local.code in local.page.meta.tocList) {
-						local.heading = local.page.meta[local.code];
-						// todo: actual level
-						ArrayAppend(local.retVal,{"level"=local.heading.level ,"pub"=local.pub,"code"=local.id,"anchor"=local.code,"title":local.heading.text});
-					}
-					
-				}
-
+		for (local.code in StructSort(arguments.document.contents, "textnocase", "asc", "text") ) {
+			local.heading = arguments.document.contents[local.code];
+			if (local.heading.toc) {
+				ArrayAppend(local.retVal,{"level"=local.heading.level,"pub"=local.heading.file,"code"=local.code,"title"=local.heading.text});
 			}
 
 		}
@@ -712,6 +692,70 @@ component name="coldlight" {
 			);
 		}
 		
+	}
+
+	public struct function saveSite(required struct document, required string template, required string outputDir, struct site={} ) localmode=true {
+
+		returnVal = {};
+		template = FileRead(arguments.template);
+		context["site"] = duplicate(arguments.site);
+		context["site"]["menu"] = siteMenu(arguments.document);
+
+		idlist = structKeyArray(arguments.document.data);
+		
+		for (code in arguments.document.data) {
+			section = arguments.document.data[code];
+			temp = section.node.clone();
+			temp.select("h1").first().remove();
+			context["page"] = {
+				"title" = section.meta.title,
+				"page_title" = section.meta.title,
+				"html" = section.html,
+				"body" = temp.body().html()
+			};
+			pos  = arrayFind(idlist, code);
+			if (pos > 1) {
+				previous = arguments.document.data[idlist[pos-1]];;
+				context["page"]["previous"] = getLink(previous);
+			}
+			if (pos < idlist.len()) {
+				next = arguments.document.data[idlist[pos+1]];;
+				context["page"]["next"] = getLink(next);
+			}
+
+			html = variables.mustache.render(template=template, context=context);
+			fileName = getCanonicalPath(arguments.outputDir & "/" & section.id & ".html");
+			fileWrite(fileName, html);
+
+			returnVal["#fileName#"] = 1;
+
+		}
+
+		searchSymbols = getHeadingData(arguments.document);
+		searchSymbolsJS = "symbols = " & serializeJSON(searchSymbols) & ";" & newLine();
+		fileName = getCanonicalPath(arguments.outputDir & "/searchSymbols.js");
+			fileWrite(fileName, searchSymbolsJS);
+
+		return returnVal;
+
+	}
+
+	private string function getLink(required struct dataSection) {
+		return "<a href='#arguments.dataSection.id#.html'>#arguments.dataSection.meta.title#</a>";
+	}
+
+	private string function siteMenu(required struct document) localmode=true {
+		menu = "<ul>";
+
+		for (code in arguments.document.data) {
+			section = arguments.document.data[code];
+			title = section.meta.title ? : code;
+			menu &= "<li><a id='menu_#code#' href='#code#.html'>#title#</a></li>";
+		}
+
+		menu &= "</ul>";
+
+		return menu;
 	}
 
 }
