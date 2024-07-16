@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{page.window_title}}</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/reset.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/breadcrumb.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/footnotes.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/menus.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/navbuttons.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/images.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/definitions.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/styles.css">
+	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
+</head>
+<body class=''>
+<div id="pagecontainer">
+	<header id="header" class="header spanning">
+		<div class="inner">
+			<div id="sitetitle" class="scheme-title">
+				<a href="index.cfm">
+					<span class="text-highlight">Cold</span><span>Light</span>
+				</a>
+			</div>
+			<div id="breadcrumb" class="cs-breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="index.html">{{site.title}}</a></li>
+					<li class="breadcrumb-item active">{{page.title}}</li>
+				</ol>
+			</div>
+			<div id="search">
+				<input type="text"autocomplete="off" id="fuzzySearch" placeholder="Search..." name="search" class="form-control search-input">
+				<button type="submit" class="btn search-btn" value="Search"><i class="fa fa-search"></i></button>
+			</div>
+			<div id="searchResults" class="empty">
+			</div>
+			<div id="hamburger" class="icon icon-big">
+				<a href="#mainmenu">a</a>
+			</div>
+		</div>
+
+	</header>
+
+	<div id="content" class="spanning">
+		<div class="inner">
+			
+			<div id="leftcol" class="hasSticky">
+				<div class="inner">
+					<div id="mainmenu" class="cs-menu menu-vertical">
+						<div id="mobileclose" class="icon icon-big">
+							<a href="#top">M</a>
+						</div>
+						{{{site.menu}}}
+					</div>
+				</div>
+			</div>
+
+			<div id="maincol">
+				<div class="inner">
+					
+
+					<div id="pageContent">
+						<div class="pageTitle">
+							<h1>{{{page.title}}}</h1>
+						</div>
+						<div class="pageBody">
+							{{{page.body}}}
+						</div>
+					</div>
+
+					<div class="navButtons">
+						<div id="previous" class="previousnext previous">
+								{{{page.previous}}}
+						</div>
+						<div id="next" class="previousnext next">
+							
+								{{{page.next}}}
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div id="rightcol" class="hasSticky">
+				<div class="inner">
+
+					<div id="submenu" class="cs-menu menu-vertical">
+						<ul class='pageHeadings'></ul>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>	
+	</div>         
+
+	<footer id="footer" class="spanning">
+		<div class="inner">
+			<small class="copyright">{{{site.copyright}}}</small>
+		</div>
+	</footer>
+		
+</div>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="{{{site.assets_url}}}/js/fts_fuzzy_match.js"></script>
+	<script src="{{{site.assets_url}}}/js/search.js"></script>
+	<script src="{{{site.assets_url}}}/js/menuScroll.js"></script>
+
+	<script src="searchSymbols.js"></script>
+<script>
+$( document ).ready(function() {
+
+
+$("#submenu").menuScroll();
+
+/* to do: move most of this to a plug in */
+$("#fuzzySearch").on("keydown",
+		function(e) {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		})
+	.on("keyup",function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var auto = false;
+		console.log(e.key);
+		if (e.key === 'Escape') {
+			$(this).val("");
+		}
+		else if (e.key === 'Enter') {
+			auto = true;
+		}
+
+		search($(this).val(),$("#searchResults"), 1, auto);
+	});
+
+
+});
+</script>
+</body>
+</html>
