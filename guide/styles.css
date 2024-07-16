@@ -1,0 +1,44 @@
+:root {
+	--bodyfont: "Open sans";
+	--menu-text-align: left;
+}
+
+.spanning .inner {
+	max-width: 1280px;
+	margin:0 auto;
+}
+
+#header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-top: 5px solid var(--darkblue);
+    background-color: var(--background);
+    color: var(--headertext);
+    padding-top: 30px;
+    padding-bottom: 30px;
+    height: var(--headerheight);
+    z-index: 1000;
+}
+
+#pagecontainer {
+    padding-top: var(--headerheight);
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 50px;
+}
+
+#content> .inner {
+    display: grid;
+    grid-template-areas: "leftcol main";
+    grid-template-columns: 240px auto;
+}
+
+@media only screen and (min-width: 980px) {
+    #content> .inner {
+        grid-template-areas: "leftcol main rightcol";
+        grid-template-columns: 240px auto 260px;
+    }
+}
+

@@ -56,6 +56,3 @@ A table of contents can be generated from the headings. Three mechanisms exist f
 	A list of CSS selectors to exclude from the toc, e.g. `#frontmatter h1, #frontmatter h2, #frontmatter h3`
 3. notoc class
 	Any heading can be simply excluded by adding a notoc class
-
-
-
