@@ -7,7 +7,7 @@ writeDump(data);
 site = {
 	"title" = "ColdLight",
 	"copyright" = "&copy; Tom Peer 2008-2024",
-	"assets_url" = "/clikpage/_assets/"
+	"assets_url" = "/clikpage/_assets"
 }
 
 template = ExpandPath("../sample/site/template.html");

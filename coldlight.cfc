@@ -115,6 +115,7 @@ component name="coldlight" {
 		
 		doc = variables.coldsoup.parse(html);
 		
+		// convert attributes for each "div" into a struct
 		for (div in doc.select("div")) {
 			info = variables.coldsoup.nodeInfo(div);
 
@@ -136,6 +137,7 @@ component name="coldlight" {
 			
 		}
 		
+		// for each included section, read the markdown file and convert
 		for (id in returnVal.data) {
 			info = returnVal.data[id];
 			filename = filepath & "/" & info.href;
@@ -150,7 +152,7 @@ component name="coldlight" {
 			}
 			
 			temp = variables.markdown.markdown(info["text"],returnVal.meta);
-
+			// data is a variable -- not part of the main flow
 			if (info.meta) {
 				returnVal.meta["#id#"] = temp.html;
 				structDelete(returnVal.data, id);
@@ -596,7 +598,7 @@ component name="coldlight" {
 		required string filename
 
 		) localmode=true {
-
+		
 		doc = duplicate(arguments.document);
 		
 		doc["template"] = FileRead(arguments.template,"utf-8");

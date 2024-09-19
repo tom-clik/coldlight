@@ -30,7 +30,7 @@ Note that the div tags are removed. You would need to wrap the includes if you w
 
 ## Meta includes
 
-An attribute `meta` can be added to the included files to exlcude them from the main body text and place their content into a variable. The id attribute is required in this case.
+An attribute `meta` can be added to the included files to exclude them from the main body text and place their content into a variable. The id attribute is required in this case.
 
 ```
 <div href="testing.md" id="testing" meta="true" />
@@ -44,15 +44,15 @@ In addition, it will automatically update cross references with the text of the 
 
 ## Variables subsitutions
 
-Variable subsitutions can be made using `{$fieldname}` syntax. Any YAML data or heading with an ID can be used.
+Variable subsitutions can be made using `{$fieldname}` syntax. Any YAML data, meta includes, or heading with an ID can be used.
 
 ## Table of contents
 
 A table of contents can be generated from the headings. Three mechanisms exist for including/excluding items:
 
-1. toclevel
-	By default all headings of level 3 and above are included. Adjust this with the `toclevel` variables. If can be any number from 1-6
-2. notoc variable
-	A list of CSS selectors to exclude from the toc, e.g. `#frontmatter h1, #frontmatter h2, #frontmatter h3`
-3. notoc class
+1. `toclevel`
+	By default all headings of level 3 and above are included. Adjust this with the `toclevel` variable. It can be any number from 1-6
+2. `notoc` variable
+	Use YAML to define a list of CSS selectors to exclude from the toc, e.g. `#frontmatter h1, #frontmatter h2, #frontmatter h3`
+3. `notoc` class
 	Any heading can be simply excluded by adding a notoc class

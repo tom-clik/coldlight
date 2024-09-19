@@ -6,11 +6,7 @@ filePath = ExpandPath("source/index.md");
 
 doc = coldLightObj.load( filePath );
 
-
-
 html = coldLightObj.html(doc);
 writeOutput(htmlCodeFormat(html));
-
-
 
 </cfscript>
