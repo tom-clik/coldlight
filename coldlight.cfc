@@ -2,74 +2,30 @@
 
 # ColdLight
 
-Utility function for collating markdown files into a single 
-"publication"
+Utility function for collating markdown files into a single "publication"
+
+For usage and background, see the [user guide](https://www.coldlight.net)
 
 ## Synopsis
 
-A collection of files is created either by using a index file
+### 1. Read index file
+	
+An index file is read and converted to HTML.
 
-These are parsed into a sorted struct of objects. The default 
-key for the struct is the filename stem. Any meta data (see YAML 
-format) is extracted into a `meta` key, the markdown is 
-converted into HTML in `html`, and an array of heading objects
-for the individual file is generated in `headings`.
+JSOUP is used to read any div nodes and see if they have an href attribute.
 
-## Usage
+A collection of files is created by using a index file to determine the order of their inclusion.
 
-### Index file
+These are parsed into a sorted struct of objects. The default key for the struct is the filename stem. Any meta data (see YAML format) is extracted into a `meta` key, the markdown is converted into HTML in `html`, and an array of heading objects for the individual file is generated in `headings`.
 
-An index file is created using Markdown with HTML embedded. Each separate file
-is included by using an href attribute attached to a div.
+## Document Struct
 
-The index file can be reused to generate a complete HTML document -- see html_full()
+A document struct contains the following keys
 
-A sample file is as follows
-
-```markdown
----
-title: The Digital Method
-subtitle: Why software is so bad
-author: Tom Peer
----
-
-<div id="title" class="section">
-	<p class="author">{$author}</p>
-	<p class="title">{$title}</p>
-	<p class="subtitle">{$subtitle}</p>
-</div>
-
-<div href='Intro.md' id='start' />
-<div href='The_Digital_Method.md' />
-```
-
-### Meta Data
-
-Meta data can be added using YAML format.
-
----
-title:	Cold Light stuff
-author: Tom Peer
-toc_level: 2
----
-
-This is returned in the meta data struct. The fields can also be used in the text `{$name}`.
-
-### Heading Objects
-
-Each `heading` object has three keys: the tagname, the html, and the meta information for the tag.
-
-## Table of Contents
-
-An HTML table of contents can be generated from the headings data. It is primarily intended for use in print versions.
-
-### TOC Level
-
-The toc level variable determines what level of headings are added to the TOC. By default this is 3. It can be varied by using the `toc_level` meta field in the index.
-
-### Excluding headers
-
-Headings with a class of `.notoc` will not be included in any TOCs.
+data     | Struct         | Complete struct of sections and sub sections keyed by ID. 
+sections | Array          | Array of top level sections.
+contents | Struct         | Struct of heading information. Each value is a struct contain keys TBC
+meta     | Struct         | Struct of variables set via YAML
 
 */
 
@@ -85,50 +41,108 @@ component name="coldlight" {
 		variables.coldsoup = new coldsoup.coldsoup();
 		variables.mustache = new mustache.Mustache();
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
-		variables.include_pattern = variables.patternObj.compile("\[include\s+file\s*\=\s*[\""\']?(\S+?)[\""\']\s*\]",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
 		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
 		
 		return this;
 	}
 
 	/**
-	 * @hint Read an index file 
+	 * @hint Read an index file and return doc struct
 	 *
-	 * An index file can include other markdown files. Include them
-	 * using <div href='filename.md' />
-	 *
-	 * Use meta=true and an id to read the files into a meta var rather than the content, e.g.
-	 *
-	 * <div href='Publisher_Info.md' id='publisher_info' meta='true' />
 	 * 
-	 * Note that the syntax is quite fussy.
+	 *
 	 * 
 	 */
 	public struct function load (required string filename) localmode=true {
 		
-		returnVal = ["contents"=[=],"data"=[=],"meta"={}];
-
 		filepath = GetDirectoryFromPath(arguments.filename);
 		text = FileRead(arguments.filename);
+		data = {};
+		contents = {};
+		returnVal = parseText(text=text, filepath=filepath, data=data, contents=contents);
+		returnVal["data"] = data;
+		returnVal["contents"] = contents;
+
+		return returnVal;
+
+	}
+
+	/**
+	 * @hint Recursive helper function for load()
+	 *
+	 * Parses text for div elements with href attribute.
+	 *
+	 * Reads file and parse that (possibly recursively)
+	 * 
+	 * 
+	 * @text     Markdown text to parse
+	 */
+	private struct function parseText(required string text, required string filepath, required struct data, required struct contents)  localmode=true {
+
+		temp = variables.markdown.markdown(arguments.text);
 		
-		html = variables.markdown.toHtml(text, returnVal.meta);
-		
-		doc = variables.coldsoup.parse(html);
+		retVal = { 
+			"sections" = [],
+			"contents" = temp.data.content, 
+			"meta" = temp.data.meta, 
+			"text" = arguments.text,
+			"node" = temp.node
+		};
 		
 		// convert attributes for each "div" into a struct
-		for (div in doc.select("div")) {
+		for (div in retVal.node.select("div[href]")) {
+			
 			info = variables.coldsoup.nodeInfo(div);
 
 			try {
+
 				if (! StructKeyExists(info.attributes,"id")) {
-					info.attributes["id"] = ListFirst(info.attributes.href,".");
+					info.attributes["id"] = ListFirst(ListLast(info.attributes.href,"\/"),".");
 				}
+
+				// add default values
 				StructAppend(info.attributes,{"meta"=false},false);
-				returnVal.data["#info.attributes.id#"] = info.attributes;
 				
+				filename = filepath & "/" & info.attributes.href;
+
+				try{
+					section_text = FileRead(filename);
+				} 
+				catch (any e) {
+					throw(
+						message      = "Unable to read input file #filename#:" & e.message, 
+						detail       = e.detail
+					);
+				}
+
+				subsection = parseText(text=section_text, filepath=arguments.filepath,data=arguments.data, contents=arguments.contents);
+
+				// parse text is a variable -- not part of the main flow
+				if (info.attributes.meta) {
+					retVal.meta["#info.attributes.id#"] = subsection.html;
+					continue;
+				}
+
+				subsection["id"] = info.attributes.id;
+
+				tmp = duplicate(subsection.contents);
+				// add section name to content items before appending to complete record
+				for (headingid in subsection.contents) {
+					StructAppend(tmp[headingid], {"section" = info.attributes.id}, false);
+				}
+
+				StructAppend(arguments.contents, tmp, false);
+
+				arguments.data["#info.attributes.id#"] = subsection;
+				retVal.sections.append(info.attributes.id);
+
+				div.remove();
+
 			}
+
 			catch (any e) {
-				local.extendedinfo = {"tagcontext"=e.tagcontext, "node"=info.html(),"filename"=arguments.filename};
+				throw(e);
+				local.extendedinfo = {"tagcontext"=e.tagcontext, "node"=div.html(),"text"=arguments.text};
 				throw(
 					extendedinfo = SerializeJSON(local.extendedinfo),
 					message      = "invalid node:#e.message#"
@@ -136,50 +150,17 @@ component name="coldlight" {
 			}
 			
 		}
-		
-		// for each included section, read the markdown file and convert
-		for (id in returnVal.data) {
-			info = returnVal.data[id];
-			filename = filepath & "/" & info.href;
-			try{
-				info["text"] = FileRead(filepath & "/" & info.href);
-			} 
-			catch (any e) {
-				throw(
-					message      = "Unable to read input file #filename#:" & e.message, 
-					detail       = e.detail
-				);
-			}
-			
-			temp = variables.markdown.markdown(info["text"],returnVal.meta);
-			// data is a variable -- not part of the main flow
-			if (info.meta) {
-				returnVal.meta["#id#"] = temp.html;
-				structDelete(returnVal.data, id);
-				continue;
-			}
 
-			info["meta"] = temp.data.meta;
-			info["content"] = Duplicate(temp.data.content);
-			info["node"] = temp.node;
-			info["html"] = temp.html;
+		retVal["html"] = retVal.node.body().html();
 
-			// add file name to contents before appending to complete record
-			for (headingid in temp.data.content) {
-				temp.data.content[headingid]["file"] = id;
-				StructAppend(returnVal["contents"], temp.data.content);
-			}
-
-		}
-
-		return returnVal;
+		return retVal;
 
 	}
 
 	/**
 	 * Replace {$varname} format variables
 	 *
-	 * This is now deprecated. See mechanisms using mustache
+	 * 
 	 * 
 	 */
 	public string function replaceVars(required string text, required struct data) {
@@ -312,13 +293,15 @@ component name="coldlight" {
 		local.meta = arguments.document.meta ? : {};
 		
 
-		for (local.id in arguments.document.data) {
+		for (local.id in arguments.document.sections) {
+
 			local.doc = arguments.document.data[local.id];
 
 			StructAppend(local.meta, local.doc.meta, false);
 
 			local.doc.node.outputSettings().charset("UTF-8");
 
+			// TODO: common function for xrefs
 			local.links = local.doc.node.select("a[href]");
 
 			for (local.link in local.links) {
@@ -582,7 +565,7 @@ component name="coldlight" {
 		for (local.code in StructSort(arguments.document.contents, "textnocase", "asc", "text") ) {
 			local.heading = arguments.document.contents[local.code];
 			if (local.heading.toc) {
-				ArrayAppend(local.retVal,{"level"=local.heading.level,"pub"=local.heading.file,"code"=local.code,"title"=local.heading.text});
+				ArrayAppend(local.retVal,{"level"=local.heading.level,"code"=local.heading.id,"section"=local.heading.section,"anchor"=local.code,"title"=local.heading.text});
 			}
 
 		}
@@ -701,36 +684,21 @@ component name="coldlight" {
 		returnVal = {};
 		template = FileRead(arguments.template);
 		context["site"] = duplicate(arguments.site);
-		context["site"]["menu"] = siteMenu(arguments.document);
+		context["site"]["menu"] = sectionMenu(data=arguments.document.data, sections=arguments.document.sections);
 
-		idlist = structKeyArray(arguments.document.data);
-		
 		for (code in arguments.document.data) {
-			section = arguments.document.data[code];
-			temp = section.node.clone();
-			temp.select("h1").first().remove();
-			context["page"] = {
-				"title" = section.meta.title,
-				"page_title" = section.meta.title,
-				"html" = section.html,
-				"body" = temp.body().html()
-			};
-			pos  = arrayFind(idlist, code);
-			if (pos > 1) {
-				previous = arguments.document.data[idlist[pos-1]];;
-				context["page"]["previous"] = getLink(previous);
-			}
-			if (pos < idlist.len()) {
-				next = arguments.document.data[idlist[pos+1]];;
-				context["page"]["next"] = getLink(next);
-			}
-
+			sectionObj = arguments.document.data[code];
+			// TODO: parent section values
+			//context["section"] = sectionObj; 
+			context["page"] = getPage(document=arguments.document,section=code);
+			context["page"].body = Replace(context["page"].body,"{{","X&X^AA%A%","all");
 			html = variables.mustache.render(template=template, context=context);
-			fileName = getCanonicalPath(arguments.outputDir & "/" & section.id & ".html");
+			html = Replace(html,"X&X^AA%A%","{{","all");
+
+			fileName = getCanonicalPath(arguments.outputDir & "/" & sectionObj.id & ".html");
 			fileWrite(fileName, html);
 
 			returnVal["#fileName#"] = 1;
-
 		}
 
 		searchSymbols = getHeadingData(arguments.document);
@@ -742,22 +710,74 @@ component name="coldlight" {
 
 	}
 
-	private string function getLink(required struct dataSection) {
-		return "<a href='#arguments.dataSection.id#.html'>#arguments.dataSection.meta.title#</a>";
+	private struct function getPage(required struct document, required string section ) localmode=true {
+
+		sectionData = arguments.document.data[arguments.section];
+
+		// TODO: formalise removal of h1 tag to become title
+		temp = sectionData.node.clone();
+		temp.select("h1").first().remove();
+
+		returnVal = {
+			"title" = sectionData.meta.title,
+			"page_title" = sectionData.meta.title,
+			"html" = sectionData.html,
+			"body" = temp.body().html()
+		};
+
+		// TODO: previous next for sub sections
+		// requires:
+		// TODO: parent sections for pages
+		pos  = arrayFind(arguments.document.sections, arguments.section);
+
+		if (pos > 1) {
+			previous = arguments.document.data[arguments.document.sections[pos-1]];
+			returnVal["previous"] = getLink(previous,"previous");
+		}
+		
+		if (pos < arguments.document.sections.len()) {
+			next = arguments.document.data[arguments.document.sections[pos+1]];
+			returnVal["next"] = getLink(next,"next");
+		}
+
+
+
+		return returnVal;
+
 	}
 
-	private string function siteMenu(required struct document) localmode=true {
-		menu = "<ul>";
+	private string function getLink(required struct dataSection, string icon) {
+		local.icon_str = structKeyExists(arguments,"icon") ? "<i class='icon-#arguments.icon#'></i>": "";
+		return "<a href='#arguments.dataSection.id#.html'>#local.icon_str##arguments.dataSection.meta.title#</a>";
+	}
 
-		for (code in arguments.document.data) {
-			section = arguments.document.data[code];
+	private string function sectionMenu(required struct data, required array sections, boolean preview=false, string class="") localmode=true {
+		className = arguments.class eq "" ? "" : " class='#arguments.class#'";
+		menu = "<ul#className#>";
+
+		for (code in arguments.sections) {
+			section = arguments.data[code];
 			title = section.meta.title ? : code;
-			menu &= "<li><a id='menu_#code#' href='#code#.html'>#title#</a></li>";
+			submenu = "";
+			if (section.keyExists("sections")) {
+				submenu = sectionMenu(data=arguments.data, sections=section.sections, preview=arguments.preview, class="submenu");
+			}
+			link = sectionLink(section=code,preview=arguments.preview);
+			menu &= "<li><a id='menu_#code#' href='#link#'>#title#</a>#submenu#</li>";
 		}
 
 		menu &= "</ul>";
 
 		return menu;
+	}
+
+	// Get link for a page 
+	private string function sectionLink(required string section, string anchor, boolean preview=false) {
+		link =  arguments.preview ? "?section=#arguments.section#" : "#arguments.section#.html";
+		if (arguments.keyExists("anchor") ) {
+			link &= "##" & arguments.anchor;
+		}
+		return link;
 	}
 
 }

@@ -1,4 +1,4 @@
-# Getting started
+# Installing ColdLight
 
 You will need to first install the [Flexmark java parser](https://github.com/vsch/flexmark-java) and [Jsoup](https://jsoup.org/) into your Java path.
 
@@ -14,7 +14,7 @@ JSoup should be installed in the same way.
 
 ## Installing the helper components
 
-ColdLight uses a number of CF components to run. These are wrappers for JSoup and Flexmark.
+ColdLight uses a number of CF components to run. These are wrappers for JSoup and Flexmark, and the Mustache library for templates
 
 Install these into either your standard component location or a folder you intend adding to the component path for an application (or server).
 
@@ -31,6 +31,13 @@ Markdown parsing component with a few additional methods for handling "meta" dat
 
 **File**: `markdown.Flexmark.cfc`<br>
 **Repo**: [Markdown](https://github.com/tom-clik/markdown)
+
+### Mustache
+
+A CFML Mustache library. Note the original author has archived the repository and I maintain a forked version.
+
+**File**: `mustache.mustache.cfc`<br>
+**Repo**: [Markdown](https://github.com/tom-clik/mustache)
 
 
 

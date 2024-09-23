@@ -2,6 +2,13 @@
 /*
 Save kindle epub (all files added to zip) and html for PDF (supposed to do converion but this isn't working).
 
+
+## Usage
+
+See the sample_soure.json and create a copy for your publication.
+
+## Notes
+
 The html for PDF version ends up in the root for the relative file paths. This could be better, we could adjust the paths as per the epub version.
 
 
@@ -43,7 +50,7 @@ for (type in ['epub','pdf']) {
         args.template = config[type & "_template"];
         doc = coldLightObj[type](argumentCollection = args);
         
-
+        
         if (type eq "pdf") {
             html_file = Replace(args.filename,".pdf",".html");
             fileWrite(html_file, doc);
