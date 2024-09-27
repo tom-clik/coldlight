@@ -18,6 +18,7 @@
     --titleheight:96px;
     --bodyfont: "Open sans";
     --menu-text-align: left;
+    --side-padding:12px;
 }
 
 body {
@@ -52,7 +53,7 @@ h1 {
 /*    height: var(--titleheight);*/
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .pageTitle {
         top: 0;
     }
@@ -100,9 +101,13 @@ a {
 
 #maincol {
     min-height: 100%;
+    padding:0 12px;
+}
+
+#maincol .inner {
+    min-height: 100%;
     display: grid;
     grid-template-rows: auto 50px;
-    padding:0 12px;
 }
 
 .pageBody h1 a:before, .pageBody h2 a:before , .pageBody h3 a:before  {
@@ -133,13 +138,11 @@ div.spanning {
     padding:0 20px;
 }
 
-.spanning .inner {
+.spanning > .inner {
     max-width: 1280px;
     margin:0 auto;
-    padding:0 8px;
+    padding:0 var(--side-padding);
 }
-
-
 
 .hasSticky > .inner {
     height: 100%;
@@ -166,6 +169,13 @@ div.spanning {
     padding: var(--contentpadding) 0 var(--contentpadding) 0;
 }
 
+#content > .inner {
+    height:100%;
+    display: grid;
+    grid-template-areas: "leftcol main";
+    grid-template-columns: 240px auto;
+}
+
 
 #mainmenu, #pagemenu {
     position: sticky;
@@ -176,12 +186,17 @@ div.spanning {
 
 }
 
-#mainmenu li.hi a , #pagemenu  li.hi a {
+#mainmenu li.hi > a , #pagemenu  li.hi > a {
     font-weight: bold;
 }
 
+#mainmenu .submenu {
+    margin-top:8px;
+    margin-bottom: 8px;
+}
 
-@media only screen and (max-width: 600px) {
+
+@media only screen and (max-width: 800px) {
     
     #mainmenu {
 
@@ -216,7 +231,7 @@ div.spanning {
 
 #search {
     position: absolute;
-    right:0;
+    right:var(--side-padding);
     top:8px;
 }
 
@@ -255,9 +270,9 @@ div.spanning {
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     #search {
-        position: relative;
+        position: static;
         margin:12px 0;
     }
 
@@ -355,6 +370,10 @@ a.xref:hover {
     --menu-item-align: stretch;
 }
 
+.cs-menu.scheme-vertical .submenu {
+    margin-left: 12px;
+}
+
 .level3 {
     padding-left:1.6em;
 }
@@ -430,13 +449,8 @@ a.xref:hover {
 }
 
 
-#content> .inner {
-    display: grid;
-    grid-template-areas: "leftcol main";
-    grid-template-columns: 240px auto;
-}
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     #pagecontainer {
         grid-template-rows: min-content auto 50px;
         padding-top: 0;
@@ -449,6 +463,10 @@ a.xref:hover {
     #content> .inner {
         grid-template-areas: "main";
         grid-template-columns: auto;
+    }
+
+    #maincol {
+        padding:0;
     }
 }
 
@@ -484,6 +502,17 @@ pre {
     white-space: pre;
     max-width: 760px;
     overflow-x: hidden;
+}
+
+#disclaimer {
+    margin:20px 0;
+    padding:12px;
+    border: 1px solid var(--bordercolor);
+    font-style: italic;
+}
+
+#disclaimer p:last-of-type {
+    margin-bottom: 0;
 }
 
 /********************************************************************
