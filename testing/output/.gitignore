@@ -1,4 +1,2 @@
-*.html
-*.epub
-*.js
-*.css
+*
+!.gitignore
