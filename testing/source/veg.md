@@ -1,6 +1,8 @@
 # Vegetables
 
-LoremNulla dolore in sed velit officia deserunt aute irure enim dolore magna duis dolor aute ex irure.
+Lorem Nulla dolore in sed velit officia deserunt aute irure enim dolore magna duis dolor aute ex irure.
+
+{$menu}
 
 <div href="veg/aubergines.md" />
 <div href="veg/broc.md" />
