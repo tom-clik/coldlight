@@ -82,8 +82,8 @@ component awsopensearch output=false {
 					
 				}
 				break;
-			case "SEARCH":
-				cfhttp( method="GET", url=variables.endpoint & "/" & variables.index & "/_search/?filter_path=took,hits.hits._id,hits.hits._score,hits.total", username=variables.username, password=variables.password, result="res") {
+			case "SEARCH"://?filter_path=took,hits.hits._id,hits.hits._score,hits.total
+				cfhttp( method="GET", url=variables.endpoint & "/" & variables.index & "/_search/", username=variables.username, password=variables.password, result="res") {
 					cfhttpparam( type="header", name="Content-type", value="application/json" );
 					cfhttpparam( type="body", value=arguments.data.query );
 				}

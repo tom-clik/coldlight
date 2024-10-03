@@ -1,5 +1,14 @@
 <cfscript>
+/*
+A sample page demonstarting use of AWS OpenSearch
 
+# Synopsis
+
+1. Read credentials file (see below) 
+2. Add data from the test ublication to the index
+3. Do a test search
+
+*/
 data = deserializeJSON(FileRead(expandPath("credentials.json")));
 
 awsopensearchObj = new coldlight.search.awsopensearch(argumentCollection = data);
@@ -15,10 +24,11 @@ dataQ = coldLightObj.searchQuery(docObj);
 for (row in dataQ) {
 
 	myTest = {
-		"id":row.key,
+		"file":row.key,
 		"title" :row.title,
 		"body": row.body,
-		"parent": row.parent
+		"page": row.page,
+		"id": row.id
 	};
 
 	data = awsopensearchObj.put(document=myTest);

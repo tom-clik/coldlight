@@ -36,7 +36,12 @@ docObj = coldLightObj.load( filePath );
 
 // Get query for search
 dataQ = coldLightObj.searchQuery(docObj);
-ret = solrObj.update(name="testing", qdata=dataQ, custom1="parent");
+
+ret = coldLightObj.search(qu="glycemic", data=dataQ);
+writeDump(ret);
+abort;
+
+ret = solrObj.update(name="testing", qdata=dataQ, custom1="page", custom2="id");
 writeDump(ret);
 writeDump(solrObj.list());
 
@@ -45,7 +50,7 @@ writeDump(solrObj.search("testing", "Bananas"));
 StructDelete(docObj.data,"bananas");
 dataQ = coldLightObj.searchQuery(docObj);
 
-ret = solrObj.refresh(name="testing", qdata=dataQ, custom1="parent");
+ret = solrObj.refresh(name="testing", qdata=dataQ, custom1="page", custom2="id");
 // writeDump(ret);
 // writeDump(solrObj.list());
 writeDump(solrObj.search("testing", "Bananas"));
@@ -56,10 +61,7 @@ writeDump(solrObj.search("testing", "diet"));
 
 writeDump(solrObj.search(name="testing", qu="diet", startrow=4, maxrows=3));
 
-
-
 solrObj.deleteCollection(name="testing");
-
 
 </cfscript>
 
