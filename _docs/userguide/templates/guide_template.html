@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{site.title}}: {{page.page_title}}</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/reset.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/breadcrumb.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/footnotes.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/menus.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/navbuttons.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/images.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/definitions.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/admonitions.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/fonts/google_icons.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/icons.css">
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+	<link rel="stylesheet" href="/coldlight/sample/site/styles.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
+</head>
+<body class=''>
+<div id="pagecontainer">
+	<header id="header" class="header spanning">
+		<div class="inner">
+			<div id="sitetitle" class="scheme-title">
+				<a href="{{site.home_link}}">
+					<span class="text-highlight">Cold</span><span>Light</span>
+				</a>
+			</div>
+			<div id="breadcrumb" class="cs-breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{site.home_link}}">{{site.title}}</a></li>
+					{{#page.parent.link}}
+					<li class="breadcrumb-item">{{{page.parent.link}}}</li>
+					{{/page.parent.link}}
+					<li class="breadcrumb-item active">{{page.page_title}}</li>
+				</ol>
+			</div>
+			<div id="search">
+				<input type="text"autocomplete="off" id="searchControl" placeholder="Search..." name="search" class="form-control search-input">
+				<button type="submit" class="btn search-btn" value="Search"><i class="fa fa-search"></i></button>
+			</div>
+			<div id="searchResults" class="empty">
+			</div>
+			<div id="hamburger" class="icon-big">
+				<a href="#mainmenu"><i class="icon icon-menu"></i></a>
+			</div>
+		</div>
+
+	</header>
+
+	<div id="content" class="spanning">
+		<div class="inner">
+			
+			<div id="leftcol" class="hasSticky">
+				<div class="inner">
+					<div id="mainmenu" class="cs-menu scheme-vertical">
+						<div id="mobileclose" class="icon-big">
+							<a href="#top"><i class="icon icon-close"></i></a>
+						</div>
+						{{{site.menu}}}
+					</div>
+				</div>
+			</div>
+
+			<div id="maincol">
+				<div class="inner">
+					
+
+					<div id="pageContent">
+						<div class="pageTitle">
+							<h1>{{{page.title}}}</h1>
+						</div>
+						<div class="pageBody">
+							{{{page.body}}}
+						</div>
+						
+
+						<div class="navButtons">
+							
+							<div id="previous" class="{{#page.previous}}button{{/page.previous}} previousnext previous">
+									{{{page.previous_link}}}
+							</div>
+							
+
+							<div id="next" class="{{#page.next}}button{{/page.next}} previousnext next">
+								
+									{{{page.next_link}}}
+								
+							</div>
+						</div>
+
+					</div>
+
+					<div id="pageBottom">
+						{{#disclaimer}}
+						<div id="disclaimer">
+							{{{disclaimer}}}
+						</div>
+						{{/disclaimer}}
+					</div>
+
+					
+				</div>
+			</div>
+
+			<div id="rightcol" class="hasSticky">
+				<div class="inner">
+
+					<div id="pagemenu" class="cs-menu scheme-vertical">
+						<ul class='pageHeadings'></ul>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>	
+	</div>         
+
+	<footer id="footer" class="spanning">
+		<div class="inner">
+			<small class="copyright">{{{site.copyright}}}</small>
+		</div>
+	</footer>
+
+</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="{{{site.assets_url}}}/js/fts_fuzzy_match.js"></script>
+	<script src="{{{site.assets_url}}}/js/fuzzySearch.js"></script>
+	<script src="{{{site.assets_url}}}/js/menuScroll.js"></script>
+	<script src="{{{site.assets_url}}}/js/jquery.menu.js"></script>
+
+	<script src="searchSymbols.js"></script>
+	
+<script>
+$( document ).ready(function() {
+
+	$("#mainmenu").menu({hilight:"{{page.section.id}}"});
+
+	$("#pagemenu").menuScroll({maincontent:".pageBody"});
+
+	$("#searchControl").fuzzySearch({symbols:symbols, results: "#searchResults"});
+	
+	var hash = $(location).attr('hash');
+	if (hash && hash !== "") {
+		$("#pagemenu").data("menuScroll").scrollToAnchor(hash);
+	}
+});
+</script>
+</body>
+</html>
