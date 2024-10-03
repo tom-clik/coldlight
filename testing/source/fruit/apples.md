@@ -3,9 +3,11 @@
 Apples are a nutritious fruit that offer a wide range of health benefits due to their rich content of vitamins, minerals, antioxidants, and fiber. Here are some of the key benefits of apples:
 
 ## 1. Rich in Nutrients
-   - **Vitamin C**: Apples are a good source of vitamin C, which is important for immune function, skin health, and fighting oxidative stress.
+   - **Vitamin C**: Apples are a good source of vitamin C[^vitaminc], which is important for immune function, skin health, and fighting oxidative stress.
    - **Potassium**: Apples provide potassium, an essential mineral that supports heart health and regulates blood pressure.
    - **Fiber**: Apples, especially with the skin on, are an excellent source of dietary fiber, which promotes digestive health and can help regulate blood sugar levels.
+
+[^vitaminc]: a footnote about vitamin C
 
 ## 2. Supports Digestive Health
    - **Soluble Fiber (Pectin)**: Apples contain soluble fiber, particularly pectin, which helps feed healthy gut bacteria and supports healthy digestion. It also helps to relieve constipation and maintain regular bowel movements.
@@ -21,8 +23,10 @@ Apples are a nutritious fruit that offer a wide range of health benefits due to 
    - **Potassium**: The potassium content in apples helps balance sodium levels in the body, supporting healthy blood pressure.
 
 ## 5. Helps Regulate Blood Sugar
-   - **Low Glycemic Index**: Apples have a relatively low glycemic index, meaning they cause a slower, more gradual rise in blood sugar levels, which is beneficial for people with diabetes or those trying to prevent blood sugar spikes.
+   - **Low Glycemic Index**: Apples have a relatively low glycemic index[^glycemic], meaning they cause a slower, more gradual rise in blood sugar levels, which is beneficial for people with diabetes or those trying to prevent blood sugar spikes.
    - The fiber in apples helps slow the absorption of sugar into the bloodstream, further promoting stable blood sugar levels.
+
+[^glycemic]: a footnote about glycemic index
 
 ## 6. Boosts Immune Function
    - The high vitamin C content, along with antioxidants in apples, helps strengthen the immune system, making the body more resistant to infections and illnesses.

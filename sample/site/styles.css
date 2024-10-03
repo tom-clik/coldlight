@@ -5,8 +5,10 @@
     --headertext: rgba(255, 255, 255, 0.85);
     --text: rgb(73, 77, 85);
     --headertextdark: rgba(255, 255, 255, 0.5);
-    --link-color: #616670;
-    --menuhicolor: var(--darkblue);
+    --link-color: var(--darkblue);
+    --link-hi-color: rgb(6, 6, 6);;
+    --menu-color: var(--text);
+    --menu-color-hi: var(--darkblue);
     --bordercolor: #ccc;
     --buttoncolor: var(--darkblue);
     --buttonhicolor: var(--background);
@@ -19,6 +21,13 @@
     --bodyfont: "Open sans";
     --menu-text-align: left;
     --side-padding:12px;
+    --code-bg:hsl(206, 64%, 98%);
+    --code-text:var(--text);
+    --box-border-radius:4px;
+    --code-font-size:1.1em;
+    --blockquote-color:inherit;
+    --blockquote-border:var(--bordercolor);
+    --blockquote-bg:transparent;
 }
 
 body {
@@ -41,6 +50,14 @@ h1 {
     font-size: 2.4em;
     letter-spacing: 1px;
     text-transform: uppercase;
+}
+
+a {
+    color:var(--link-color);
+}
+
+a:hover {
+    color:var(--link-hi-color);
 }
 
 .pageTitle {
@@ -303,41 +320,48 @@ div.spanning {
     font-size: 220%;
 }
 
-
-
+/* code has to do inline code and also as an inner tag for blocks (see <pre>) */ 
 code, .code {
+    border-radius: var(--box-border-radius);
     padding:2px;
     border:1px solid #eee;
     font-family: monospace;
-}
-
-code {
+    background-color: var(--code-bg);
+    color: var(--code-text);
+    font-size: var(--code-font-size);
     display: inline-block;
     margin:2px;
 }
 
-pre.code {
-    margin-bottom: 1em;
-}
-/* new markdown engine just dumps out <pre> without a class */
 pre {
     margin-bottom: 1em;
+    white-space: pre;
+    max-width: 760px;
+    width: 100%;
+    margin: 1em 0;
+    overflow-x: auto;
+    
 }
 
-table {
-    margin-bottom: 1em;
+pre code {
+    padding: 1rem;
+    border:1px solid #eee;
+    font-family: monospace;
+    background-color: var(--code-bg);
+    display: block;
+    margin:0px;
+    box-shadow: inset 1px 1px 6px #1d56800f;
 }
+
+
 
 table , td,   th {
     border: 1px solid  #eee;
 }
-table td, table th {
-    padding: 2px
-}
- table th {
-    border-bottom: 2px solid #d4dde4;
-    background: #eaeef2;
-    background: rgba(212,221,228,.5);
+
+table {
+    --table-border-width:1px;
+    --table-cell-padding:2px;
 }
 
 table.striped tr:nth-of-type(2n) {
@@ -361,6 +385,12 @@ a.xref:hover {
 }
 
 /** menus  */
+.cs-menu a {
+    --link-color:var(--menu-color);
+}
+.cs-menu a:hover {
+    --link-color:var(--menu-color-hi);
+}
 
 .cs-menu.scheme-vertical {
     --menu-item-justify: start;
@@ -498,12 +528,6 @@ a.xref:hover {
     --button-direction:row-reverse;
 }
 
-pre {
-    white-space: pre;
-    max-width: 760px;
-    overflow-x: hidden;
-}
-
 #disclaimer {
     margin:20px 0;
     padding:12px;
@@ -515,13 +539,24 @@ pre {
     margin-bottom: 0;
 }
 
-/********************************************************************
-
-:root {
-	
+blockquote{
+  font-style:italic;
+  color: var(--blockquote-color);
+  padding:0.6em 30px 0.6em 20px;
+  margin:1em 0 ;
+  border-left:8px solid var(--blockquote-border);
+  line-height:1.6;
+  background:var(--blockquote-bg);
 }
 
+.listing .listingName,.listing .listingFile {
+    display:none;
+}
 
+.listingtitle  .listingName {
+      display:block;
+}
 
-
-*/
+.listingtitle  .listingFile {
+      display:block;
+}

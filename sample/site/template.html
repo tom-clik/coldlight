@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>{{page.window_title}}</title>
+	<title>{{site.title}}: {{page.page_title}}</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/reset.css">
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/breadcrumb.css">
@@ -10,11 +10,13 @@
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/navbuttons.css">
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/images.css">
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/definitions.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/admonitions.css">
+	<link rel="stylesheet" href="{{{site.assets_url}}}/css/lists.css">
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/fonts/google_icons.css">
 	<link rel="stylesheet" href="{{{site.assets_url}}}/css/icons.css">
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="/coldlight/sample/site/styles.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
 </head>
 <body class=''>
@@ -22,18 +24,21 @@
 	<header id="header" class="header spanning">
 		<div class="inner">
 			<div id="sitetitle" class="scheme-title">
-				<a href="{{site.home}}">
+				<a href="{{site.home_link}}">
 					<span class="text-highlight">Cold</span><span>Light</span>
 				</a>
 			</div>
 			<div id="breadcrumb" class="cs-breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="{{site.home}}">{{site.title}}</a></li>
-					<li class="breadcrumb-item active">{{page.title}}</li>
-				</ol>
+				<ul class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{site.home_link}}">{{site.title}}</a></li>
+					{{#page.parent.link}}
+					<li class="breadcrumb-item">{{{page.parent.link}}}</li>
+					{{/page.parent.link}}
+					<li class="breadcrumb-item active">{{page.page_title}}</li>
+				</ul>
 			</div>
 			<div id="search">
-				<input type="text"autocomplete="off" id="fuzzySearch" placeholder="Search..." name="search" class="form-control search-input">
+				<input type="text"autocomplete="off" id="searchControl" placeholder="Search..." name="search" class="form-control search-input">
 				<button type="submit" class="btn search-btn" value="Search"><i class="fa fa-search"></i></button>
 			</div>
 			<div id="searchResults" class="empty">
@@ -70,21 +75,32 @@
 						<div class="pageBody">
 							{{{page.body}}}
 						</div>
-					</div>
-
-					<div class="navButtons">
-						
-						<div id="previous" class="{{#page.previous}}button{{/page.previous}} previousnext previous">
-								{{{page.previous}}}
-						</div>
 						
 
-						<div id="next" class="{{#page.next}}button{{/page.next}} previousnext next">
+						<div class="navButtons">
 							
-								{{{page.next}}}
+							<div id="previous" class="{{#page.previous}}button{{/page.previous}} previousnext previous">
+									{{{page.previous_link}}}
+							</div>
 							
+
+							<div id="next" class="{{#page.next}}button{{/page.next}} previousnext next">
+								
+									{{{page.next_link}}}
+								
+							</div>
 						</div>
+
 					</div>
+
+					<div id="pageBottom">
+						{{#disclaimer}}
+						<div id="disclaimer">
+							{{{disclaimer}}}
+						</div>
+						{{/disclaimer}}
+					</div>
+
 					
 				</div>
 			</div>
@@ -110,21 +126,27 @@
 		
 </div>
 
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="{{{site.assets_url}}}/js/fts_fuzzy_match.js"></script>
-	<script src="{{{site.assets_url}}}/js/search.js"></script>
+	<script src="{{{site.assets_url}}}/js/fuzzySearch.js"></script>
 	<script src="{{{site.assets_url}}}/js/menuScroll.js"></script>
+	<script src="{{{site.assets_url}}}/js/jquery.menu.js"></script>
 
 	<script src="searchSymbols.js"></script>
+	
 <script>
 $( document ).ready(function() {
 
+	$("#mainmenu").menu({hilight:"{{page.section.id}}"});
 
-$("#pagemenu").menuScroll();
+	$("#pagemenu").menuScroll({maincontent:".pageBody"});
 
-/* to do: move most of this to a plug in */
-$("#fuzzySearch").fuzzySearch({symbols:symbols, results: "#searchResults"})
-
+	$("#searchControl").fuzzySearch({symbols:symbols, results: "#searchResults"});
+	
+	var hash = $(location).attr('hash');
+	if (hash && hash !== "") {
+		$("#pagemenu").data("menuScroll").scrollToAnchor(hash);
+	}
 });
 </script>
 </body>

@@ -8,6 +8,6 @@ toclevel: 2
 Welcome to the {$title}
 
 <div href="disclaimer.md" id="disclaimer" meta="true" />
-<div href="fruit.md" />
+<div href="fruit/index.md" />
 <div href="veg.md" />
 <div href="pulses.md" />

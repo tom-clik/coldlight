@@ -1,9 +1,15 @@
 {
-	"indexFile": "../testing/source/index.md",
+	"title" : "ColdLight Sample Site",
+	"index": "../testing/source/index.md",
 	"pdf_template": "../testing/templates/template.html",
 	"epub_template": "../testing/templates/template.html",
 	"epub": "../testing/output/sample.epub",
-	"pdf": "../testing/output/sample.pdf"
+	"pdf": "../testing/output/sample.pdf",
+	"site" : "../testing/output/site",
+	"site_template" : "./site/template.html",
+	"copyright": "&copy; Tom Peer 2008-2024",
+	"assets_url" : "/clikpage/_assets",
+	"plugins": "coldlight.testing.plugin_listings"
 }
 
 
