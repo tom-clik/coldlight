@@ -1,21 +1,40 @@
-# Fuzzy Search
+# Search
 
-`fts_fuzzy_match.js` is a JavaScript component that tries to emulate Sublime's fuzzy search.
+## Fuzzy Search
 
-It does a reasonable job considering it's JavaScript, and can return a score for a give search pattern. By looping over a set of "symbols" we can sort the results according to the best match.
+The sample template uses a Fuzzy Search library, [`fts_fuzzy_match.js`](https://github.com/forrestthewoods/lib_fts/blob/master/code/fts_fuzzy_match.js).
 
-It doesn't allow for emboldening of the matched letters, and there's no guarantee first occurence of a letter is the one that has triggered the score. E.g.
+This matches letters against the letters of given headings and returns a score according to where they are placed.
 
-For the pattern  `GS`, `Goings South` would probably match the second S
+For example, the pattern  `GS` would match `Going South` with a high score, `Giselle` with a lower one, and `Goings` lower.
+
+Fuzzy search works well for publications where the sections have lots of headings.
 
 ## Integration
 
-ColdLight generates symbols for all h1-h3 tags in the app.
+ColdLight generates symbols for all h1-h3 tags in the app. These are saved to file `searchSymbols.js` which creates a global variable `symbols`. 
 
-## Link
+The fuzzy search plug in can then be applied to a search box:
 
-[forrestthewoods/lib_fts](https://github.com/forrestthewoods/lib_fts/blob/master/code/fts_fuzzy_match.js)
+```
+$("#searchControl").fuzzySearch({symbols:symbols, results: "#searchResults"});
+```
 
+## Other search
+
+If you want to write your own API for search, you can adapt the fuzzySearch plugin to call it. Some sample search functionality is available in the testing folder.
+
+### Solr search
+
+A `testing/search_test.cfm` file uses the `search/solr.cfc` component to create a Solr search catalogue. This could be used to create an API search.
+
+### Open search
+
+A `search_test.cfm` file uses the `search/solr.cfc` component to create a Solr search catalogue. 
+
+### Simple match
+
+You could do a query of queries on all the data using a simple match. This is generally a very bad idea, however the data can be obtained using the `searchQuery()` method.
 
 
 

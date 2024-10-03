@@ -1,6 +1,12 @@
 # Table of contents
 
-A table of contents can be generated from the headings. Three mechanisms exist for including/excluding items:
+## Web version
+
+Each section and the site has a toc variables which is the top level headings in that section.
+
+## Print Version
+
+For print publications, a table of contents is generated from all the headings. Three mechanisms exist for including/excluding items:
 
 1. `toclevel`
 	By default all headings of level 3 and above are included. Adjust this with the `toclevel` variable. It can be any number from 1-6
@@ -9,11 +15,8 @@ A table of contents can be generated from the headings. Three mechanisms exist f
 3. `notoc` class
 	Any heading can be simply excluded by adding a notoc class
 
-## Using the toc
 
-The toc is added to the document variables with key `toc` and can be output with the syntax `{$toc}`.
-
-## Examples
+### Examples
 
 Setting the toc level variable in YAML.
 
@@ -37,4 +40,14 @@ Using a class to exclude a header
 ### Header text {.notoc} 
 ```
 
+## Using the toc
 
+The toc is added to the document variables with key `toc` and can be output with the syntax `{$toc}` or with a mustache variable in the template.
+
+E.g. for a section you can add a table of contents so:
+
+```
+<h2>Section contents</h2>
+
+{$toc}
+```

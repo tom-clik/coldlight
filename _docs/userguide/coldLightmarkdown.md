@@ -17,9 +17,9 @@ toclevel: 2
 
 This information should be placed at the top of the markdown files. Any variable defined here will be available as for substitution using `{$varname}` syntax.
 
-## Additional anchors { #additional_anchors}
+## Additional data { #additional_attrs}
 
-Anchors can be added to any markdown tag using the attribute syntax:
+IDs, classes, and data tags can be added to any markdown tag using the attribute syntax:
 
 ```
 ### heading 3 { #tag}
@@ -37,7 +37,7 @@ When linking to a cross reference in any part of the document, use only the uniq
 [](#chapter4)
 ```
 
-Sample cross-ref to `#additional_anchors`: [](#additional_anchors)
+Sample cross-ref to `#additional_attrs`: [](#additional_attrs)
 
 ## Definition lists
 
