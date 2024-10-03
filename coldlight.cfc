@@ -42,15 +42,18 @@ component name="coldlight" {
 		variables.mustache = new mustache.Mustache();
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
 		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
+		variables.plugins = [];
 		
 		return this;
 	}
 
+	// Add a plugin that implements pluginInterface
+	public void function addPlugin(required pluginName) {
+		variables.plugins.append( CreateObject("component", arguments.pluginName).init() );
+	}
+
 	/**
 	 * @hint Read an index file and return doc struct
-	 *
-	 * 
-	 *
 	 * 
 	 */
 	public struct function load (required string filename) localmode=true {
@@ -61,7 +64,7 @@ component name="coldlight" {
 		contents = {};
 		temp = parseText(text=text, filepath=filepath, data=data, contents=contents);
 		setHierarchy(data=data,sections=temp.sections);
-
+		returnVal["basepath"] = filepath;
 		returnVal["sections"] = temp.sections;
 		returnVal["meta"] = temp.meta;
 		returnVal["data"] = data;
@@ -77,7 +80,16 @@ component name="coldlight" {
 			}
 		}
 		else {
-			returnVal["meta"]["home"] = returnVal["sections"][1];
+			returnVal["navigation_list"] = getNavigationList(data=returnVal.data, sections=returnVal.sections);
+			returnVal["meta"]["home"] = returnVal["navigation_list"][1];
+		}
+		
+		for (plugin in variables.plugins) {
+			
+			for (section in returnVal.data) {
+				sectionObj = returnVal.data[section];
+				plugin.process(node=sectionObj.node, jsoupObj=variables.coldsoup, markDownObj=variables.markdown, document=returnVal);
+			}
 		}
 
 		return returnVal;
@@ -117,12 +129,20 @@ component name="coldlight" {
 
 				if (! StructKeyExists(info.attributes,"id")) {
 					info.attributes["id"] = ListFirst(ListLast(info.attributes.href,"\/"),".");
+					if (info.attributes.id eq "index") {
+						info.attributes["id"] = ListFirst(info.attributes.href,"\/")
+					}
+					// removed sort-orders from filename for e.g. 50-sectioname
+					numcheck = ListFirst(info.attributes["id"],"-");
+					if ( isValid("integer", numcheck ) ) {
+						info.attributes["id"] = Replace(info.attributes["id"],numcheck & "-","");
+					}
 				}
 
 				// add default values
 				StructAppend(info.attributes,{"meta"=false},false);
 				
-				filename = filepath & "/" & info.attributes.href;
+				filename = arguments.filepath & "/" & info.attributes.href;
 
 				try{
 					section_text = FileRead(filename);
@@ -134,7 +154,7 @@ component name="coldlight" {
 					);
 				}
 
-				subsection = parseText(text= section_text, filepath=arguments.filepath,data=arguments.data, contents=arguments.contents);
+				subsection = parseText(text= section_text, filepath=getDirectoryFromPath(filename),data=arguments.data, contents=arguments.contents);
 
 				// parse text is a variable -- not part of the main flow
 				if (info.attributes.meta) {
@@ -144,23 +164,31 @@ component name="coldlight" {
 
 				subsection["id"] = info.attributes.id;
 
-				tmp = duplicate(subsection.contents);
-
-				// add section name to content items before appending to complete record
-				for (headingid in subsection.contents) {
-					StructAppend(tmp[headingid], {"section" = info.attributes.id}, false);
-				}
-
-				StructAppend(arguments.contents, tmp, false);
-
 				// Remove first h1 if it was the title
-				title = subsection.node.select("h1");
-				if ( ArrayLen(title) && title.text() eq subsection.meta.title) {
+				title = subsection.node.select("h1").first();
+				
+				if ( IsDefined(title) && title.text() eq subsection.meta.title) {
 					title.remove();
 				}
 				
-				arguments.data["#info.attributes.id#"] = subsection;
+				if ( Trim(subsection.node.body().html() neq "" ) ) {
+					subsection["hasContent"] = 1;
+					tmp = duplicate(subsection.contents);
+
+					// add section name to content items before appending to complete record
+					for (headingid in subsection.contents) {
+						StructAppend(tmp[headingid], {"section" = info.attributes.id}, false);
+					}
+
+					StructAppend(arguments.contents, tmp, false);
+
+				}
+				else {
+					subsection["hasContent"] = 0;
+				}
+
 				retVal.sections.append(info.attributes.id);
+				arguments.data["#info.attributes.id#"] = subsection;
 
 			}
 
@@ -273,65 +301,100 @@ component name="coldlight" {
 	/**
 	 * Generate single page of html from sections (ignores "home" page)
 	 *
-	 * @footnotes  manually process footnotes and place end notes into meta var "footnotes"
+	 * @footnotes  manually process footnotes and place end notes into meta var "footnotes" (required context argument)
+	 * @XML        sets output settings to XML - only needed for ebook generation
+	 * @context    page rendering content to be updated with footnotes
 	 *
 	 */
-	public string function html(required struct document, boolean footnotes=false, boolean XML=false, struct context={}) {
+	public string function html( required struct document, boolean footnotes=false, boolean XML=false, struct context={} ) {
 		
 		local.html = "";
 		
-		if (arguments.footnotes) {
-			// track footnotes
-			local.noteshtml = [];
-			local.notecount = 0;
+		// track footnotes through recursion
+		footnotes = {
+			on = arguments.footnotes,
+			html = [],
+			count = 0,
 		}
 
-		for (local.id in arguments.document.sections) {
+		local.html &= sectionsHTML(sections=arguments.document.sections,document=arguments.document, footnotes=footnotes, XML=arguments.XML);
 
-			local.doc = arguments.document.data[local.id];
-			node = duplicate(local.doc.node);
-			updateXrefs(node=node,contents=arguments.document.contents,preview=false,usePage=0);
-
-			if (arguments.XML) {
-				node.outputSettings(variables.coldsoup.XML); 
-			}
-
-			if (arguments.footnotes) {
-				local.notes = node.select( "span.footnote" );
-
-				for (local.note in local.notes) {
-					local.notecount++;
-					local.noteshtml.append( "<p><a id=""footnote-#local.notecount#"" href=""##footnote-#local.notecount#-ref""><strong>#local.notecount#</strong></a> #local.note.html()#</p>");
-					local.note.html( "<a id=""footnote-#local.notecount#-ref"" href=""##footnote-#local.notecount#""><sup>#local.notecount#</sup></a>" );
-				}
-			}
-
-			local.section_html = node.body().html();
-
-			if (StructKeyExists(local.doc,"meta")) {
-				local.section_html = replaceVars(local.section_html, local.doc.meta);
-			}
-
-			local.html &= "<section id='section_#local.id#'>";
-			local.html &= "<h1 id='#local.id#'>#local.doc.meta.title#</h1>";
-			local.html &= local.section_html;
-			local.html &= "</section>";
-			
-		}
-
-		if (arguments.footnotes && local.notecount) {
-			arguments.context["footnotes"] = local.noteshtml.toList( newLine() );
+		if (footnotes.count) {
+			arguments.context["footnotes"] = footnotes.html.toList( newLine() );
 		}
 
 
 		if (StructKeyExists(arguments.document,"meta")) {
-
 			local.html = replaceVars(local.html, arguments.document.meta);
 		}
 
 		return local.html;
 
 	}
+
+	/**
+	 * Recursive helper function for html()
+	 * 
+	 */
+	private string function sectionsHTML(required array sections, required struct document, required struct footnotes, boolean XML=false, numeric depth=0 ) {
+
+		local.html = "";
+
+		for (local.id in arguments.sections) {
+
+			local.sectionObj = arguments.document.data[local.id];
+			node = duplicate(local.sectionObj.node);
+			updateXrefs(node=node,contents=arguments.document.contents,preview=false,usePage=0);
+
+			if (arguments.XML) {
+				node.outputSettings(variables.coldsoup.XML); 
+			}
+
+			if (arguments.footnotes.on) {
+				local.notes = node.select( "span.footnote" );
+
+				for (local.note in local.notes) {
+					arguments.footnotes.count++;
+					arguments.footnotes.html.append( "<p><a id=""footnote-#arguments.footnotes.count#"" href=""##footnote-#arguments.footnotes.count#-ref""><strong>#arguments.footnotes.count#</strong></a> #local.note.html()#</p>");
+					local.note.html( "<a id=""footnote-#arguments.footnotes.count#-ref"" href=""##footnote-#arguments.footnotes.count#""><sup>#arguments.footnotes.count#</sup></a>" );
+				}
+			}
+
+			if ( arguments.depth ) {
+				demoteHeadings(node=node,depth=arguments.depth);
+			}
+
+			local.headerLevel = arguments.depth + 1;
+			
+			local.html &= "<section id='section_#local.id#' class='level-#local.headerLevel#'>";
+			local.html &= "<h#local.headerLevel# id='#local.id#'>#local.sectionObj.meta.title#</h#local.headerLevel#>";
+			local.html &= node.body().html();
+
+			if (StructKeyExists(local.sectionObj,"sections") && ArrayLen(local.sectionObj.sections) ) {
+				local.html &= sectionsHTML(sections=local.sectionObj.sections,document=arguments.document, footnotes=arguments.footnotes, XML=arguments.XML, depth=local.headerLevel);
+			}
+
+			if (StructKeyExists(local.sectionObj,"meta")) {
+				local.html = replaceVars(local.html, local.sectionObj.meta);
+			}
+
+			local.html &= "</section>";
+
+		}
+
+		return local.html
+
+	}
+
+	private void function demoteHeadings(required node, required numeric depth) localmode=true {
+
+		for (heading = 5; heading >= arguments.depth;  heading-- ) {
+			headings = arguments.node.select( "h" & heading );
+			headings.tagName("h" & heading + 1);
+		}
+
+	}
+
 
 	/**
 	 * @hint Update automatic cross references with text of target
@@ -351,7 +414,12 @@ component name="coldlight" {
 				text = link.text();
 				if (trim(text) eq "" OR link.hasClass("auto")) {
 					linkData = arguments.contents[linkid];
-					href = sectionLink(section=linkData.section, anchor=linkid, preview=arguments.preview);
+					if (arguments.usePage) {
+						href = sectionLink(section=linkData.section, anchor=linkid, preview=arguments.preview);
+					}
+					else {
+						href = "##" & linkid;
+					}
 					link.attr("href", href);
 					link.html(linkData.text);
 				}
@@ -384,12 +452,16 @@ component name="coldlight" {
 
 	}
 
-	// replace all stylesheet urls with /styles/filename
-	// Return struct of original file names
+	/**
+	 * replace all stylesheet urls with /styles/filename and return struct of original file names
+	 * 
+	 * @html        html text with relative paths to stylesheets
+	 * @stylesheets Pass in struct by reference to return "set" of original names
+	 */
 	private string function processStylesheets(
 		required string html, 
 		required struct stylesheets) localmode=true {
-		
+
 		doc = variables.coldsoup.parse(arguments.html);
 		addNameSpace(doc);
 		doc.outputSettings(variables.coldsoup.XML); 
@@ -637,9 +709,9 @@ component name="coldlight" {
 		templateHTML = FileRead(arguments.template,"utf-8");
 
 		doc = {};
+		
 		manifest = {"styles"={},"images"= getImages(arguments.document) };
 		
-
 		templateHTML = processStylesheets(templateHTML,manifest.styles);
 
 		context.body = html(document=arguments.document,XML=true,footnotes=true, context=context);
@@ -679,8 +751,8 @@ component name="coldlight" {
 		html = OPFPackage(context=context,manifest=manifest);
 		zipFile(arguments.filename, outputFile, html);
 
-		// this isn't great. IMages assumed to be in /images but see below, stylesheets have paths
-		// TODO: standardise, use one methodology
+		// Save images to zip. Requires images to be in sub folder. Could possibly improve to 
+		// allow any path and update href in doc as we do with processStylesheets
 		for (item in manifest["images"]) {
 			source = getCanonicalPath( arguments.filePath & item );
 			data = fileReadBinary(source);
@@ -733,7 +805,10 @@ component name="coldlight" {
 		
 	}
 
-	public struct function saveSite(required struct document, required string template, required string outputDir, struct site={} ) localmode=true {
+	/**
+	 * Save static html website 
+	 */
+	public struct function staticSite(required struct document, required string template, required string outputDir, struct site={} ) localmode=true {
 
 		returnVal = {};
 
@@ -749,13 +824,17 @@ component name="coldlight" {
 
 		// Home page might have text in its own right, save it as a file
 		if (! arguments.document.data.keyExists(arguments.document.meta.home) ) {
+			// TODO: don't save if it doesn't have any actual content...
+			// The "home" thing isn't the best mechanism for testing this.
 			sectionList.append(arguments.document.meta.home);
 		}
 
 		for (code in sectionList) {
 		
 			sectionObj = arguments.document.data[code];
-
+			if (! ( sectionObj.hasContent ? : true ) ) {
+				continue;
+			}
 			
 			// TODO: parent section values
 			context["page"] = getPage(document=arguments.document,section=code);
@@ -775,7 +854,19 @@ component name="coldlight" {
 			html = Replace(html,"X&X^AA%A%","{{","all");
 
 			fileName = getCanonicalPath(arguments.outputDir & "/" & sectionObj.id & ".html");
-			fileWrite(fileName, html);
+			
+			try{
+				fileWrite(fileName, html);
+			} 
+			catch (any e) {
+				local.extendedinfo = {"tagcontext"=e.tagcontext,"filename": fileName};
+				throw(
+					extendedinfo = SerializeJSON(local.extendedinfo),
+					message      = "Error writing file #fileName#:" & e.message, 
+					detail       = e.detail
+				);
+			}
+			
 			
 			returnVal["#sectionObj.id#"] = 1;
 		
@@ -798,21 +889,47 @@ component name="coldlight" {
 
 	}
 
+	// Replace {$ with a place holder if they're in a code block 
+	private void function replaceCodeVars(required any node) localmode=true {
+
+		code = node.select("code");
+		for (text in code) {
+			tmp = text.html();
+			if (find("{$", tmp )) {
+				text.html(Replace(tmp,"{$", "{dollarplaceholder","all"));
+			}
+		}
+
+	}
+
 	private struct function getPage(required struct document, required string section, boolean preview = false ) localmode=true {
 
 		sectionData = arguments.document.data[arguments.section];
 		node = duplicate(sectionData.node);
 		updateXrefs(node=node,contents=arguments.document.contents,preview=arguments.preview,usePage=1);
 
+		replaceCodeVars(node);
 		page = {
 			"title" = sectionData.meta.title,
 			"page_title" = sectionData.meta.page_title ? : sectionData.meta.title,
 			"html" = node.body().html(),
+			"parent" = {}
 		};
+
+		if ( sectionData.keyExists("parent") ) {
+			parentObj =  arguments.document.data[sectionData.parent];
+			hasContent = parentObj.hasContent ? : true;
+			page["parent"] = {
+				"title" = parentObj.meta.title,
+				"link" = hasContent ? getLink(dataSection=parentObj,preview=arguments.preview) : parentObj.meta.title
+			};
+		}
 
 		page.html = replaceVars(page.html, sectionData.meta);
 		page.html = replaceVars(page.html, arguments.document.meta);
-		
+		page.html = replace(page.html, "dollarplaceholder","$","all");
+
+
 		pageNavigation(page=page, section=arguments.section, document=arguments.document, preview=arguments.preview);
 		
 		return page;
@@ -888,7 +1005,9 @@ component name="coldlight" {
 		
 		for (code in arguments.sections ) {
 			section = arguments.data[code];
-			navList.append(code);
+			if ( section.hasContent ? : 1 ) {
+				navList.append(code);
+			}
 			if ( section.keyExists("sections") ) {
 				navList.append(getNavigationList(data = arguments.data, sections=section.sections ), true);
 			}
@@ -929,7 +1048,10 @@ component name="coldlight" {
 				submenu = sectionMenu(data=arguments.data, sections=section.sections, preview=arguments.preview, class="submenu");
 			}
 			link = sectionLink(section=code,preview=arguments.preview);
-			menu &= "<li><a id='menu_#code#' href='#link#'>#title#</a>#submenu#</li>";
+			hasContent = section.hasContent ? : true;
+			href = hasContent ? " href='#link#'" : "";
+			class = hasContent ? "" : " class='menu_section'";
+			menu &= "<li><a id='menu_#code#'#href##class#>#title#</a>#submenu#</li>";
 		}
 
 		menu &= "</ul>";
@@ -951,19 +1073,40 @@ component name="coldlight" {
 	 */
 	public query function searchQuery(required struct document) localmode=true {
 
-		data = queryNew("key,title,body,parent,custom2");
+		data = queryNew("key,title,body,page,id");
+
 		for (code in arguments.document.data) {
 			section = arguments.document.data[code];
+			pageSections = [=];
+			node = Duplicate(section.node);
+			
+			tags = node.select("h2,h3,h4,h5,h6,p,ul,ol");
+			id = section.id;
+			title = section.meta.title;
+			for (tag in tags) {
+				tagName = tag.tagName(); 
+				if (tagName eq "H2" OR tagName eq "H3") {
+					id = tag.attr("id");
+					title = tag.text();
+
+					continue;
+				}
+				if (! pageSections.keyExists(id) ) {
+					pageSections["#id#"] = {"text"="","title"=title};
+				}
+				pageSections[id]["text"] &= tag.text();
+			}
+			
 			try{
-				
-				
-				queryAddRow(data, {
-					"key" = code,
-					"title" = section.meta.title,
-					"body" = section.html,
-					"parent" = section.parent ? : "",
-					"custom2" = ""
-				});
+				for (id in pageSections ) {
+					queryAddRow(data, {
+						"key" = code,
+						"title" = pageSections[id].title,
+						"body" = pageSections[id].text,
+						"page" =  pageSections[id].title eq section.meta.title ? "" : section.meta.title,
+						"id" = id
+					});
+				}
 			} 
 			catch (any e) {
 				local.extendedinfo = {"tagcontext"=e.tagcontext,"section"=section};
@@ -976,6 +1119,52 @@ component name="coldlight" {
 		}
 
 		return data;
+
+	}
+
+	// A utility function to generate index files from a directory structure
+	public string function generateIndex(required string filepath) localmode=true {
+		path = getCanonicalPath(arguments.filepath);
+		if (right(path,1) eq "\") path = Left(path, len(path) - 1);
+
+		html = "";
+		filelist = directoryList(path, true, "query", "*.md");
+
+		data = [ "index" = []];
+		for (row in filelist ) {
+			dir = Replace( Replace(row.directory,path,""), "\", "");
+			if (row.name eq "index.md") {
+				if (dir != "") {
+
+					data["index"].append( dir & "\index.md" );
+				}
+			}
+			else {
+				if (! data.keyExists(dir) ) {
+					data[dir] = [];
+				}
+				data[dir].append(row.name);
+			}
+			
+		}
+		
+		for (code in data) {
+			dirList = newLine();
+			for (filename in data[code]) {
+				dirList &= "<div href='#filename#' />" & newLine();
+			}
+			if (code eq "index") {
+				filePath = path & "\index.md";
+			}
+			else {
+				filePath = path & "\" & code & "\index.md";
+			}
+
+			fileAppend(filePath, dirList);
+
+		}
+
+		return html;
 
 	}
 
