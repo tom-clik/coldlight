@@ -1,0 +1,10 @@
+{
+	"title" : "Coldlight Userguide",
+	"index": "../_docs/userguide/index.md",
+	"site_template": "../_docs/userguide/templates/guide_template.html",
+	"epub_template": "../_docs/userguide/templates/kindle_template.html",
+	"epubX": "../guide/coldlight_userguide.epub",
+	"site": "../guide",
+	"copyright": "&copy; Tom Peer 2008-2024",
+	"assets_url": "/clikpage/_assets"
+}

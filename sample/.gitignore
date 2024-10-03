@@ -1,3 +1,4 @@
 # Ignore actual config files except the sample
 *.json
 !sample_source.json
+!guide.json
