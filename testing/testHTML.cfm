@@ -5,7 +5,8 @@ coldLightObj = new coldlight.coldlight();
 filePath = ExpandPath("source/index.md");
 
 doc = coldLightObj.load( filePath );
-html = coldLightObj.html(doc);
+html = coldLightObj.html(document=doc,footnotes=1);
+
 writeOutput(htmlCodeFormat(html));
 
 </cfscript>

@@ -1,23 +1,33 @@
 <cfscript>
-coldLightObj = new coldlight.coldlight();
-// filePath = ExpandPath("../_docs/userguide/_userguide.md");
-filePath = ExpandPath("source/index.md");
-data = coldLightObj.load( filePath );
 
+param name="url.site" default="sample";
+
+coldLightObj = new coldlight.coldlight();
+
+filePath = ExpandPath("source/index.md");
 site = {
-	"title" = "ColdLight",
+	"title" = "ColdLight Sample Site",
 	"copyright" = "&copy; Tom Peer 2008-2024",
 	"assets_url" = "/clikpage/_assets",
-	"home" = "index.html"
 }
 
 template = ExpandPath("../sample/site/template.html");
-// outputDir = ExpandPath("../guide");
-outputDir = ExpandPath("output");
+outputDir = ExpandPath("output/site");
+
+data = coldLightObj.load( filePath );
+
+
+dummyFile = outputDir & "/dummy_file.html";
+fileWrite(dummyFile, "Dummy file");
 
 fileCopy(ExpandPath("../sample/site/styles.css"), outputDir);
 
-site = coldLightObj.saveSite(document=data,template=template,outputDir=outputDir,site=site);
+site = coldLightObj.staticSite(document=data,template=template,outputDir=outputDir,site=site);
 writeDump(site);
+
+if (fileExists(dummyFile)) {
+	writeOutput("Remove old file failed");
+}
+
 
 </cfscript>
