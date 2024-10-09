@@ -6,8 +6,12 @@ menu = coldLightObj.sectionMenu(data=docObj.data,sections=docObj.sections,previe
 // writeOutput(menu);
 // writeDump(docObj);
 
-TOC = coldLightObj.TOC(document=docObj,toclevel=2);
+for (section in docObj.data) {
+	writeDump(docObj.data[section].node.body().html());
+}
 
-writeOutput(TOC);
+// TOC = coldLightObj.TOC(document=docObj,toclevel=2);
+
+// writeOutput(TOC);
 
 </cfscript>

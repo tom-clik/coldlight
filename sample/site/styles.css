@@ -52,12 +52,12 @@ h1 {
     text-transform: uppercase;
 }
 
-a {
-    color:var(--link-color);
+#pageContent {
+   --heading-margin: 0 0 0.6em 0;
 }
 
 a:hover {
-    color:var(--link-hi-color);
+    --link-color:var(--link-hi-color);
 }
 
 .pageTitle {
@@ -286,7 +286,6 @@ div.spanning {
     top:8px;
 }
 
-
 @media only screen and (max-width: 800px) {
     #search {
         position: static;
@@ -302,7 +301,6 @@ div.spanning {
     #hamburger, #mobileclose  {
         display:block;
     }
-
 }
 
 #search  input {
@@ -318,6 +316,7 @@ div.spanning {
 #sitetitle {
     text-transform: uppercase;
     font-size: 220%;
+    --title-font-weight: normal;
 }
 
 /* code has to do inline code and also as an inner tag for blocks (see <pre>) */ 
@@ -340,7 +339,6 @@ pre {
     width: 100%;
     margin: 1em 0;
     overflow-x: auto;
-    
 }
 
 pre code {
@@ -353,19 +351,14 @@ pre code {
     box-shadow: inset 1px 1px 6px #1d56800f;
 }
 
-
-
-table , td,   th {
-    border: 1px solid  #eee;
-}
-
 table {
     --table-border-width:1px;
     --table-cell-padding:2px;
+    --table-border-color: #eee;
 }
 
-table.striped tr:nth-of-type(2n) {
-    background-color: #eee;
+table th {
+    background: rgba(212,221,228,.5);
 }
 
 .summary {

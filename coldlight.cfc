@@ -167,10 +167,10 @@ component name="coldlight" {
 				// Remove first h1 if it was the title
 				title = subsection.node.select("h1").first();
 				
-				if ( IsDefined(title) && title.text() eq subsection.meta.title) {
+				if ( IsDefined("title") && title.text() eq subsection.meta.title) {
 					title.remove();
 				}
-				
+								
 				if ( Trim(subsection.node.body().html() neq "" ) ) {
 					subsection["hasContent"] = 1;
 					tmp = duplicate(subsection.contents);
@@ -805,33 +805,20 @@ component name="coldlight" {
 		
 	}
 
-	/**
-	 * Save static html website 
-	 */
-	public struct function staticSite(required struct document, required string template, required string outputDir, struct site={} ) localmode=true {
+	public struct function getSiteContext(required struct document, struct site={}, boolean preview=false ) localmode=true {
 
-		returnVal = {};
-
-		// TODO: this will all be common to the preview stuff
 		context = duplicate(arguments.document.meta);
-		template = FileRead(arguments.template);
+		
 		context["site"] = duplicate(arguments.site);
 
 		context["site"]["menu"] = sectionMenu(data=arguments.document.data, sections=arguments.document.sections);
-		context["site"]["home_link"] = sectionLink(section=arguments.document.meta.home, preview=false);
+		context["site"]["home_link"] = sectionLink(section=arguments.document.meta.home, preview=arguments.preview);
 
-		sectionList = structKeyArray(arguments.document.data);
+		return context;
+	}
 
-		// Home page might have text in its own right, save it as a file
-		if (! arguments.document.data.keyExists(arguments.document.meta.home) ) {
-			// TODO: don't save if it doesn't have any actual content...
-			// The "home" thing isn't the best mechanism for testing this.
-			sectionList.append(arguments.document.meta.home);
-		}
-
-		for (code in sectionList) {
-		
-			sectionObj = arguments.document.data[code];
+	public string function pageHTML(required string section, required struct context  ) {
+		sectionObj = arguments.document.data[code];
 			if (! ( sectionObj.hasContent ? : true ) ) {
 				continue;
 			}
@@ -850,8 +837,32 @@ component name="coldlight" {
 				context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections);
 			}
 
-			html = variables.mustache.render(template=template, context=context);
+			html = variables.mustache.render(template=templateHTML, context=context);
 			html = Replace(html,"X&X^AA%A%","{{","all");
+	}
+
+	/**
+	 * Save static html website 
+	 */
+	public struct function staticSite(required struct document, required string template, required string outputDir, struct site={} ) localmode=true {
+
+		returnVal = {};
+		templateHTML = FileRead(arguments.template);
+
+		context = getSiteContext(document=arguments.document, site=arguments.site, preview=false );
+
+		sectionList = structKeyArray(arguments.document.data);
+
+		// Home page might have text in its own right, save it as a file
+		if (! arguments.document.data.keyExists(arguments.document.meta.home) ) {
+			// TODO: don't save if it doesn't have any actual content...
+			// The "home" thing isn't the best mechanism for testing this.
+			sectionList.append(arguments.document.meta.home);
+		}
+
+		for (code in sectionList) {
+		
+			get page here
 
 			fileName = getCanonicalPath(arguments.outputDir & "/" & sectionObj.id & ".html");
 			

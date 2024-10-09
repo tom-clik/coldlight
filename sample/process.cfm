@@ -39,7 +39,6 @@ if (config.keyExists( "plugins") ) {
 	for ( plugin in listToArray(config.plugins ) ) {
 		coldLightObj.addPlugin(plugin);
 	}
-
 }
 
 // The idea was to only load this once. I have a bug whereby the epub process is affecting
@@ -90,6 +89,12 @@ if (config.keyExists("site")) {
 }
 
 WriteOutput("<p>Done</p>");
+
+writeDump(config);
+
+if (config.keyExists("preview_url")) {
+	writeOutput("<p><a href='#config.preview_url#'>#config.preview_url#</a></p>");
+}
 
 public void function checkDirectory(filepath) {
 	local.dir = getDirectoryFromPath(arguments.filepath);
@@ -156,10 +161,10 @@ struct function getConfig(required string code, struct site={}) localmode=true {
 	}
 
 	// Expand file paths and add to config
-	for (field in ['index','pdf','epub','site','pdf_template','epub_template','site_template','plugins']) {
+	for (field in ['index','pdf','epub','site','pdf_template','epub_template','site_template','plugins','preview_url']) {
 		
 		if ( data.keyExists( field ) ) {
-			if (field != "plugins") {
+			if (! ListFind( "plugins,preview_url", field ) ) {
 				config[field] = ExpandPath(data[field]);
 			}
 			else {
