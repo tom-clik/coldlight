@@ -44,7 +44,7 @@ $.fn.menu = function(ops) {
 			$(this).prev("a").append(options.arrow).addClass("hasmenu");
 		});
 
-		$(self).on("click",".hasmenu",function(e) {
+		$(self).on("click",".hasmenu > i",function(e) {
 			e.preventDefault();
 			e.stopPropagation(); 
 			var $li = $(this).closest("li");
