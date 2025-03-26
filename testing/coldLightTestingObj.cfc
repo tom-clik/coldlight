@@ -1,4 +1,16 @@
 component extends="coldlight.coldlight" {
+
+	public function init() {
+		super.init();
+		try {
+			this.loggerObj = new logger.logger(debug=1);
+		} 
+		catch (e) {
+			writeDump(e);
+		}
+	}
+	
+
 	public function getLink() {
 		return super.getLink(argumentCollection = arguments);
 	}
@@ -23,6 +35,12 @@ component extends="coldlight.coldlight" {
 		
 		return  queryExecute( local.sql, local.params, {dbtype="query", returntype="array" } );
 
+	}
+
+	public void function logger(required text, type="I", category="") output=false {
+		if (StructKeyExists(this,"loggerObj")) {
+			this.loggerObj.log(argumentCollection = arguments);
+		}
 	}
 
 }

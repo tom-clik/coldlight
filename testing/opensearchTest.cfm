@@ -5,11 +5,20 @@ A sample page demonstarting use of AWS OpenSearch
 # Synopsis
 
 1. Read credentials file (see below) 
-2. Add data from the test ublication to the index
+2. Add data from the test publication to the index
 3. Do a test search
 
+## Credentials file
+
+Create a file credentials.json with initialisation data for awsopensearch.cfc
+
 */
-data = deserializeJSON(FileRead(expandPath("credentials.json")));
+try {
+	data = deserializeJSON(FileRead(expandPath("credentials.json")));
+}
+catch (any e) {
+	throw("Unable to read credentials file for open search test");
+}
 
 awsopensearchObj = new coldlight.search.awsopensearch(argumentCollection = data);
 
@@ -31,12 +40,20 @@ for (row in dataQ) {
 		"id": row.id
 	};
 
-	data = awsopensearchObj.put(document=myTest);
+	cfstopwatch( variable="dur" ) {
+		data = awsopensearchObj.put(document=myTest);
+	}
+
+	coldLightObj.logger("Added #row.id#  in #dur#ms");
 
 }
 
+// sample delete call
 // data = awsopensearchObj.delete(id=myTest.id);
+
 data = awsopensearchObj.search(qu="glycemic index");
 writeDump( deserializeJSON( data.filecontent ) );
+
+coldLightObj.loggerObj.viewLog();
 
 </cfscript>

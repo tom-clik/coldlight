@@ -2,6 +2,11 @@
 
 # Open Search search component
 
+
+## Usage
+
+Initialise as singleton component with credentials.
+
 ## History
 
 |------------|------|----------------------------------
@@ -10,8 +15,19 @@
 --->
 
 component awsopensearch output=false {
-	
-	public awsopensearch function init(required string endpoint, required string index, required string username, required string password) {
+	/**
+	 * AWS Endpint 
+	 * @endpoint End point for API calls
+	 * @index    Name of OpenSearch index
+	 * @username AWS account username
+	 * @password AWS account password
+	 */
+	public awsopensearch function init(
+		required string endpoint, 
+		required string index, 
+		required string username, 
+		required string password
+		) {
 
 		variables.endpoint = arguments.endpoint;          
 		variables.index    = arguments.index;        
@@ -93,7 +109,6 @@ component awsopensearch output=false {
 				res = {"notimplemented":1};
 		}
 		
-
 		return res;
 
 	}

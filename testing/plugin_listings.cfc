@@ -1,5 +1,11 @@
-component implements="coldlight.pluginInterface" {
+/**
+ * Prototype plug in
+ *
+ * Functionality not implemented yet
+ * 
+ */
 
+component implements="coldlight.pluginInterface" {
 	
 	public function init() {
 		variables.coldSoup = new coldsoup.coldsoup();

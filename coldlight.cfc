@@ -12,11 +12,9 @@ For usage and background, see the [user guide](https://www.coldlight.net)
 	
 An index file is read and converted to HTML.
 
-JSOUP is used to read any div nodes and see if they have an href attribute.
+JSOUP is used to read any div nodes and see if they have an href attribute. 
 
-A collection of files is created by using a index file to determine the order of their inclusion.
-
-These are parsed into a sorted struct of objects. The default key for the struct is the filename stem. Any meta data (see YAML format) is extracted into a `meta` key, the markdown is converted into HTML in `html`, and an array of heading objects for the individual file is generated in `headings`.
+The included files are parsed into a sorted struct of objects. The default key for the struct is the filename stem. Any meta data (see YAML format) is extracted into a `meta` field, the markdown is converted into HTML in `html`, and an array of heading objects for the individual file is generated in `headings`.
 
 ## Document Struct
 
@@ -861,8 +859,9 @@ component name="coldlight" {
 		}
 
 		for (code in sectionList) {
-		
-			get page here
+			
+			throw("Code incomplete");
+			//get page here
 
 			fileName = getCanonicalPath(arguments.outputDir & "/" & sectionObj.id & ".html");
 			
