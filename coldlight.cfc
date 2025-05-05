@@ -40,14 +40,14 @@ component name="coldlight" {
 		variables.mustache = new mustache.Mustache();
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
 		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
-		variables.plugins = [];
+		variables.plugins = [=];
 		
 		return this;
 	}
 
 	// Add a plugin that implements pluginInterface
 	public void function addPlugin(required pluginName) {
-		variables.plugins.append( CreateObject("component", arguments.pluginName).init() );
+		variables.plugins[arguments.pluginName] = CreateObject("component", arguments.pluginName).init();
 	}
 
 	/**
@@ -82,8 +82,8 @@ component name="coldlight" {
 			returnVal["meta"]["home"] = returnVal["navigation_list"][1];
 		}
 		
-		for (plugin in variables.plugins) {
-			
+		for (plugin_code in variables.plugins) {
+			plugin = variables.plugins[plugin_code];
 			for (section in returnVal.data) {
 				sectionObj = returnVal.data[section];
 				plugin.process(node=sectionObj.node, jsoupObj=variables.coldsoup, markDownObj=variables.markdown, document=returnVal);
@@ -815,28 +815,33 @@ component name="coldlight" {
 		return context;
 	}
 
-	public string function pageHTML(required string section, required struct context  ) {
-		sectionObj = arguments.document.data[code];
-			if (! ( sectionObj.hasContent ? : true ) ) {
-				continue;
-			}
+	public string function pageHTML(required string section, required struct document, required struct context, required string template  ) localmode=true {
 			
-			// TODO: parent section values
-			context["page"] = getPage(document=arguments.document,section=code);
-			context["page"].body = Replace(context["page"].html,"{{","X&X^AA%A%","all");
-			context["page"]["section"] = {
-				"id" = code,
-				"parent" = sectionObj.parent ? : "",
-			};
+		sectionObj = arguments.document.data[arguments.section];
 
-			// TODO: formalise all this stuff
-			// section menu
-			if ( sectionObj.keyExists("sections") ) {
-				context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections);
-			}
+		if (! ( sectionObj.hasContent ? : true ) ) {
+			continue;
+		}
 
-			html = variables.mustache.render(template=templateHTML, context=context);
-			html = Replace(html,"X&X^AA%A%","{{","all");
+		// TODO: parent section values
+		context["page"] = getPage(document=arguments.document,section=arguments.section);
+		context["page"].body = Replace(context["page"].html,"{{","X&X^AA%A%","all");
+		context["page"]["section"] = {
+			"id" = arguments.section,
+			"parent" = sectionObj.parent ? : "",
+		};
+
+		// TODO: formalise all this stuff
+		// section menu
+		if ( sectionObj.keyExists("sections") ) {
+			context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections);
+		}
+
+		html = variables.mustache.render(template=arguments.template, context=context);
+		html = Replace(html,"X&X^AA%A%","{{","all");
+
+		return html;
+
 	}
 
 	/**
@@ -859,17 +864,19 @@ component name="coldlight" {
 		}
 
 		for (code in sectionList) {
-			
-			throw("Code incomplete");
-			//get page here
 
-			fileName = getCanonicalPath(arguments.outputDir & "/" & sectionObj.id & ".html");
+			section = arguments.document.data[code];
+			
+			htmlx = pageHTML(document= arguments.document, section=code,context=context,template=templateHTML);
+
+
+			fileName = getCanonicalPath(arguments.outputDir & "/" & code & ".html");
 			
 			try{
-				fileWrite(fileName, html);
+				fileWrite(fileName, htmlx);
 			} 
 			catch (any e) {
-				local.extendedinfo = {"tagcontext"=e.tagcontext,"filename": fileName};
+				local.extendedinfo = {"error"=e,"filename": fileName,"html"=htmlx};
 				throw(
 					extendedinfo = SerializeJSON(local.extendedinfo),
 					message      = "Error writing file #fileName#:" & e.message, 
@@ -878,7 +885,7 @@ component name="coldlight" {
 			}
 			
 			
-			returnVal["#sectionObj.id#"] = 1;
+			returnVal["#code#"] = 1;
 		
 		}
 
@@ -912,7 +919,7 @@ component name="coldlight" {
 
 	}
 
-	private struct function getPage(required struct document, required string section, boolean preview = false ) localmode=true {
+	public struct function getPage(required struct document, required string section, boolean preview = false ) localmode=true {
 
 		sectionData = arguments.document.data[arguments.section];
 		node = duplicate(sectionData.node);

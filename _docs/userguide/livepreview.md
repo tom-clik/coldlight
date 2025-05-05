@@ -6,18 +6,3 @@ To make editing the markdown easier, a live preview version will reload individu
 
 
 
-## Linking to a site
-
-A web preview URL can be set up to point to your site. The section link is always
-
-`index.cfm?section=<sectionname>`
-
-If your
-
-Some logic in the preview page can abstract the name if a file name is passed,
-
-### Example using Sublime Text
-
-The 
-
-

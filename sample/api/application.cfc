@@ -17,12 +17,13 @@ component {
 
 	public void function onRequestStart() {
 		
-		param name="url.reset" type="boolean" default=false;
 		if (url.reset && application.debug) {
-			onApplicationStart();
+			if ( url.reset ? : false) {
+				onApplicationStart();
+			}
 		}
-		param name="url.method" type="string" default="index";
 
+		param name="url.method" type="string" default="index";
 
 	}
 	
@@ -31,7 +32,7 @@ component {
 		
 		// errorhandler available at https://github.com/tom-clik/cferrorHandler
 		try {
-			new cferrorHandler.ErrorHandler(e=arguments.e, isAjaxRequest=request.isAjaxRequest ,debug=application.debug, logger=new cferrorHandler.textLogger( application.errorsFolder ));
+			new cferrorHandler.ErrorHandler(e=arguments.e, isAjaxRequest=request.isAjaxRequest ,debug=application.debug ? : false, logger= new cferrorHandler.textLogger( application.errorsFolder ));
 
 		}
 		catch (any local.n) {

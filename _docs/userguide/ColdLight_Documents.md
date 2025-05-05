@@ -2,7 +2,7 @@
 
 A ColdLight publication consists of multiple markdown files that are combined using a single index file.
 
-This uses a proprietary mechanism for defining the included files: `<div href="testing.md" />`. This is done to ensure file names are unique, permanent references without the numeric sort orders that similar systems use. There are also advantages when it comes to generation PDF and EPUB versions of the publication.
+This uses a proprietary mechanism for defining the included files: `<div href="testing.md" />`. This is done to ensure file names are unique, permanent references without the numeric sort orders that similar systems use. There are also advantages when it comes to generating PDF and EPUB versions of the publication.
 
 The index file can contain markdown text, but usually just has YAML data and includes. e.g.
 

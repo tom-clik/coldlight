@@ -12,6 +12,14 @@ A sample page demonstarting use of AWS OpenSearch
 
 Create a file credentials.json with initialisation data for awsopensearch.cfc
 
+```json
+{
+	"endpoint":"",
+	"index":"",
+	"username":"",
+	"password":""
+}
+```
 */
 try {
 	data = deserializeJSON(FileRead(expandPath("credentials.json")));

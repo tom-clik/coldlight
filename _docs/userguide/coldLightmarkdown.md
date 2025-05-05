@@ -15,7 +15,7 @@ toclevel: 2
 ---
 ```
 
-This information should be placed at the top of the markdown files. Any variable defined here will be available as for substitution using `{$varname}` syntax.
+This information should be placed at the top of the markdown files. Any variable defined here will be available as for substitution using `{{varname}}` mustache syntax.
 
 ## Additional data { #additional_attrs}
 
@@ -24,7 +24,7 @@ IDs, classes, and data tags can be added to any markdown tag using the attribute
 ```
 ### heading 3 { #tag}
 
-Classes and other attributes can be added to this:
+Classes and other attributes can be added:
 
 ### heading 3 { #tag .warning data-subtitle='Other attribs added as key pairs'}
 ```
@@ -38,17 +38,6 @@ When linking to a cross reference in any part of the document, use only the uniq
 ```
 
 Sample cross-ref to `#additional_attrs`: [](#additional_attrs)
-
-## Definition lists
-
-Definition lists can be defined as so:
-
-```markdown
-term:
-    Defintiion
-term2:
-    Defintiion
-```
 
 ## HTML
 
@@ -65,3 +54,7 @@ section text
 
 </div>
 ```
+
+## Other markdown
+
+A range of other markdown, including footnotes and definitions is supported, see [](#markdown_exotica).

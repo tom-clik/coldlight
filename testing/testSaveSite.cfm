@@ -4,8 +4,13 @@ param name="url.site" default="sample";
 
 coldLightObj = new coldlight.coldlight();
 
+for ( plugin in ['coldlight.testing.plugin_listings'] ) {
+	coldLightObj.addPlugin(plugin);
+}
+
 filePath = ExpandPath("source/index.md");
-site = {
+
+site_data = {
 	"title" = "ColdLight Sample Site",
 	"copyright" = "&copy; Tom Peer 2008-2024",
 	"assets_url" = "/clikpage/_assets",
@@ -22,7 +27,7 @@ fileWrite(dummyFile, "Dummy file");
 
 fileCopy(ExpandPath("../sample/site/styles.css"), outputDir);
 
-site = coldLightObj.staticSite(document=data,template=template,outputDir=outputDir,site=site);
+site = coldLightObj.staticSite(document=data,template=template,outputDir=outputDir,site=site_data);
 writeDump(site);
 
 if (fileExists(dummyFile)) {

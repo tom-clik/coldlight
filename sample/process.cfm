@@ -4,17 +4,30 @@ Save kindle epub (all files added to zip), PDF, and static site for a publicatio
 
 ## Description
 
-Using a json configuration     
+Use a json configuration to set source file and output(s) for conversion.  
 
 ## Usage
 
-1. See the sample_soure.json and create a copy for your publication (see notes below).
-2. Set the path to the Prince executable in environment.princeExecutable (or use default below)
-3. Run script
-
-Omit either "epub" or "pdf" from the
+1. See the sample_source.json and create a copy for your publication (see notes below).
+2. Set the path to the Prince executable in environment.princeExecutable (or use default below) for PDFs
+3. Run script NB it's configured to read all .json files in folder and display a list. If you use this, you may want to add a title to the json to appear in the list. Otherwise just call with url.code={stem of your json file}
 
 ### Config file params
+
+
+| Param         | Description
+|---------------|-----------------------------------------------------------
+| index         | REQUIRED  Markdown index page
+| epub*         | File name for Epub export
+| epub_template | Template to use for epub conversion
+| pdf*          | File name for PDF export 
+| pdf_template  | Template to use for PDF conversion
+| site*         | Folder for HTML site 
+| site_template | Template for HTML conversion
+| plugins       | List of ColdLight plug ins to load. Currently in alpha testing
+| assets_url    | Other data can be added here and will be added to site data for use in conversion. Typically you would use technical variables here and the markdown for editorial. 
+
+* Any of these can be omitted. The corresponding template file is then not needed. 
 
 ## Notes
 
@@ -27,13 +40,16 @@ if (! IsDefined("url.code") ) {
 	listPubs();
 	abort;
 }
+
 princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files (x86)/Prince/engine/bin/prince.exe";
 
-
-site = {};
-config = getConfig(code=url.code, site=site);
+fileName = ExpandPath("./" & url.code & ".json");
 
 coldLightObj = new coldlight.coldlight();
+coldLightSampleObj = new coldlight.sample.coldlightSample();
+
+site = {};
+config = coldLightSampleObj.getConfig(fileName=fileName, site=site);
 
 if (config.keyExists( "plugins") ) {
 	for ( plugin in listToArray(config.plugins ) ) {
@@ -137,51 +153,6 @@ public void function listPubs() {
 
 }
 
-/* Load and process configuration file */
-struct function getConfig(required string code, struct site={}) localmode=true {
-
-	config = {};
-	fileName = ExpandPath("./" & arguments.code & ".json");
-	
-	if (! fileExists(fileName)) {
-		throw("Config file #fileName# not found");
-	}
-
-	data = deserializeJSON(fileRead(fileName));
-
-	// check index file defined
-	if ( ! data.keyExists( "index" ) ) {
-		throw("No index field defined");
-	}
-	// check templates defined for all outputs
-	for (field in ['pdf','epub','site'] ) {
-		if ( data.keyExists( field ) && ! data.keyExists( field & "_template" ) ) {
-			throw("No template defined for #field#");
-		}
-	}
-
-	// Expand file paths and add to config
-	for (field in ['index','pdf','epub','site','pdf_template','epub_template','site_template','plugins','preview_url']) {
-		
-		if ( data.keyExists( field ) ) {
-			if (! ListFind( "plugins,preview_url", field ) ) {
-				config[field] = ExpandPath(data[field]);
-			}
-			else {
-				config[field] = data[field];
-			}
-			StructDelete(data,field);
-			
-		   
-		}
-		
-	}
-	// Append any remaining data fields to site
-	StructAppend(arguments.site, data);
-
-	return config;
-
-}
 
 
 

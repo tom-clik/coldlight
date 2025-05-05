@@ -6,7 +6,7 @@ component extends="coldlight.coldlight" {
 			this.loggerObj = new logger.logger(debug=1);
 		} 
 		catch (e) {
-			writeDump(e);
+			// logger not in use - just ignore
 		}
 	}
 	
@@ -20,9 +20,7 @@ component extends="coldlight.coldlight" {
 	public function sectionLink() {
 		return super.sectionLink(argumentCollection = arguments);
 	}
-	public function getPage() {
-		return super.sectionLink(argumentCollection = arguments);
-	}
+	
 
 	public array function search(required string qu, required query data) {
 		

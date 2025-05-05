@@ -5,7 +5,7 @@ Apply styling to a side element with the admonition syntax. This is three   `!` 
 The text is indented after the title line. 
 
 ```
- note "Title"
+??? note "Title"
     Block style with class and title  
 
 ??? note
@@ -15,16 +15,16 @@ The text is indented after the title line.
     Collapse block style open by default
 ```
 
-Using `???` creates a collapsible block in the website version.
+Using `+` creates a collapsible block in the website version (TODO: not working)
 
-??? note
+???+ note
     Collapse block style
 
 ## Admonition Samples
 
 
 !!! abstract "abstract style"
-    Block etxt
+    Block text
 
     * Carries on
     * List item

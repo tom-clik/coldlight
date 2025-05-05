@@ -43,8 +43,6 @@ dl dd {
 }
 ```
 
-Note that for long terms with multiple definitions, sometimes you still have to convert to a table to get the styling right.
-
 ## Sample list
 
 First Term

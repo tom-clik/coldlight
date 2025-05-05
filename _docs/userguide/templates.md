@@ -14,15 +14,15 @@ The other fields depend on the output target.
 
 ## Single page publications
 
-For a single page (PDF, EPUB), the main body text is combined into a variable called `body`. 
+For a single page version (PDF, EPUB), the main body text is combined into a variable called `body`. 
 
-Each separate file is added in order. If a "section" has sub sections, the title of the is "demoted" to `<h2>`. The easiest way to change this behaviour is to create a separate index for the print/ebook versions. This is the primary reason for using the `<div href=''>` mechanism as opposed to the directory structure.
+Each separate file is added in order. If a section has sub sections, the title of each sub section is demoted to `<h2>`. The easiest way to change this behaviour is to create a separate index for the print/ebook versions.
 
 ### The TOC variable
 
 An HTML table of contents can be output with the `toc` variable.
 
-Note this is only for PDF documents. The EPUB toc is generated automatically in code.
+Note this is only for PDF documents. The EPUB TOC is generated automatically in code.
 
 ## Website publications
 
@@ -46,7 +46,9 @@ Multiple page publications have a "page" variable with multiple fields for navig
 
 When saving a static website, variables can be defined in the site object and output with the `site` prefix, e.g. `{{site.title}}`. These are in addition to the basic variables defined in YAML.
 
+These are generally used for "technical" variables such as `{{site.assets_url}}`. Editorial variables such as title are best defined in the text.
+
 ### Menu
 
-The main menu for a multiple page document is saved to a variable `site.menu`. It's the same on all pages 
+The main menu for a multiple page document is saved to a variable `site.menu`. It's the same on all pages.
 

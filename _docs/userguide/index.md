@@ -19,4 +19,7 @@ As a CFML application, it is easily extensible to add custom content. The docume
 <div href="toc.md" />
 <div href="fuzzy.md" />
 <div href="markdown_exotica.md" />
+<div href="livepreview.md" />
+<div href="plugins.md" />
 
+*[TOC]: Table of contents
