@@ -118,7 +118,8 @@
 </div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="{{{site.assets_url}}}/js/_min/coldlightpackage.0.9.min.js"></script>
+	<script src="{{{site.assets_url}}}/js/_min/coldlightpackage.0.10.min.js"></script>
+	
 
 	<script src="searchSymbols.js"></script>
 	
@@ -129,7 +130,7 @@ $( document ).ready(function() {
 
 	$("#pagemenu").menuScroll({maincontent:".pageBody"});
 
-	$("#searchControl").fuzzySearch({symbols:symbols, results: "#searchResults"});
+	$("#searchControl").fuzzySearch({symbols:symbols, results: "#searchResults", preview: {{site.preview}} });
 	
 	var hash = $(location).attr('hash');
 	if (hash && hash !== "") {

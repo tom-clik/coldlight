@@ -35,18 +35,19 @@ The html for PDF version ends up in the root for the relative file paths. This c
 
 */
 
+coldLightObj = new coldlight.coldlight();
+coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
+
 // List settings files in the folder if code not defined
 if (! IsDefined("url.code") ) {
-	listPubs();
+	coldLightSampleObj.listPubs(getDirectoryFromPath(getCurrentTemplatePath()));
 	abort;
 }
 
+// Uses prince to convert to PDF. Omit pdf from config file if not using 
 princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files (x86)/Prince/engine/bin/prince.exe";
 
 fileName = ExpandPath("./" & url.code & ".json");
-
-coldLightObj = new coldlight.coldlight();
-coldLightSampleObj = new coldlight.sample.coldlightSample();
 
 site = {};
 config = coldLightSampleObj.getConfig(fileName=fileName, site=site);
@@ -70,7 +71,7 @@ for (type in ['pdf','epub']) { // ,
 		// see note above
 		args.document = coldlightObj.load(config.index);
 		args.filename = config[type];
-		checkDirectory(args.filename);
+		coldLightSampleObj.checkDirectory(args.filename);
 		
 		args.template = config[type & "_template"];
 		doc = coldLightObj[type](argumentCollection = args);
@@ -93,10 +94,10 @@ for (type in ['pdf','epub']) { // ,
 if (config.keyExists("site")) {
 	writeOutput("<p>Generating site</p>");
 	args = {};
-
+	
 	args.document = coldlightObj.load(config.index);
 	args.outputDir = config["site"];
-	checkDirectory(args.outputDir & "/index.html");
+	coldLightSampleObj.checkDirectory(args.outputDir);
 	args.template = config["site_template"];
 	args.site = site;
 
@@ -106,52 +107,10 @@ if (config.keyExists("site")) {
 
 WriteOutput("<p>Done</p>");
 
-writeDump(config);
-
 if (config.keyExists("preview_url")) {
 	writeOutput("<p><a href='#config.preview_url#'>#config.preview_url#</a></p>");
 }
 
-public void function checkDirectory(filepath) {
-	local.dir = getDirectoryFromPath(arguments.filepath);
-	
-	if (! DirectoryExists(local.dir)) {
-		try{
-			DirectoryCreate(local.dir);
-		} 
-		catch (any e) {
-			local.extendedinfo = {"tagcontext"=e.tagcontext,"dir"=local.dir};
-			throw(
-				extendedinfo = SerializeJSON(local.extendedinfo),
-				message      = "Unabel to create directory:" & e.message, 
-				detail       = e.detail  
-			);
-		}
-		
-	}
-}
-
-
-// List JSON files in folder
-public void function listPubs() {
-	
-	local.fileList = directoryList(getDirectoryFromPath(getCurrentTemplatePath()) ,false, "name", "*.json");
-	local.html = "";
-	
-	if (arrayLen(local.fileList) ) {
-		for (local.name in local.fileList) {
-			local.code = listFirst(local.name,".");
-			local.html &= "<p><a href='process.cfm?code=#local.code#'>#local.code#</a></p>";
-			
-		}
-		writeOutput("<h1>Select Publication</h1>");
-		writeOutput(local.html);
-	}
-	else {
-		 writeOutput("<h1>No Publications Defined</h1>");
-	}
-
-}
 
 
 

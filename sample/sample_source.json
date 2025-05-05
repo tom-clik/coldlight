@@ -1,7 +1,7 @@
 {
 	"title" : "ColdLight Sample Site",
 	"index": "../testing/source/index.md",
-	"pdf_template": "../testing/templates/template.html",
+	"pdf_template": "../testing/templates/template_pdf.html",
 	"epub_template": "../testing/templates/template.html",
 	"epub": "../testing/output/sample.epub",
 	"pdf": "../testing/output/sample.pdf",

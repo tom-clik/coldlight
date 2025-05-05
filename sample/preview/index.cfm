@@ -2,17 +2,8 @@
 
 param name="request.rc.section" default="index";
 
-if (! application.cache.keyExists( request.rc.section ) ) {
-	// reload page
-	html = application.coldlightObj.getPage();
-	
-	application.cache[request.rc.section] = {
-		"html" = html,
-		"lastmodified" = now()
-	}
-}
+html = application.coldlightObj.pageHTML(document= application.document, section=request.rc.section,context=application.context,template=application.template,preview=true);
 
-
-
+writeOutput(html);
 
 </cfscript>

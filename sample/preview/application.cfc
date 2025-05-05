@@ -9,37 +9,59 @@ component {
 	function onApplicationStart() {
 		application.rootDir = getDirectoryFromPath( getCurrentTemplatePath() );
 
-		application.filename = getCanonicalPath(application.rootDir & "../../sample/guide.json");
 		application.coldLightObj = new coldlight.coldlight();
-		application.coldLightSampleObj = new coldlight.sample.coldlightSample();
+		application.coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
 
-		loadDoc();
-
+		application.code = "";
+	
 	}
 
 	function loadDoc() localmode="true" {
 
+		application.filename = getCanonicalPath(application.rootDir & "../../sample/" & application.code & ".json");
+
 		site = {};
 		config = application.coldLightSampleObj.getConfig(filename=application.filename, site=site);
-
+		
 		application.document = application.coldlightObj.load( config.index );
-		application.template = config.site_template;
+		application.directory = getDirectoryFromPath(config.index);
+		application.template = FileRead( config.site_template );
+		application.context  = application.coldLightObj.getSiteContext(document=application.document, site=site, preview=true );
+		
+		searchSymbolsJS = application.coldLightObj.searchSymbols(document=application.document);
+		fileName = application.rootDir & "searchSymbols.js";
+		fileWrite(fileName, searchSymbolsJS);
+
 	}
 
 	
 
 	function onRequestStart(string targetPage) {
 		
+
 		request.rc = duplicate(url);
 		structAppend(request.rc, form);
 
+
+		param name="request.rc.code" type="string" default="";
 		param name="request.rc.reset" type="boolean" default="false";
 		param name="request.rc.reload" type="boolean" default="false";
 
 		if (request.rc.reset) {
 			onApplicationStart();
 		}
-		else if ( request.rc.reload OR checkCache() ) {
+		
+		// Mechanism for loading different pubs. See /coldlight/sample
+		if (request.rc.code == "" && application.code eq "") {
+			request.rc.reload = true;
+			application.code = "guide";
+		}
+		else if (request.rc.code != "" && request.rc.code != application.code) {
+			request.rc.reload = true;
+			application.code = request.rc.code;
+		}
+
+		if ( request.rc.reload OR checkCache() ) {
 			loadDoc();
 		}
 
@@ -54,7 +76,7 @@ component {
 		
 		cacheUpdate = false;
 
-		test = directoryList(application.folder,true,"query","*.md");
+		test = directoryList(application.directory,true,"query","*.md");
 		
 		for (row in test) {
 			if ( row.dateLastModified gt application.LastModified ) {

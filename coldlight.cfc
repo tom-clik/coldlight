@@ -163,10 +163,13 @@ component name="coldlight" {
 				subsection["id"] = info.attributes.id;
 
 				// Remove first h1 if it was the title
-				title = subsection.node.select("h1").first();
+				titles = subsection.node.select("h1");
 				
-				if ( IsDefined("title") && title.text() eq subsection.meta.title) {
-					title.remove();
+				if ( IsDefined("titles") and titles.len() ) {
+					title = titles.first();
+					if ( title.text() eq subsection.meta.title ) {
+						title.remove();
+					}
 				}
 								
 				if ( Trim(subsection.node.body().html() neq "" ) ) {
@@ -809,14 +812,20 @@ component name="coldlight" {
 		
 		context["site"] = duplicate(arguments.site);
 
-		context["site"]["menu"] = sectionMenu(data=arguments.document.data, sections=arguments.document.sections);
+		context["site"]["preview"] = arguments.preview ? 'true' : 'false';
+
+		context["site"]["menu"] = sectionMenu(data=arguments.document.data, sections=arguments.document.sections, preview=arguments.preview);
 		context["site"]["home_link"] = sectionLink(section=arguments.document.meta.home, preview=arguments.preview);
 
 		return context;
 	}
 
-	public string function pageHTML(required string section, required struct document, required struct context, required string template  ) localmode=true {
-			
+	public string function pageHTML(required string section, required struct document, required struct context, required string template, boolean preview=false  ) localmode=true {
+		
+		// default page is index - use first section if not present
+		if ( arguments.section eq "index" && ! arguments.document.data.keyExists("index") ) {
+			arguments.section = arguments.document.sections[1];
+		}
 		sectionObj = arguments.document.data[arguments.section];
 
 		if (! ( sectionObj.hasContent ? : true ) ) {
@@ -824,7 +833,7 @@ component name="coldlight" {
 		}
 
 		// TODO: parent section values
-		context["page"] = getPage(document=arguments.document,section=arguments.section);
+		context["page"] = getPage(document=arguments.document,section=arguments.section,preview=arguments.preview);
 		context["page"].body = Replace(context["page"].html,"{{","X&X^AA%A%","all");
 		context["page"]["section"] = {
 			"id" = arguments.section,
@@ -834,7 +843,7 @@ component name="coldlight" {
 		// TODO: formalise all this stuff
 		// section menu
 		if ( sectionObj.keyExists("sections") ) {
-			context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections);
+			context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections,preview=arguments.preview);
 		}
 
 		html = variables.mustache.render(template=arguments.template, context=context);
@@ -889,8 +898,7 @@ component name="coldlight" {
 		
 		}
 
-		searchSymbols = getHeadingData(arguments.document);
-		searchSymbolsJS = "symbols = " & serializeJSON(searchSymbols) & ";" & newLine();
+		searchSymbolsJS = searchSymbols(document=arguments.document);
 		fileName = getCanonicalPath(arguments.outputDir & "/searchSymbols.js");
 		fileWrite(fileName, searchSymbolsJS);
 
@@ -904,6 +912,11 @@ component name="coldlight" {
 
 		return returnVal;
 
+	}
+
+	public string function searchSymbols() localmode=true {
+		searchSymbols = getHeadingData(arguments.document);
+		return "symbols = " & serializeJSON(searchSymbols) & ";" & newLine();
 	}
 
 	// Replace {$ with a place holder if they're in a code block 

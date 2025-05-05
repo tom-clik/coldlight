@@ -2,3 +2,4 @@
 *.json
 !sample_source.json
 !guide.json
+search_symbols.js
