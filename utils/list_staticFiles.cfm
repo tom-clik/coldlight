@@ -1,6 +1,6 @@
 <!---
 
-# test_staticFiles
+# list_staticFiles
 
 Get static files required for coldLight
 

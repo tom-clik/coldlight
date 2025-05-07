@@ -1,5 +1,7 @@
-# Ignore actual config files except the sample
+# Ignore actual config files except the samples
 *.json
 !sample_source.json
 !guide.json
+!book.json
+!resume.json
 searchSymbols.js

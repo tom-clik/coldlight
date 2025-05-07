@@ -1,0 +1,80 @@
+<html>
+<head>
+	<title>{{title}}</title>
+	{{#author}}<meta name="Author" value="{{author}}" />{{/author}}
+	{{#description}}<meta name="Description" value="{{description}}" />{{/description}}
+	{{#ISBN}}<meta name="ISBN" value="{{ISBN}}" />{{/ISBN}}
+	
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="https://www.coldlight.net/_styles/pdf/reset.css">
+	<link rel="stylesheet" type="text/css" href="https://www.coldlight.net/_styles/pdf/standard.css">
+	<link rel="stylesheet" type="text/css" href="https://www.coldlight.net/_styles/pdf/simplebook.css">
+	<link rel="stylesheet" type="text/css" href="https://www.coldlight.net/_styles/pdf/fonts/steelfish/Steelfish.css">
+	<link rel="stylesheet" type="text/css" href="https://www.coldlight.net/_styles/pdf/fonts/crimson/crimson.css">
+	<style>
+	@page {
+		font-family: "Crimson Text";
+	}
+
+	body {
+		font-family: "Crimson Text";
+	}
+
+	h1, h2, .title {
+		font-family:Steelfish Rg;
+	}	
+	</style>
+</head>
+<body>
+
+<div id="frontmatter">
+	<div id="halftitle" class="section">
+		<p class="title">{{title}}</p>
+	</div>
+
+	<div id="publisher" class="section">
+		<h2>{{publisher}}</h2>
+
+		{{{publisher_info}}}
+	</div>
+
+	<div id="titlepage" class="section">
+
+		{{#author}}<p class="author">{{author}}</p>{{/author}}
+		<p class="title">{{title}}</p>
+		{{#subtitle}}<p class="subtitle">{{subtitle}}</p>{{/subtitle}}
+		<div class="publisherinfo">
+			<p>{{publisher}}</p> 
+			<p>{{publisher_location}}</p>
+		</div>
+		
+	</div>
+	
+	<div id="copyright" class="section">
+	
+		{{{copyright}}}
+	
+	</div>
+
+	<div id="toc" class="section">
+		<h1>Contents</h1>
+
+		<div id="toclisting">
+			{{{toc}}}
+		</div>
+
+	</div>
+</div>
+<div id="content">
+	
+{{{body}}}
+
+</div>
+<div id="endmatter">
+	<div class="section">
+		{{{acknow}}}
+
+	</div>
+</div>
+</body>
+</html>

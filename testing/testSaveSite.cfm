@@ -1,4 +1,11 @@
 <cfscript>
+/**
+ * Save the sample site to static HTML
+ *
+ * Meant primarily as a testing scratchpad but you can use this in preference to the sample code
+ * 
+ */
+
 
 param name="url.site" default="sample";
 
@@ -16,16 +23,13 @@ site_data = {
 	"assets_url" = "/clikpage/_assets",
 }
 
-template = ExpandPath("../sample/site/template.html");
+template = ExpandPath("../sample/templates/site.html");
 outputDir = ExpandPath("output/site");
 
 data = coldLightObj.load( filePath );
 
-
 dummyFile = outputDir & "/dummy_file.html";
 fileWrite(dummyFile, "Dummy file");
-
-fileCopy(ExpandPath("../sample/site/styles.css"), outputDir);
 
 site = coldLightObj.staticSite(document=data,template=template,outputDir=outputDir,site=site_data);
 writeDump(site);

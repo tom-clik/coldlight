@@ -1,0 +1,66 @@
+/*== really basic reset script ==*/
+/*===Reset Code===*/
+html, body, div, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, tt, var, center, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, ul, ol, dl, li
+{
+margin: 0;
+padding: 0;
+border: 0;
+font-size: 100%;
+vertical-align: baseline;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+img {
+	font-size: inherit;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.clear:after, .clearfix:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+table, tr, td {
+	font-size: 1em;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+ol, ul {
+  margin:1em 0;
+  padding-left: 1.4em;
+  text-indent:0px;
+}
+
+ul {
+  list-style: disc;
+}
+ul ul  {
+  list-style: circle;
+}
+ol  {
+  list-style: decimal;
+}
+ol ol {
+  list-style: lower-alpha;
+}
+

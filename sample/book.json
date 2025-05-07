@@ -1,0 +1,8 @@
+{
+	"title" : "Sample book",
+	"index": "./source/book/index.md",
+	"epub_template": "./templates/epub.html",
+	"epub": "../testing/output/book/sample.epub",
+	"pdf_template": "./templates/simple_book.html",
+	"pdf": "../testing/output/book/sample.pdf",
+}

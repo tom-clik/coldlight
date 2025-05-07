@@ -76,12 +76,18 @@ component name="coldlight" {
 				"meta" = {"title": temp.meta.title },
 				"node" = temp.node
 			}
+			// if there is only one page, we use that
+			if ( !returnVal["sections"].len() ) {
+				returnVal["sections"].append(id);
+			}
 		}
 		else {
 			returnVal["navigation_list"] = getNavigationList(data=returnVal.data, sections=returnVal.sections);
 			returnVal["meta"]["home"] = returnVal["navigation_list"][1];
 		}
 		
+
+
 		for (plugin_code in variables.plugins) {
 			plugin = variables.plugins[plugin_code];
 			for (section in returnVal.data) {
@@ -101,12 +107,12 @@ component name="coldlight" {
 	 *
 	 * Reads file and parse that (possibly recursively)
 	 * 
-	 * 
 	 * @text     Markdown text to parse
 	 */
 	private struct function parseText(required string text, required string filepath, required struct data, required struct contents)  localmode=true {
 
 		temp = variables.markdown.markdown(text=arguments.text,options={"meta"=false});
+
 		temp.node.outputSettings().charset("UTF-8");
 		
 		retVal = { 
@@ -194,8 +200,7 @@ component name="coldlight" {
 			}
 
 			catch (any e) {
-				throw(e);
-				local.extendedinfo = {"tagcontext"=e.tagcontext, "node"=div.html(),"text"=arguments.text};
+				local.extendedinfo = {"error"=e, "node"=div.html(),"text"=arguments.text};
 				throw(
 					extendedinfo = SerializeJSON(local.extendedinfo),
 					message      = "invalid node:#e.message#"
@@ -817,7 +822,10 @@ component name="coldlight" {
 		context["site"]["menu"] = sectionMenu(data=arguments.document.data, sections=arguments.document.sections, preview=arguments.preview);
 		context["site"]["home_link"] = sectionLink(section=arguments.document.meta.home, preview=arguments.preview);
 
+		context.debug = arguments.preview;
+
 		return context;
+
 	}
 
 	public string function pageHTML(required string section, required struct document, required struct context, required string template, boolean preview=false  ) localmode=true {
@@ -1152,12 +1160,13 @@ component name="coldlight" {
 
 	}
 
-	// A utility function to generate index files from a directory structure
-	public string function generateIndex(required string filepath) localmode=true {
+	/**
+	 * @hint A utility function to generate index files from a directory structure
+	 */
+	public struct function generateIndex(required string filepath) localmode=true {
 		path = getCanonicalPath(arguments.filepath);
 		if (right(path,1) eq "\") path = Left(path, len(path) - 1);
 
-		html = "";
 		filelist = directoryList(path, true, "query", "*.md");
 
 		data = [ "index" = []];
@@ -1194,7 +1203,7 @@ component name="coldlight" {
 
 		}
 
-		return html;
+		return data;
 
 	}
 

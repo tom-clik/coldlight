@@ -1,0 +1,245 @@
+body {
+	font-family: Myriad;
+	font-size: 9pt;
+}
+
+.layout-cover {
+	page: cover;
+}
+
+.layout-front {
+	page: front;
+}
+
+.layout-main {
+	page: main;
+}
+
+/* the header is taken out of the flow and used as the header on the main content */
+div#header { 
+	flow:static(mainHeader);
+	padding:0;
+	position: relative;
+}
+
+div#header .pubdate {
+	position: absolute;
+	bottom:2mm;
+	left:0;
+}
+
+div#header .companyname {
+	position: absolute;
+	bottom:2mm;
+	right:0;
+	font-size: 140%;
+	text-align: right;
+	margin-top:-2mm;
+}
+
+h1.company {prince-page-group: start;}
+
+div#coverheader {
+	flow:static(coverHeader);
+	text-align:right;
+	color:white;
+	font-size:200%;
+}
+
+
+@page {
+	size:a4;
+	border-bottom: 0.6pt solid #666666;
+	border-top: 0.6pt solid #666666;
+	padding: 4mm 0;
+	margin: 32mm 20mm 21mm 20mm;
+	font-family: Myriad;
+	font-size: 9pt;
+	
+	@top-center {
+		content: flow(mainHeader);
+		vertical-align: bottom;
+	}
+
+	@bottom-center {
+	    content: counter(page);
+	    vertical-align: top;
+	    margin: 0.3em 0;
+	    text-align: outside;
+	}
+
+    @footnotes {
+		border-top: solid black thin;
+		padding-top: 8pt
+    }
+}
+
+
+@page cover {
+	border-width: 0;
+
+	margin: 40mm 15mm 21mm 15mm;
+
+	@top-center {
+		content: flow(coverHeader);
+		margin: 0 -15mm;
+		padding: 4mm 15mm;
+		background-color:black;
+		
+	}
+
+	@bottom {
+		border-width: 0;
+		padding-bottom: 0.5em;
+	}
+
+	@bottom-center {
+	    content: '';
+	}
+}
+
+@page front {
+	padding-left: 0mm;
+}
+
+@page main {
+	padding-left: 20mm;
+}
+
+@page main:first {
+	padding-left: 50mm;
+}
+
+h1, h2, h3, .scheme-title {
+	color:#666666;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0.4em
+}
+
+h1 {
+	font-size:240%;
+}
+
+h2 {
+	font-size:180%;
+}
+h3 {
+	font-size:140%;
+}
+h4 {
+	font-size:120%;
+}
+h5 {
+	font-size:110%;
+}
+
+.scheme-justify p {
+	text-align: justify;
+}
+
+.scheme-spaced p {
+	line-height: 140%;
+}
+/* cover page styling */
+
+section#cover .title {
+	font-size:200%;
+	font-weight: bold;
+	margin-bottom: 0.2em;
+	margin-top:1em;
+}
+
+section#cover .subtitle {
+	font-size:140%;
+	margin-bottom: 0.6em;
+	font-weight: bold;
+	margin-top:0;
+}
+
+section#cover .coverimage {
+	margin:4mm 0;
+	min-height: 80mm;
+}
+
+
+section#cover .coverimage {
+	max-width:100%;
+	height:auto;
+}
+
+section#cover .notedate {
+	font-size:160%;
+	margin-bottom: 1.4em;
+	text-align: right;
+	font-weight: bold;
+}
+
+section#cover .contacts {
+	float:bottom;
+}
+
+.contacts .contactlist tr td {
+	padding:0.6mm 0;
+}
+.contacts .contactlist tr td:nth-of-type(1) {
+	width:60mm;
+}
+
+.contacts .contactlist tr td:nth-of-type(2) {
+	width:70mm;
+}
+
+.contacts .contactlist tr td:nth-of-type(3) {
+	width:70mm;
+}
+
+table.info {
+	border-width:1pt 0;
+	border-style: solid;
+	border-color: black;
+	width: 100%;
+}
+
+table.info caption {
+    caption-side: bottom;
+}
+
+caption, .caption {
+	font-size: 90%;
+	font-weight: bold;
+	font-style: italic;
+	text-align: right;
+}
+
+table.info th, table.info td {
+	border-width:0.6pt 0 0 0;
+	border-style: solid;
+	border-color: #666666;
+	text-align: center;
+}
+
+table.info td:nth-of-type(1), table.info th:nth-of-type(1)  {
+ 	text-align: left;
+ }
+
+table.info th {
+	font-weight: bold;
+	background-color: #c3c3c3;
+}
+
+.intro {
+	font-weight: bold;
+}
+.companyinfo {
+	float:left;
+	margin-left:-60mm;
+	width: 56mm;
+}
+
+.companyinfo th {
+	text-align: left;
+}

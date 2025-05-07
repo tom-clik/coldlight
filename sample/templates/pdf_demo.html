@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Sample PrinceXML Document</title>
+	<meta name="author" content="Tom Peer">
+	<meta name="description" content="A sample document demonstrating PrinceXML layout features.">
+	<meta name="isbn" content="978-3-16-148410-0">
+	<link rel="stylesheet" href="../../_styles/pdf/reset.css">
+	<link rel="stylesheet" href="../../_styles/pdf/standard.css">
+	<link rel="stylesheet" href="../../_styles/pdf/simplebook.css">
+</head>
+
+<body class="numbers">
+
+<!-- Frontmatter -->
+<div id="frontmatter">
+	<div class="section" id="titlepage">
+		<h1>Title Page</h1>
+		<p class="publisher">Published by Example Press.</p>
+	</div>
+	<div class="section" id="toclisting">
+		<h1>Table of Contents</h1>
+		<p class="toc1"><a href="#intro"></a></p>
+		<p class="toc2"><a href="#lists"></a></p>
+		<p class="toc2"><a href="#examples"></a></p>
+	</div>
+	
+</div>
+
+<div id="content">
+<!-- Main content -->
+<h1 title="Introduction" id="intro">Introduction</h1>
+<p>This document showcases features available through PrinceXML with custom CSS. <span class="footnote">This is a footnote explanation.</span></p>
+
+<h2 title="Block and Text Features">Block and Text Features</h2>
+
+<p class="note">This is a styled note paragraph with a gray border and bold text.</p>
+
+<blockquote>This is a blockquote using the custom quote font, intended to stand out.</blockquote>
+
+<p class="pull">This is a pull quote styled to float right with larger bold text.</p>
+
+<p><span class="dropCap">D</span>rop caps like this are common in print design. The drop cap here uses custom styles defined in the CSS.</p>
+
+<h2 title="Lists and Indentation" id="lists">Lists and Indentation</h2>
+
+<p class="list"><span class="num">1. </span>First item</p>
+<div class="indent">
+	<p>This text is indented to align under the list item.</p>
+</div>
+
+<h2 title="Code Examples" id="examples">Code Examples</h2>
+<p class="code">let x = 42; // This is inline code using the mono font</p>
+
+<h2 title="Images and Layout">Images and Layout</h2>
+
+<img src="https://placehold.co/600x400?text=Sample+Image" alt="Sample Image" class="imageFloat">
+
+<p>This paragraph wraps around the floating image. This paragraph wraps around the floating image. This paragraph wraps around the floating image. This paragraph wraps around the floating image. This paragraph wraps around the floating image. This paragraph wraps around the floating image. This paragraph wraps around the floating image. This paragraph wraps around the floating image.<span class="footnote">This is a footnote shown at the bottom of the page in print.</span></p>
+
+<h2 title="Tables and Styling">Tables and Styling</h2>
+
+<table class="borders reverse striped">
+	<thead>
+	<tr>
+		<th>Feature</th>
+		<th>Description</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>Striped Rows</td>
+		<td>Alternating background color</td>
+	</tr>
+	<tr>
+		<td>Bordered Table</td>
+		<td>Defined borders using custom CSS</td>
+	</tr>
+	</tbody>
+</table>
+
+<h2 title="Endnotes">Endnotes</h2>
+<p>This is a sentence with an <a class="en" href="#en1">endnote</a>.</p>
+
+<p class="breaker">* * *</p>
+
+</div>
+<!-- Endmatter -->
+<div id="endmatter">
+	<h1>Endnotes</h1>
+	<p class="endnote" id="en1"><span><a href="#en1">1</a></span> This is an example endnote formatted by the stylesheet.</p>
+</div>
+
+</body>
+</html>

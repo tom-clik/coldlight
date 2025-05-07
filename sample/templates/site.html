@@ -3,11 +3,16 @@
 <head>
 	<title>{{site.title}}: {{page.page_title}}</title>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="{{{site.assets_url}}}/css/_min/mainpackage.0.11.min.css">
-	<link rel="stylesheet" href="{{{site.assets_url}}}/css/fonts/google_icons.css">
+	<link rel="stylesheet" href="//www.coldlight.net/clikpage/_assets/css/_min/mainpackage.0.12.min.css">
+	<link rel="stylesheet" href="//www.coldlight.net/clikpage/_assets/css/fonts/google_icons.css">
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
-	<link rel="stylesheet" href="/coldlight/sample/site/styles.css">
+	{{#debug}}
+	<link rel="stylesheet" href="/coldlight/_styles/sample_site.css">
+	{{/debug}}
+	{{^debug}}
+	<link rel="stylesheet" href="//www.coldlight.net/_styles/min/1.0/sample_site.css">
+	{{/debug}}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
 </head>
 <body class=''>
@@ -118,7 +123,19 @@
 </div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="{{{site.assets_url}}}/js/_min/coldlightpackage.0.10.min.js"></script>
+	{{#debug}}
+	<script src="/_assets/js/jquery-3.4.1.js"></script>
+	<script src="/_assets/js/clik_common.js"></script>
+	<script src="/_assets/js/jquery.throttledresize.js"></script>
+	<script src="/_assets/js/fuzzySearch.js"></script>
+	<script src="/_assets/js/fts_fuzzy_match.js"></script>
+	<script src="/_assets/js/menuScroll.js"></script>
+	<script src="/_assets/js/jquery.menu.js"></script>
+	<script src="/_assets/js/jquery.animateAuto.js"></script>
+	{{/debug}}
+	{{^debug}}
+	<script src="//www.coldlight.net/clikpage/_assets/js/_min/coldlightpackage.0.10.min.js"></script>
+	{{/debug}}
 
 	<script src="searchSymbols.js"></script>
 	

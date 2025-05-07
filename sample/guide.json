@@ -1,7 +1,7 @@
 {
 	"title" : "Coldlight Userguide",
 	"index": "../_docs/userguide/index.md",
-	"site_template": "../_docs/userguide/templates/guide_template.html",
+	"site_template" : "./templates/site.html",
 	"epub_template": "../_docs/userguide/templates/kindle_template.html",
 	"epub": "../guide/coldlight_userguide.epub",
 	"site": "../guide",

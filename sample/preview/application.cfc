@@ -23,18 +23,17 @@ component {
 		site = {};
 		config = application.coldLightSampleObj.getConfig(filename=application.filename, site=site);
 		
-		application.document = application.coldlightObj.load( config.index );
+		application.document  = application.coldlightObj.load( config.index );
 		application.directory = getDirectoryFromPath(config.index);
-		application.template = FileRead( config.site_template );
-		application.context  = application.coldLightObj.getSiteContext(document=application.document, site=site, preview=true );
+		application.template  = FileRead( config.site_template );
+		application.context   = application.coldLightObj.getSiteContext(document=application.document, site=site, preview=true );
 		
 		searchSymbolsJS = application.coldLightObj.searchSymbols(document=application.document);
 		fileName = application.rootDir & "searchSymbols.js";
 		fileWrite(fileName, searchSymbolsJS);
+		
 
 	}
-
-	
 
 	function onRequestStart(string targetPage) {
 		
@@ -55,6 +54,7 @@ component {
 		if (request.rc.code == "" && application.code eq "") {
 			request.rc.reload = true;
 			application.code = "guide";
+
 		}
 		else if (request.rc.code != "" && request.rc.code != application.code) {
 			request.rc.reload = true;
@@ -64,6 +64,7 @@ component {
 		if ( request.rc.reload OR checkCache() ) {
 			loadDoc();
 		}
+
 
 	}
 

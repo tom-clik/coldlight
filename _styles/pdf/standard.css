@@ -1,0 +1,530 @@
+/*******************
+ *
+ * Basic Prince Layout
+ * 
+ * ## Usage
+ * 
+ * Your main fonts etc should be set with normal styling e.g. body or h1,h2,h3,h4
+ *
+ * A few vars can be set (see :root) section
+ *
+ * Basic page numbering can be applied by applying `numbers` class to the body.
+ *
+ * ## Details
+ *
+ * Does the following
+ *
+ * 1. Basic variables
+ * 	Gets title, author, desxcription, isbn from header information. h1 sets 'chapter-title'
+ * 2. PDF bookmarks
+ * 	Sets PDF bookmarks from headings. Ignores any in site #frontmatter or #endmatter or with class .notoc
+ *
+ *  Easily customisable with setting `prince-bookmark-level`;
+ * 
+ * 
+ */
+
+ :root {
+    --noteborder-c: gray;
+    --quote-font: Adobe Garamond Pro;
+    --mono-font: Droid sans mono, "Courier New", Courier;
+    --tablereversebg-c: black;
+	--tablereverse-c: white;
+	--tablestripedbg-c: #cecece;
+ }
+
+
+/*===have these fields available to us to reuse in templates===*/
+title {
+	string-set: book-title content();
+}
+
+meta[name="author"] {
+	string-set: author attr(content);
+}
+meta[name="description"] {
+	string-set: description attr(content);
+}
+meta[name="isbn"] {
+	string-set: isbn attr(content);
+}
+
+h1 {
+	string-set: chapter-title content();
+	counter-increment:chapter;
+}
+
+/*===PDF Bookmarks===*/
+
+/* set PDF bookmark label to title attribute if present */
+h1[title], h2[title], h3[title] {prince-bookmark-label: attr(title);}
+
+.notoc, #frontmatter h1, #frontmatter h2, #frontmatter h3, #endmatter h1,
+#endmatter h2, #endmatter h3 {prince-bookmark-level:none !important}
+
+h4, h5, h6 {
+	prince-bookmark-level:none;
+}
+
+@prince-pdf {
+    prince-pdf-page-mode: show-bookmarks
+}
+
+/* simulate page size when vewing on screen */
+@media screen {
+	body {
+		width:17cm;
+		margin:auto;
+		padding:2cm;
+	}
+}
+
+/* =========== Page breaks =================== */
+
+h1, div.section, section {
+	page-break-before: always;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	page-break-after: avoid;
+}
+
+h1, h2  {
+	text-align: center;
+}
+
+h2,h3 {
+	margin-bottom:0.1em;
+}
+
+h4, h5, h6 {
+	margin-bottom:0px;
+}
+
+p, ol, ul, dl, table, blockquote, pre.code {
+	margin-bottom:1em;
+}
+
+ol li, ul li {
+	margin-bottom: 2pt;
+}
+
+p {
+   orphans:2;
+   widows:2
+}
+/* simple inline list */
+ul.flex {
+	--flexgap: 20px;
+	list-style-type: none;
+	display: flex;
+	grid-gap: var(--flexgap);
+	flex-wrap: wrap;
+	text-indent:0px;
+}
+
+@media print {
+	sup {
+		line-height: none;
+		font-size: 60%;
+		vertical-align: top;
+		margin-top:2pt;
+	}
+}
+
+kbd {
+	font-size:1em;
+}
+
+blockquote {
+	font-weight: bold;
+	font-family: var(--quote-font), cursive;
+	font-style:italic;
+	margin:0 1em 1em 1em;
+}
+
+img {
+	max-width:100%;
+}
+
+img.imageFloat {
+	float:right;
+	max-width:40%;
+}
+
+.red {
+	color:red;
+}
+
+.mono {
+	font-family: var(--mono-font), monospace;
+}
+
+p.note {
+	border-left:8px solid var(--noteborder-c, #cccccc);
+	padding-left:8px;
+	margin-left:8px;
+	font-weight:bold;
+}
+
+p.list {
+	margin-bottom:0px;
+}
+
+p.list span.num {
+	display:inline-block;
+	width:2em;
+}
+
+p.indent {
+	margin-left:2em;
+}
+
+p.list + div.indent > p   {
+	margin-top:0px;
+}
+
+p.code, span.code, div.code {
+	font-family:var(--mono-font), monospace;
+	font-weight:bold;
+}
+
+p.code {
+	display:block;
+	margin-left:2em;
+}
+
+p.pull {
+	display:none;
+}
+
+p.quote {
+	margin-left:3em;
+	margin-right:2em;
+}
+
+p.breaker {
+	margin:1em 0 !important;
+	letter-spacing: 4em !important;
+	text-align: center !important;
+}
+
+.center {
+	text-align: center !important;
+}
+
+
+table {
+	page-break-inside: avoid;
+	border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+table, tr, td {
+	font-size: 1em;
+}
+
+td, th {
+	vertical-align: top;
+	padding:2pt;
+}
+
+td.right {
+	text-align: right;
+}
+
+td.center {
+	text-align: center;
+}
+
+table.deflist tr td.dt {
+	white-space: nowrap;
+	padding-right:1em;
+}
+
+table.borders, table.borders td, table.borders th {
+    /*border:1px solid var(--tableborders-c, black);*/
+    border:1px solid black;
+}
+
+table.borders td, table.borders th {
+    border-width:0.6pt;
+}
+
+table.reverse th {
+    background-color: var(--tablereversebg-c, black);
+    color: var(--tablereverse-c, white);
+}
+
+table.striped tbody tr:nth-of-type(even) {
+    background-color: var(--tablestripedbg-c, #cecece);
+}
+
+.next, .keep {
+	page-break-after: avoid;
+}
+
+.together {
+	page-break-inside: avoid;
+}
+
+.caption {
+	font-style: italic;
+}
+
+.clear {
+	clear:both;
+}
+
+@media (min-width:100px)  {
+	
+	div.imagediv_left, div.imagediv_right {
+		margin-bottom:10px;
+	}
+
+	div.stretch {
+		width:50%;
+	}
+
+	div.stretch img {
+		width:100%;
+	}
+
+	div.imagediv_left {
+		float:left;
+		margin-right:10px;
+	}
+
+	div.imagediv_right {
+		float:right;
+		margin-left:10px;
+	}
+
+	p.quote, p.pull {
+
+		font-size: 2em;
+	    font-weight: bold;
+	    line-height: 1.25em;
+	    margin-bottom: 15px;
+	}
+
+	span.dropCap {
+		color: #666666;
+		display: block;
+	    float: left !important;
+	    font-size: 3em;
+	    line-height: 0px;
+	    margin: 0.5em 0.16em 0.3em 0;
+	    padding: 0;
+	    border:0;
+	    vertical-align: baseline;
+
+	}
+
+	p.pull {
+		display:block;
+		float:right;
+		margin-top: 0px;
+		width:40%;
+		margin-left:2em;
+		text-align:right;
+	}
+
+
+	p.list.nomargin {
+		margin-top:0;
+	}
+
+
+
+	div.indent {
+		margin-left:2em;
+	}
+
+
+}
+
+a.fn {
+	display:none;
+}
+
+a.en {
+    font-size: 83%;
+    line-height: none;
+    text-decoration:none;
+    color: inherit;
+}
+
+a.en:hover {
+    text-decoration:underline;
+}
+
+p.endnote {
+	margin-left:1.6em;
+}
+
+p.endnote span:nth-of-type(1) a {
+	text-decoration:none;
+    color: inherit;
+}
+
+p.endnote span:nth-of-type(1) {
+	display: inline-block;
+	width:1.6em;
+	margin-left: -1.6em;
+}
+
+a.fn-call {
+	vertical-align: super;
+	font-size: smaller;
+	line-height: none;
+}
+
+@media screen {
+	
+	span.footnote {
+		display: none;
+	}
+
+	div.footnotes {
+		padding-top:1em 10% 0 0;
+		margin-top:1em;
+		border-top:1px solid black ;
+
+	}
+
+	div.footnotes p {
+		margin-left:20px;
+	}
+
+	div.footnotes p > span {
+		display:inline-block;
+		width:18px;
+		padding-right:2px;
+		margin-left:-20px;
+	}
+}
+
+@media print  {
+	
+
+	p.quote, p.pull {
+
+		font-size: 2em;
+	    font-weight: bold;
+	    line-height: 1.25em;
+	    margin-bottom: 15px;
+	}
+
+	span.dropCap {
+		color: #666666;
+		display: block;
+	    float: left !important;
+	    line-height: 0.6cm;
+	    padding: 0;
+	    border:0;
+		font-size: 2cm;
+	    margin: 0.62cm 2pt 0 0;
+	}
+
+	p.pull {
+		display:block;
+		float:right;
+		margin-top: 0px;
+		width:40%;
+		margin-left:2em;
+		text-align:right;
+	}
+	
+	p.list {
+		margin-left:2em;
+	}
+
+	p.list span.num {
+		margin-left:-2em;
+	}
+
+	.footnote {
+		display: inherit;
+		float:footnote;
+	}
+
+	.footnote::footnote-call {
+	    content: counter(footnote);
+	    font-size: 83%;
+	    vertical-align: super;
+	    line-height: none;
+	    content: "[" counter(footnote) "]";
+	}
+
+	.footnote::footnote-marker {
+	    font-weight: bold
+	}
+
+	.screen {
+		display:none;
+	}
+
+}
+
+@page {
+	size: a4;
+	/*marks: crop cross;*/
+	margin: 21mm 15mm;
+	
+    @footnotes {
+		border-top: solid black thin;
+		padding-top: 8pt
+    }
+
+    @top {
+    	vertical-align: bottom;
+    	padding-bottom:4px;
+    }
+
+    @top-left {
+    	vertical-align: bottom;
+    	padding-bottom:4px;
+    }
+
+     @top-right {
+    	vertical-align: bottom;
+    	padding-bottom:4px;
+    }
+
+    @bottom {
+    	vertical-align: top;
+    	padding-top:4px;
+    }
+
+    @bottom-left {
+    	vertical-align: top;
+    	padding-top:4px;
+    }
+
+     @bottom-right {
+    	vertical-align: top;
+    	padding-top:4px;
+    }
+}
+
+@page numbers {
+	border-bottom: thin solid black;
+	padding-bottom: 0.5em;
+
+	@bottom-center {
+	    content: counter(page);
+	    vertical-align: top;
+	    margin: 0.3em 0;
+	}
+}
+
+
+body.numbers {
+	page:numbers;
+}
+
+/*== don't display kindle only content ==*/
+.mobi {
+	display: none;
+}

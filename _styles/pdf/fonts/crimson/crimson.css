@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Crimson Text';
+  font-style: normal;
+  font-weight: 400;
+  src: url('CrimsonText-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Crimson Text';
+  font-style: normal;
+  font-weight: 700;
+  src: url('CrimsonText-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Crimson Text';
+  font-style: italic;
+  src: url('CrimsonText-Italic.ttf');
+}
+
+@font-face {
+  font-family: 'Crimson Text';
+  font-style: italic;
+  font-weight: 700;
+  src: url('CrimsonText-BoldItalic.ttf');
+}
+

@@ -1,0 +1,6 @@
+{
+	"title" : "Sample resume",
+	"index": "./source/cv/resume.md",
+	"pdf_template": "./templates/resume.html",
+	"pdf": "../testing/output/resume/resume.pdf",
+}

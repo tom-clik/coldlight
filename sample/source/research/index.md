@@ -1,0 +1,20 @@
+---
+author: Tom Peer
+title: Simple Research Template
+subtitle: Sub title for document here.
+toclevel: 2
+publisher: Research Co Ltd
+pubdate: 2025-03-04
+pubdate_short: Q1 2015
+---
+
+<div href="company_1_info.md" id="company_1_info" meta="true" />
+<div href="company_1_info.md" id="company_2_info" meta="true" />
+
+<div href="about_researchco.md" id="about_researchco" meta="true" />
+<div href="contact_info.md" id="contact_info" meta="true" />
+<div href="intro.md" id="intro" meta="true" />
+<div href="company_1.md" />
+<div href="company_2.md" />
+<div href="disclaimer.md" id="disclaimer" meta="true" />
+

@@ -1,0 +1,75 @@
+<html>
+<head>
+	<title>{{title}}</title>
+	{{#author}}<meta name="Author" value="{{author}}" />{{/author}}
+	{{#description}}<meta name="Description" value="{{description}}" />{{/description}}
+	{{#company}}<meta name="Company" value="{{company}}" />{{/company}}
+	{{#pubdate}}<meta name="pubdate" value="{{pubdate}}" />{{/pubdate}}
+
+	<link rel="stylesheet" href="/coldlight/_styles/pdf/reset.css">
+	<link rel="stylesheet" href="/coldlight/_styles/pdf/standard.css">
+	<link rel="stylesheet" href="/coldlight/_styles/pdf/toc.css">
+	<link rel="stylesheet" href="/coldlight/_styles/pdf/fonts/open_sans/style.css">
+	<link rel="stylesheet" href="/coldlight/_styles/pdf/research.css">
+
+</head>
+<body class="scheme-justify scheme-spaced">
+
+	<div id="coverheader">
+		<div class="companyname">{{company}}</div>
+	</div>
+
+	<div id="header">
+		<div class="pubdate">{{pubdate}}</div>
+		<div class="companyname scheme-title">{{company}}</div>
+	</div>
+
+	<section id="cover" class="layout-cover">
+
+		<div class="title scheme-title">{{title}}</div>
+		{{#subtitle}}<div class="subtitle scheme-title">{{subtitle}}</div>{{/subtitle}}
+		
+		<svg viewBox="0 0 120 80"  class="coverimage">
+		  <rect width="120" height="80" style="fill:rgb(255,255,255);stroke-width:1.2;stroke:rgb(0,0,0)" />
+		</svg>
+		
+		<div class="notedate scheme-title">{{pubdate_short}}</div>
+		<div class="contacts">
+			{{{contact_info}}}
+		</div>
+
+	</section>
+	<section id="about" class="layout-main">
+		{{{intro}}}
+	</section>
+	<section id="toc" class="layout-main">
+		<h1 id="chapter-toc" class="notoc">Contents</h1>
+		<div class="toc">
+	       {{{toc}}}
+    	</div>
+	</section>
+	<section id="content" class="layout-main">
+
+		{{{body}}
+
+	</section>
+	<section id="disclaimer" class="layout-main">
+		
+		{{{disclaimer}}}
+
+	</section>
+
+	<section id="about" class="layout-front">
+		
+		{{{about_researchco}}}
+
+		<div class="contacts">
+			
+			{{{contact_info}}}
+
+		</div>
+	</section>
+
+
+</body>
+</html>

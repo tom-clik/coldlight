@@ -65,7 +65,7 @@ if (config.keyExists( "plugins") ) {
 
 args.filepath = getDirectoryFromPath(config.index);
 
-for (type in ['pdf','epub']) { // ,
+for (type in ['pdf','epub']) { 
 	if (config.keyExists(type)) {
 		writeOutput("<p>Generating #type#</p>");
 		// see note above
@@ -92,6 +92,7 @@ for (type in ['pdf','epub']) { // ,
 }
 
 if (config.keyExists("site")) {
+	
 	writeOutput("<p>Generating site</p>");
 	args = {};
 	
@@ -110,9 +111,5 @@ WriteOutput("<p>Done</p>");
 if (config.keyExists("preview_url")) {
 	writeOutput("<p><a href='#config.preview_url#'>#config.preview_url#</a></p>");
 }
-
-
-
-
 
 </cfscript>

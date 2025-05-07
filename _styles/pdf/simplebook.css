@@ -1,0 +1,261 @@
+body {
+	font-size: 10pt;
+	counter-reset: page 1;
+	counter-reset: chapter;
+}
+
+h1 {
+	font-size: 48pt;
+	text-transform: uppercase;
+	margin-top:4cm;
+	margin-bottom:0.8cm;
+	text-align: center;
+	letter-spacing: 4pt;
+	line-height: 48pt;
+	page-break-before:always;
+	prince-page-group: start;
+	string-set: chapter-title content();
+}
+
+div#content h1 {
+	counter-increment: chapter;
+}
+
+
+div#content p:has(> img) {
+	text-indent: 0;
+	margin:4pt 0;
+}
+
+h2 {
+	font-size: 36pt;
+	margin-top:2cm;
+	margin-bottom:0.8cm;
+	text-align: center;
+	letter-spacing: 2pt;
+}
+
+body p {
+	text-align: justify;
+}
+
+.footnote {
+	text-align: left;
+}
+
+
+/*@page {
+	@footnotes {
+		text-align: left;
+	}
+}*/
+
+div#content p {
+	text-indent: 1em;
+	margin: 0em;
+	line-height: 160%;
+}
+
+
+/* quotes for para starts */
+div.quote {
+	height:3.2cm;
+	margin-bottom:0.4cm;
+	padding:0 1.2cm;
+	font-style: italic;
+	font-size:14pt;
+	text-align: center;
+	line-height: 100%;
+}
+
+div.quote p {
+	text-align: right;
+	font-weight: bold;
+	margin-top:1.6em;
+}
+
+/* drop caps */
+div.quote + p > span {
+	display:inline-block;
+	float: left;
+	font-size: 75px;
+	line-height:60px;
+	padding-top:4px;
+	padding-right:8px;
+	padding-left: 3px;
+}
+
+
+
+#frontmatter .title {
+	
+	font-size: 60pt;
+	text-transform: uppercase;
+	margin-top:4cm;
+	margin-bottom:1.8cm;
+	text-align: center;
+	letter-spacing: 4pt;
+}
+
+#halftitle .title {
+	font-size: 40pt;
+}
+
+#titlepage .subtitle {
+	font-size: 24pt;
+	margin-bottom:2cm;
+	text-align: center;
+	line-height: 24pt;
+	font-style: italic;
+}
+
+#titlepage .author {
+	font-size: 24pt;
+	text-transform: uppercase;
+	margin-top:2cm;
+	margin-bottom:2cm;
+	text-align: center;
+	letter-spacing: 4pt;
+	line-height: 24pt;
+}
+
+#titlepage .publisherinfo {
+	float:bottom;
+}
+
+#frontmatter h1, #endmatter h1 {
+	font-size: 32pt;
+	margin:1em 0;
+}
+
+#frontmatter h2, #endmatter h2 {
+	font-size: 24pt;
+	text-align:left;
+	margin:0 0 1em 0;
+}
+
+/* contents page */
+
+
+#toclisting p {
+	text-transform: uppercase;
+	font-size:10pt;
+	font-weight:bold;
+	text-align: left;
+}
+
+/* target-counter(attr(href), chapter) ". "  */
+#toclisting a {
+	content: target-content(attr(href));
+}
+
+#toclisting p.nocase {
+	text-transform: none;
+}
+
+#toclisting a::after {
+	content: leader(".") target-counter(attr(href), page);
+}
+
+#content {
+	counter-reset: page 1
+}
+
+@media screen {
+body {
+	width:13.97cm;
+	margin:1.5cm 2.2cm;
+	padding:0.3cm 0;
+}
+}
+
+@media print {
+	@page {
+		size: 13.97cm 21.59cm;
+		margin:1.1cm 1.4cm;
+		padding:0.3cm 0;
+		
+		@bottom {
+			content: counter(page);
+			font-size: 10pt;
+			line-height: 100%;
+			color:#6f6f6f;
+			padding-top:4pt;
+			vertical-align: top;
+			
+		}
+
+		@top {
+			text-transform: uppercase;
+			letter-spacing: 1pt;
+			text-align: outside;
+			font-size: 9pt;
+			line-height: 100%;
+			color:#6f6f6f;
+			padding-top:4pt;
+			vertical-align: bottom;
+		}
+
+	}
+
+	@page:left {
+		@top {
+			content: string(book-title);
+		}
+	}
+
+	@page:right {
+		@top {
+			content: string(chapter-title);
+		}
+	}
+
+	@page:first {
+		@top {
+			content: none;
+		}
+	} 
+
+	@page blank {
+		@bottom {
+			content: none;
+		}
+		@top {
+			content: none;
+		}
+	}
+
+	@page cover {
+		margin:0;
+		padding:0;
+		background-color: #ccc;
+
+		@bottom {
+			content: none;
+		}
+		@top {
+			content: none;
+		}
+	}
+
+
+	#frontmatter,#endmatter {
+		page:blank;
+	}
+
+	#frontmatter div.section,#endmatter div.section {
+		page-break-before: always;
+	}
+
+	#publisher, #copyright {
+		page-break-before: left;
+	}
+
+	#halftitle, #titlepage, #contents {
+		page-break-before: right;
+	}
+
+	#titlepage .author {
+	}
+
+}
