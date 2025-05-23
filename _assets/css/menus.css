@@ -169,6 +169,11 @@ turn on with e.g.
 	flex-grow: 1;
 }
 
+/* Don't use flex mechanism if we're using access keys */
+.cs-menu a[accesskey] {
+	display: inline-block;
+}
+
 /*.
 
 TODO: check deprecation;
