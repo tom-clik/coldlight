@@ -31,9 +31,10 @@
 
 component implements="coldlight.pluginInterface" {
 	
-	public function init() {
-		variables.markdown = new markdown.flexmark(attributes="true",typographic=true);
-		variables.coldsoup = new coldsoup.coldsoup();
+	public function init(markdown.flexmark markdownObj, coldsoup.coldsoup coldsoupObj) {
+		
+		variables.markdown = arguments.markdownObj;
+		variables.coldsoup = arguments.coldsoupObj;
 		
 		return this;
 	}

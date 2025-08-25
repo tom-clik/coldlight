@@ -7,20 +7,26 @@ date:  2023-08-28
 
 <div id="header">
 
-<h1 id="title">{{author}}</h1>
+# {{author}} { #title }
 
-<ul id="professionaltitle" class="flex"><li>Senior Software Architect</li><li>Full-Stack Developer</li><li>Technical Leader</li></ul>
+* Senior Software Architect
+* Full-Stack Developer
+* Technical Leader
+
+{ #professionaltitle .flex }
 
 <div class="contact">
 
-* (123) 456-7890 
-* {{emailxxx}}
-* San Francisco, CA
+* (123) 456-7890 {.tel}
+* {{email}} {.email}
+* San Francisco, CA {.address}
 * [LinkedIn](https://linkedin.com/in/johndoe)
 * [GitHub](https://github.com/johndoe)
 
+{ .icon-list }
+
 </div>
-<!-- 
+<!-- TODO: grab these icons and apply to contact classes
 **{{subject}}**  
 📍 San Francisco, CA | 📧 {{email}} | 📞 (123) 456-7890 | [LinkedIn](https://linkedin.com/in/johndoe) | [GitHub](https://github.com/johndoe)
  -->
@@ -29,7 +35,6 @@ date:  2023-08-28
 ## Summary
 
 Experienced software professional with 30+ years of expertise in designing, developing, and deploying large-scale, high-performance applications. Proven track record of leading cross-functional teams, architecting scalable systems, and mentoring developers. Passionate about clean code, open-source, and lifelong learning.
-
 
 ## Skills
 

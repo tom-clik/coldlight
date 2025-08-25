@@ -2,6 +2,7 @@
 Title: Company one
 ---
 
+
 <div class="companyinfo">
 
    {{{company_1_info}}}

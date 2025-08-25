@@ -33,10 +33,10 @@ component name="coldlight" {
 	 * @hint      Pseudo constructor
 	 *
 	 */
-	public coldlight function init() {
+	public coldlight function init(required string jsoupjar) {
 		
-		variables.markdown = new markdown.flexmark(attributes="true",typographic=true);
-		variables.coldsoup = new coldsoup.coldsoup();
+		variables.markdown = new markdown.flexmark(attributes="true",typographic=true,jsoupjar=arguments.jsoupjar);
+		variables.coldsoup = new coldsoup.coldsoup(arguments.jsoupjar);
 		variables.mustache = new mustache.Mustache();
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
 		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
@@ -47,7 +47,7 @@ component name="coldlight" {
 
 	// Add a plugin that implements pluginInterface
 	public void function addPlugin(required pluginName) {
-		variables.plugins[arguments.pluginName] = CreateObject("component", arguments.pluginName).init();
+		variables.plugins[arguments.pluginName] = CreateObject("component", arguments.pluginName).init(markdownObj=variables.markdown, coldsoupObj=variables.coldsoup);
 	}
 
 	/**
@@ -293,6 +293,7 @@ component name="coldlight" {
 
 		context = duplicate(arguments.document.meta);
 		context.body = html(document=arguments.document);
+
 		toclevel = arguments.document.meta.toclevel ? : 1;
 
 		context.toc = TOC(arguments.document,toclevel)
@@ -372,8 +373,10 @@ component name="coldlight" {
 
 			local.headerLevel = arguments.depth + 1;
 			
-			local.html &= "<section id='section_#local.id#' class='level-#local.headerLevel#'>";
-			local.html &= "<h#local.headerLevel# id='#local.id#'>#local.sectionObj.meta.title#</h#local.headerLevel#>";
+			if (arguments.sections.len() gt 1) {
+				local.html &= "<section id='section_#local.id#' class='level-#local.headerLevel#'>";
+				local.html &= "<h#local.headerLevel# id='#local.id#'>#local.sectionObj.meta.title#</h#local.headerLevel#>";
+			}
 			local.html &= node.body().html();
 
 			if (StructKeyExists(local.sectionObj,"sections") && ArrayLen(local.sectionObj.sections) ) {
@@ -383,8 +386,9 @@ component name="coldlight" {
 			if (StructKeyExists(local.sectionObj,"meta")) {
 				local.html = replaceVars(local.html, local.sectionObj.meta);
 			}
-
-			local.html &= "</section>";
+			if (arguments.sections.len() gt 1) {
+				local.html &= "</section>";
+			}
 
 		}
 

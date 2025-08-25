@@ -1,7 +1,7 @@
 component extends="coldlight.coldlight" {
 
 	public function init() {
-		super.init();
+		super.init(server.system.environment.javalib & "\jsoup-1.20.1.jar");
 		try {
 			this.loggerObj = new logger.logger(debug=1);
 		} 

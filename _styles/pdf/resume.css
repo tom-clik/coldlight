@@ -88,6 +88,10 @@ body {
 	padding-left:0;
 }
 
+.contact ul li[class] {
+	padding-left:18pt;
+}
+
 .contact ul li:last-of-type {
 	padding-right:0;
 }
@@ -193,3 +197,32 @@ h2, h3 {
 	column-break-after:avoid;
 }
 
+.icon-list {
+  list-style: none;
+  padding: 0;
+}
+
+.icon-list li {
+  margin: 8px 0;
+  position: relative;
+  padding-left: 22px;
+}
+
+.icon-list li::before {
+  position: absolute;
+  left: 6px;
+  top: 0;
+  font-size: .8em;
+}
+
+li.tel::before {
+  content: "📞";
+}
+
+li.email::before {
+  content: "📧";
+}
+
+li.address::before {
+  content: "📍";
+}

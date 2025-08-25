@@ -1,5 +1,5 @@
 body {
-	font-family: Myriad;
+	font-family: Open sans;
 	font-size: 9pt;
 }
 
@@ -11,9 +11,11 @@ body {
 	page: front;
 }
 
-.layout-main {
+.layout-main, .layout-body {
 	page: main;
 }
+
+ .layout-body h1 {prince-page-group: start;}
 
 /* the header is taken out of the flow and used as the header on the main content */
 div#header { 
@@ -36,8 +38,6 @@ div#header .companyname {
 	text-align: right;
 	margin-top:-2mm;
 }
-
-h1.company {prince-page-group: start;}
 
 div#coverheader {
 	flow:static(coverHeader);
@@ -97,6 +97,7 @@ div#coverheader {
 	    content: '';
 	}
 }
+
 
 @page front {
 	padding-left: 0mm;
@@ -242,4 +243,8 @@ table.info th {
 
 .companyinfo th {
 	text-align: left;
+}
+
+.company_data thead {
+	display: none;
 }

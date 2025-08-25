@@ -7,7 +7,7 @@
  * The svelte documentation is a good one to try this on.
  */
 
-coldLightObj = new coldlight.coldlight();
+coldLightObj = new coldlight.testing.coldLighttestingObj();
 
 data = coldLightObj.generateIndex( "C:\git\svelte\kit\documentation\docs" );
 

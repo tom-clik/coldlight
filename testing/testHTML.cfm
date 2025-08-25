@@ -1,9 +1,9 @@
 <cfscript>
 // Just generate HTML for the complete doc
 
-coldLightObj = new coldlight.coldlight();
+coldLightObj = new coldlight.testing.coldLighttestingObj();
 
-filePath = ExpandPath("../sample/source/cv/resume.md");
+filePath = ExpandPath("../sample/source/research/index.md");
 
 doc = coldLightObj.load( filePath );
 

@@ -9,8 +9,8 @@ testing\plugin_listings.cfc
 */
 interface {
 
-	public function init() {
-
+	public function init(markdown.flexmark markdownObj, coldsoup.coldsoup coldsoupObj) {
+		
 	}
 	
 	public void function process(required node, required struct document) localmode=true {

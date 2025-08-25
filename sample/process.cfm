@@ -12,8 +12,7 @@ Use a json configuration to set source file and output(s) for conversion.
 2. Set the path to the Prince executable in environment.princeExecutable (or use default below) for PDFs
 3. Run script NB it's configured to read all .json files in folder and display a list. If you use this, you may want to add a title to the json to appear in the list. Otherwise just call with url.code={stem of your json file}
 
-### Config file params
-
+### Config file fields
 
 | Param         | Description
 |---------------|-----------------------------------------------------------
@@ -25,7 +24,7 @@ Use a json configuration to set source file and output(s) for conversion.
 | site*         | Folder for HTML site 
 | site_template | Template for HTML conversion
 | plugins       | List of ColdLight plug ins to load. Currently in alpha testing
-| assets_url    | Other data can be added here and will be added to site data for use in conversion. Typically you would use technical variables here and the markdown for editorial. 
+| assets_url    | This or any other field can be added here and will be added to site data for use in the Mustache templates, e.g. {{{site.assets_url}}}. Typically you would use technical variables here and the markdown for editorial variables. 
 
 * Any of these can be omitted. The corresponding template file is then not needed. 
 
@@ -35,7 +34,7 @@ The html for PDF version ends up in the root for the relative file paths. This c
 
 */
 
-coldLightObj = new coldlight.coldlight();
+coldLightObj = new coldlight.coldlight(server.system.environment.javalib & "\jsoup-1.20.1.jar");
 coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
 
 // List settings files in the folder if code not defined
@@ -70,6 +69,9 @@ for (type in ['pdf','epub']) {
 		writeOutput("<p>Generating #type#</p>");
 		// see note above
 		args.document = coldlightObj.load(config.index);
+		
+		StructAppend(args.document.meta, site, false);
+		
 		args.filename = config[type];
 		coldLightSampleObj.checkDirectory(args.filename);
 		

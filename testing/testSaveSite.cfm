@@ -9,7 +9,7 @@
 
 param name="url.site" default="sample";
 
-coldLightObj = new coldlight.coldlight();
+coldLightObj = new coldlight.testing.coldLighttestingObj();
 
 for ( plugin in ['coldlight.testing.plugin_listings'] ) {
 	coldLightObj.addPlugin(plugin);
@@ -28,6 +28,7 @@ outputDir = ExpandPath("output/site");
 
 data = coldLightObj.load( filePath );
 
+// create a dummy page that isn't in the site. It should be removed
 dummyFile = outputDir & "/dummy_file.html";
 fileWrite(dummyFile, "Dummy file");
 

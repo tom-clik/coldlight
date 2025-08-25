@@ -9,7 +9,7 @@ component {
 	function onApplicationStart() {
 		application.rootDir = getDirectoryFromPath( getCurrentTemplatePath() );
 
-		application.coldLightObj = new coldlight.coldlight();
+		application.coldLightObj = new coldlight.coldlight(server.system.environment.javalib & "\jsoup-1.20.1.jar");
 		application.coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
 
 		application.code = "";

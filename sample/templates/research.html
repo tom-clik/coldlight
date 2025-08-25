@@ -6,11 +6,11 @@
 	{{#company}}<meta name="Company" value="{{company}}" />{{/company}}
 	{{#pubdate}}<meta name="pubdate" value="{{pubdate}}" />{{/pubdate}}
 
-	<link rel="stylesheet" href="/coldlight/_styles/pdf/reset.css">
-	<link rel="stylesheet" href="/coldlight/_styles/pdf/standard.css">
-	<link rel="stylesheet" href="/coldlight/_styles/pdf/toc.css">
-	<link rel="stylesheet" href="/coldlight/_styles/pdf/fonts/open_sans/style.css">
-	<link rel="stylesheet" href="/coldlight/_styles/pdf/research.css">
+	<link rel="stylesheet" href="{{{assets_url}}}/_styles/pdf/reset.css">
+	<link rel="stylesheet" href="{{{assets_url}}}/_styles/pdf/standard.css">
+	<link rel="stylesheet" href="{{{assets_url}}}/_styles/pdf/toc.css">
+	<link rel="stylesheet" href="{{{assets_url}}}/_styles/pdf/fonts/open_sans/style.css">
+	<link rel="stylesheet" href="{{{assets_url}}}/_styles/pdf/research.css">
 
 </head>
 <body class="scheme-justify scheme-spaced">
@@ -48,7 +48,7 @@
 	       {{{toc}}}
     	</div>
 	</section>
-	<section id="content" class="layout-main">
+	<section id="content" class="layout-body">
 
 		{{{body}}
 
@@ -59,7 +59,7 @@
 
 	</section>
 
-	<section id="about" class="layout-front">
+	<section id="about" class="layout-main">
 		
 		{{{about_researchco}}}
 
