@@ -1,0 +1,41 @@
+
+e {
+	display: block;
+	page-break-inside: avoid;
+	line-height: 2em;
+	margin: 0 2em 1em 2em;
+	text-align: center;
+}
+
+e.inline {
+	 display: inline-block;
+	 margin: 0;
+}
+
+f {
+  display: inline-block;
+  line-height: 1.5em;
+  margin: 0 4px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+r:first-child, d:first-child {
+  border-bottom: solid 1px;
+}
+
+r {
+  display: block;
+  line-height: 1.4em;
+  white-space: nowrap;
+}
+
+
+e.inline r {
+	line-height: 1.2em;
+	font-size: 0.8em;
+}
+
+e sub, e sup {
+	font-size: 70%;
+}

@@ -47,7 +47,11 @@ component name="coldlight" {
 
 	// Add a plugin that implements pluginInterface
 	public void function addPlugin(required pluginName) {
+		
 		variables.plugins[arguments.pluginName] = CreateObject("component", arguments.pluginName).init(markdownObj=variables.markdown, coldsoupObj=variables.coldsoup);
+		if (StructKeyExists(this,"loggerObj")) {
+			variables.plugins[arguments.pluginName].loggerObj = this.loggerObj;
+		}
 	}
 
 	/**
@@ -60,8 +64,11 @@ component name="coldlight" {
 		text = FileRead(arguments.filename);
 		data = {};
 		contents = {};
+
 		temp = parseText(text=text, filepath=filepath, data=data, contents=contents);
+
 		setHierarchy(data=data,sections=temp.sections);
+
 		returnVal["basepath"] = filepath;
 		returnVal["sections"] = temp.sections;
 		returnVal["meta"] = temp.meta;
@@ -70,7 +77,7 @@ component name="coldlight" {
 
 		if ( Trim( temp.node.body().html() ) neq "" ) {
 			id = ListFirst( ListLast(arguments.filename,"\/"), "." );
-			returnVal["meta"]["home"] = id;
+			returnVal["meta"]["home"] = id;// weird naming. TODO: check see if this shouldn't be "id"
 			returnVal["data"]["#id#"] = {
 				"id" = id,
 				"meta" = {"title": temp.meta.title },
@@ -86,13 +93,18 @@ component name="coldlight" {
 			returnVal["meta"]["home"] = returnVal["navigation_list"][1];
 		}
 		
-
-
 		for (plugin_code in variables.plugins) {
 			plugin = variables.plugins[plugin_code];
 			for (section in returnVal.data) {
 				sectionObj = returnVal.data[section];
-				plugin.process(node=sectionObj.node, jsoupObj=variables.coldsoup, markDownObj=variables.markdown, document=returnVal);
+				try {
+					plugin.process(node=sectionObj.node, jsoupObj=variables.coldsoup, markDownObj=variables.markdown, document=returnVal);
+				}
+				catch (any e) {
+					logger("Plugin #plugin_code# failed. Note the plug in should catch its own errors to give detail on the failure. Please update the plugin to do this.");
+				}
+
+				
 			}
 		}
 
@@ -103,18 +115,51 @@ component name="coldlight" {
 	/**
 	 * @hint Recursive helper function for load()
 	 *
-	 * Parses text for div elements with href attribute.
-	 *
-	 * Reads file and parse that (possibly recursively)
+	 * Calls markdown() on text. Needs to be recursive as it parses text for div elements
+	 *  with href attribute and then parses those
 	 * 
 	 * @text     Markdown text to parse
 	 */
 	private struct function parseText(required string text, required string filepath, required struct data, required struct contents)  localmode=true {
 
+		// run plugin preprocessor
+		for (plugin_code in variables.plugins) {
+			plugin = variables.plugins[plugin_code];
+			try {
+				arguments.text = plugin.preProcess( arguments.text );
+			}
+			catch (any e) {
+				logger("Plugin #plugin_code# failed. Note the plug in should catch its own errors to give detail on the failure. Please update the plugin to do this.");
+			}
+		}
+
 		temp = variables.markdown.markdown(text=arguments.text,options={"meta"=false});
 
 		temp.node.outputSettings().charset("UTF-8");
 		
+		// Check title exists and remove first h1 if its the title
+		titles = temp.node.select("h1");
+		
+		if ( IsDefined("titles") and titles.len() ) {
+			title = titles.first();
+			
+			if (! temp.data.meta.keyExists("title") ) {
+				temp.data.meta["title"] = title.text();
+			}
+			
+			if ( title.text() eq temp.data.meta["title"] ) {
+				title.remove();
+			}
+		}
+
+		if (! temp.data.meta.keyExists("title") ) {
+			extendedinfo = {"text"=arguments.text};
+			throw(
+				extendedinfo = SerializeJSON(local.extendedinfo),
+				message      = "No title defined for document and no h1 set"
+			);
+		}
+
 		retVal = { 
 			"sections" = [],
 			"contents" = temp.data.content, 
@@ -162,22 +207,18 @@ component name="coldlight" {
 
 				// parse text is a variable -- not part of the main flow
 				if (info.attributes.meta) {
-					retVal.meta["#info.attributes.id#"] = subsection.node.body().html();
+					// not even markdown, maybe css or something
+					if ( ListLast(filename,".") != "md" ) {
+						retVal.meta["#info.attributes.id#"] = section_text;
+					}
+					else {
+						retVal.meta["#info.attributes.id#"] = subsection.node.body().html();
+					}
 					continue;
 				}
 
 				subsection["id"] = info.attributes.id;
 
-				// Remove first h1 if it was the title
-				titles = subsection.node.select("h1");
-				
-				if ( IsDefined("titles") and titles.len() ) {
-					title = titles.first();
-					if ( title.text() eq subsection.meta.title ) {
-						title.remove();
-					}
-				}
-								
 				if ( Trim(subsection.node.body().html() neq "" ) ) {
 					subsection["hasContent"] = 1;
 					tmp = duplicate(subsection.contents);
@@ -227,37 +268,6 @@ component name="coldlight" {
 
 	}
 
-	/**
-	 * Replace {$varname} format variables
-	 *
-	 * 
-	 * 
-	 */
-	public string function replaceVars(required string text, required struct data) {
-
-		local.matches = ReMatchNoCase("\{\$*.+?\}",arguments.text);
-		
-		// create unique list to only process each var once
-		local.vars = {};
-
-		if ( ArrayLen(local.matches) ) {
-			for (local.match in local.matches) {
-				local.vars[ ListFirst( match,"{$}" ) ] = 1;
-			}
-
-			for (local.match in local.vars) {
-				if ( arguments.data.KeyExists( local.match ) ) {
-					arguments.text = ReplaceNoCase( arguments.text, "{$#local.match#}", arguments.data[local.match], "all" );
-				}
-			}
-
-		}
-
-		return arguments.text;
-	}
-
-	
-	
 	private array function getHeadings(required any document) {
 		local.headings = [];
 		local.nodes = arguments.document.select("h1,h2,h3,h4,h5,h6");
@@ -332,7 +342,7 @@ component name="coldlight" {
 
 
 		if (StructKeyExists(arguments.document,"meta")) {
-			local.html = replaceVars(local.html, arguments.document.meta);
+			local.html = variables.markdown.replaceVars(local.html, arguments.document.meta);
 		}
 
 		return local.html;
@@ -374,8 +384,19 @@ component name="coldlight" {
 			local.headerLevel = arguments.depth + 1;
 			
 			if (arguments.sections.len() gt 1) {
-				local.html &= "<section id='section_#local.id#' class='level-#local.headerLevel#'>";
-				local.html &= "<h#local.headerLevel# id='#local.id#'>#local.sectionObj.meta.title#</h#local.headerLevel#>";
+				try{
+					local.html &= "<section id='section_#local.id#' class='level-#local.headerLevel#'>";
+					local.html &= "<h#local.headerLevel# id='#local.id#'>#local.sectionObj.meta.title#</h#local.headerLevel#>";
+				} 
+				catch (any e) {
+					local.extendedinfo = {"error"=e, "sectionObj"=local.sectionObj};
+					throw(
+						extendedinfo = SerializeJSON(local.extendedinfo),
+						message      = "Error creating toc:" & e.message, 
+						detail       = e.detail
+					);
+				}
+				
 			}
 			local.html &= node.body().html();
 
@@ -384,7 +405,7 @@ component name="coldlight" {
 			}
 
 			if (StructKeyExists(local.sectionObj,"meta")) {
-				local.html = replaceVars(local.html, local.sectionObj.meta);
+				local.html = variables.markdown.replaceVars(local.html, local.sectionObj.meta);
 			}
 			if (arguments.sections.len() gt 1) {
 				local.html &= "</section>";
@@ -841,7 +862,7 @@ component name="coldlight" {
 		sectionObj = arguments.document.data[arguments.section];
 
 		if (! ( sectionObj.hasContent ? : true ) ) {
-			continue;
+			return "";
 		}
 
 		// TODO: parent section values
@@ -890,6 +911,7 @@ component name="coldlight" {
 			
 			htmlx = pageHTML(document= arguments.document, section=code,context=context,template=templateHTML);
 
+			if (htmlx eq "") continue;
 
 			fileName = getCanonicalPath(arguments.outputDir & "/" & code & ".html");
 			
@@ -897,7 +919,7 @@ component name="coldlight" {
 				fileWrite(fileName, htmlx);
 			} 
 			catch (any e) {
-				local.extendedinfo = {"error"=e,"filename": fileName,"html"=htmlx};
+				local.extendedinfo = {"error"=e,"filename": fileName};
 				throw(
 					extendedinfo = SerializeJSON(local.extendedinfo),
 					message      = "Error writing file #fileName#:" & e.message, 
@@ -967,8 +989,8 @@ component name="coldlight" {
 			};
 		}
 
-		page.html = replaceVars(page.html, sectionData.meta);
-		page.html = replaceVars(page.html, arguments.document.meta);
+		page.html = variables.markdown.replaceVars(page.html, sectionData.meta);
+		page.html = variables.markdown.replaceVars(page.html, arguments.document.meta);
 		page.html = replace(page.html, "dollarplaceholder","$","all");
 
 
@@ -1210,5 +1232,11 @@ component name="coldlight" {
 		return data;
 
 	}
+
+	public void function logger(required text, type="I", category="") output=false {
+ 		if (StructKeyExists(this,"loggerObj")) {
+ 			this.loggerObj.log(argumentCollection = arguments);
+ 		}
+ 	}
 
 }

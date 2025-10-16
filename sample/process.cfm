@@ -36,6 +36,8 @@ The html for PDF version ends up in the root for the relative file paths. This c
 
 coldLightObj = new coldlight.coldlight(server.system.environment.javalib & "\jsoup-1.20.1.jar");
 coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
+logger = new logger.logger(debug=1);
+coldLightObj.loggerObj = logger;
 
 // List settings files in the folder if code not defined
 if (! IsDefined("url.code") ) {
@@ -44,7 +46,7 @@ if (! IsDefined("url.code") ) {
 }
 
 // Uses prince to convert to PDF. Omit pdf from config file if not using 
-princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files (x86)/Prince/engine/bin/prince.exe";
+princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files/Prince/engine/bin/prince.exe";
 
 fileName = ExpandPath("./" & url.code & ".json");
 
@@ -52,7 +54,8 @@ site = {};
 config = coldLightSampleObj.getConfig(fileName=fileName, site=site);
 
 if (config.keyExists( "plugins") ) {
-	for ( plugin in listToArray(config.plugins ) ) {
+	if (! isArray(config.plugins)){ config.plugins = listToArray(config.plugins ) }
+	for ( plugin in config.plugins ) {
 		coldLightObj.addPlugin(plugin);
 	}
 }
@@ -113,5 +116,7 @@ WriteOutput("<p>Done</p>");
 if (config.keyExists("preview_url")) {
 	writeOutput("<p><a href='#config.preview_url#'>#config.preview_url#</a></p>");
 }
+
+logger.viewLog();
 
 </cfscript>

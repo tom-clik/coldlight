@@ -1,6 +1,6 @@
 ---
 author: Tom Peer
-title: Simple Research Template
+title: Simple Research Example
 subtitle: Sub title for document here.
 toclevel: 2
 company: Research Co Ltd

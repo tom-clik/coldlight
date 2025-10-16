@@ -2,7 +2,7 @@
 Title: Company one info
 ---
 
-![](/coldlight/samples/images/sample.png)
+![](/coldlight/sample/images/sample.png)
 
 |Field              | Value
 |-------------------|---------------------------		

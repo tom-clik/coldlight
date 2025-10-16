@@ -67,6 +67,7 @@ a:hover {
     padding-bottom:8px;
     top: calc(var(--headerheight));
     background-color:var(--pagebg);
+    z-index: 999; /* higher than anything else */
 /*    height: var(--titleheight);*/
 }
 
