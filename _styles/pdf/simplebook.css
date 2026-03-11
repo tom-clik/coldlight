@@ -210,12 +210,12 @@ body {
 		}
 	}
 
-	@page:first {
+	@page:first-of-group {
 		@top {
 			content: none;
 		}
-	} 
-
+	}
+	
 	@page blank {
 		@bottom {
 			content: none;
@@ -237,7 +237,6 @@ body {
 			content: none;
 		}
 	}
-
 
 	#frontmatter,#endmatter {
 		page:blank;

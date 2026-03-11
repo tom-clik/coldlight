@@ -9,7 +9,7 @@ component {
 	function onApplicationStart() {
 		application.rootDir = getDirectoryFromPath( getCurrentTemplatePath() );
 
-		application.coldLightObj = new coldlight.coldlight(server.system.environment.javalib & "\jsoup-1.20.1.jar");
+		application.coldLightObj = new coldlight.testing.coldLightTestingObj();
 		application.coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
 
 		application.code = "";
@@ -22,12 +22,15 @@ component {
 
 		site = {};
 		config = application.coldLightSampleObj.getConfig(filename=application.filename, site=site);
+		application.coldLightObj.updatePlugins(config);
 		
 		application.document  = application.coldlightObj.load( config.index );
 		application.directory = getDirectoryFromPath(config.index);
 		application.template  = FileRead( config.site_template );
 		application.context   = application.coldLightObj.getSiteContext(document=application.document, site=site, preview=true );
 		
+
+
 		searchSymbolsJS = application.coldLightObj.searchSymbols(document=application.document);
 		fileName = application.rootDir & "searchSymbols.js";
 		fileWrite(fileName, searchSymbolsJS);

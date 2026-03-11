@@ -3,6 +3,7 @@
 	"index": "./source/book/index.md",
 	"epub_template": "./templates/epub.html",
 	"epub": "../testing/output/book/sample.epub",
+	"assets_url": "https://www.coldlight.net",
 	"pdf_template": "./templates/simple_book.html",
 	"pdf": "../testing/output/book/sample.pdf",
 }

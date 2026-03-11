@@ -24,7 +24,7 @@ Use a json configuration to set source file and output(s) for conversion.
 | site*         | Folder for HTML site 
 | site_template | Template for HTML conversion
 | plugins       | List of ColdLight plug ins to load. Currently in alpha testing
-| assets_url    | This or any other field can be added here and will be added to site data for use in the Mustache templates, e.g. {{{site.assets_url}}}. Typically you would use technical variables here and the markdown for editorial variables. 
+| assets_url    | This or any other field can be added here and will be added to site data for use in the Mustache templates, e.g. {{{assets_url}}}. Typically you would use technical variables here and the markdown for editorial variables. 
 
 * Any of these can be omitted. The corresponding template file is then not needed. 
 
@@ -34,10 +34,19 @@ The html for PDF version ends up in the root for the relative file paths. This c
 
 */
 
-coldLightObj = new coldlight.coldlight(server.system.environment.javalib & "\jsoup-1.20.1.jar");
+version = "jsoup-1.22.1.jar";
+jsoupJarPath = server.system.environment.javalib & "\" & version
+if (! FileExists( jsoupJarPath ) ) { throw("JSOUP jar file (#jsoupJarPath#) not found");}
+
+version = "flexmark-all-0.64.0-lib.jar";
+flexmarkPath = server.system.environment.javalib & "\" & version
+if (! FileExists( flexmarkPath ) ) { throw("Flexmark jar file (#flexmarkPath#) not found");}
+
+coldLightObj = new coldlight.coldlight(jarpath=flexmarkPath,jsoupJar=jsoupJarPath);
 coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
 logger = new logger.logger(debug=1);
 coldLightObj.loggerObj = logger;
+
 
 // List settings files in the folder if code not defined
 if (! IsDefined("url.code") ) {

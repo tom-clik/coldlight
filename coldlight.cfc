@@ -33,10 +33,10 @@ component name="coldlight" {
 	 * @hint      Pseudo constructor
 	 *
 	 */
-	public coldlight function init(required string jsoupjar) {
+	public coldlight function init(required string jarpath, required string jsoupjar) {
 		
-		variables.markdown = new markdown.flexmark(attributes="true",typographic=true,jsoupjar=arguments.jsoupjar);
 		variables.coldsoup = new coldsoup.coldsoup(arguments.jsoupjar);
+		variables.markdown = new markdown.flexmark(attributes="true",typographic=true,jarpath=arguments.jarpath,coldsoupObj=variables.coldsoup);
 		variables.mustache = new mustache.Mustache();
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
 		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
@@ -101,6 +101,13 @@ component name="coldlight" {
 					plugin.process(node=sectionObj.node, jsoupObj=variables.coldsoup, markDownObj=variables.markdown, document=returnVal);
 				}
 				catch (any e) {
+					local.extendedinfo = {"error"=e};
+					throw(
+						extendedinfo = SerializeJSON(local.extendedinfo),
+						message      = "Error in plug in:" & e.message, 
+						detail       = e.detail
+					);
+					
 					logger("Plugin #plugin_code# failed. Note the plug in should catch its own errors to give detail on the failure. Please update the plugin to do this.");
 				}
 
@@ -123,18 +130,19 @@ component name="coldlight" {
 	private struct function parseText(required string text, required string filepath, required struct data, required struct contents)  localmode=true {
 
 		// run plugin preprocessor
-		for (plugin_code in variables.plugins) {
-			plugin = variables.plugins[plugin_code];
+		loop key="plugin_code" value="plugin" collection=variables.plugins {
 			try {
 				arguments.text = plugin.preProcess( arguments.text );
 			}
 			catch (any e) {
-				logger("Plugin #plugin_code# failed. Note the plug in should catch its own errors to give detail on the failure. Please update the plugin to do this.");
+				logger(text="Plugin #plugin_code# preProcess failed. Note the plug in should catch its own errors to give detail on the failure. Please update the plugin to do this.",type="E");
 			}
 		}
 
 		temp = variables.markdown.markdown(text=arguments.text,options={"meta"=false});
 
+		writeDump(temp);
+		
 		temp.node.outputSettings().charset("UTF-8");
 		
 		// Check title exists and remove first h1 if its the title
@@ -173,7 +181,7 @@ component name="coldlight" {
 			
 			info = variables.coldsoup.nodeInfo(div);
 			div.remove();
-
+ 
 			try {
 
 				if (! StructKeyExists(info.attributes,"id")) {
@@ -203,8 +211,6 @@ component name="coldlight" {
 					);
 				}
 
-				subsection = parseText(text= section_text, filepath=getDirectoryFromPath(filename),data=arguments.data, contents=arguments.contents);
-
 				// parse text is a variable -- not part of the main flow
 				if (info.attributes.meta) {
 					// not even markdown, maybe css or something
@@ -212,9 +218,14 @@ component name="coldlight" {
 						retVal.meta["#info.attributes.id#"] = section_text;
 					}
 					else {
-						retVal.meta["#info.attributes.id#"] = subsection.node.body().html();
+						temp = variables.markdown.markdown(text=section_text,options={"meta"=false});
+						temp.node.outputSettings().charset("UTF-8");
+						retVal.meta["#info.attributes.id#"] = temp.node.body().html();
 					}
 					continue;
+				}
+				else {
+					subsection = parseText(text= section_text, filepath=getDirectoryFromPath(filename),data=arguments.data, contents=arguments.contents);
 				}
 
 				subsection["id"] = info.attributes.id;

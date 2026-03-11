@@ -1,13 +1,25 @@
 component extends="coldlight.coldlight" {
 
-	public function init() {
-		super.init(server.system.environment.javalib & "\jsoup-1.20.1.jar");
+	public function init() localmode=true {
+		version = "jsoup-1.22.1.jar";
+		jsoupJarPath = server.system.environment.javalib & "\" & version
+		if (! FileExists( jsoupJarPath ) ) { throw("JSOUP jar file (#jsoupJarPath#) not found");}
+
+		version = "flexmark-all-0.64.0-lib.jar";
+		flexmarkPath = server.system.environment.javalib & "\" & version
+		if (! FileExists( flexmarkPath ) ) { throw("Flexmark jar file (#flexmarkPath#) not found");}
+
+		super.init(jarpath=flexmarkPath,jsoupJar=jsoupJarPath);
+		
 		try {
 			this.loggerObj = new logger.logger(debug=1);
 		} 
 		catch (e) {
 			// logger not in use - just ignore
 		}
+
+		return this;
+
 	}
 	
 
@@ -39,6 +51,29 @@ component extends="coldlight.coldlight" {
 		if (StructKeyExists(this,"loggerObj")) {
 			this.loggerObj.log(argumentCollection = arguments);
 		}
+	}
+
+	public void function updatePlugins(required struct config) {
+
+		existingPlugins = Duplicate(variables.plugins);
+
+		if (arguments.config.keyExists( "plugins") ) {
+			if (! isArray(arguments.config.plugins)){ arguments.config.plugins = listToArray(arguments.config.plugins ) }
+			for ( plugin in arguments.config.plugins ) {
+				if (! existingPlugins.keyExists(plugin)) {
+					addPlugin(plugin);
+				}
+				existingPlugins.delete(plugin);
+			}
+			// remove unused
+			for (plugin in existingPlugins) {
+				existingPlugins.delete(plugin);
+			}
+		}
+		else {
+			structClear(variables.plugins)
+		}
+
 	}
 
 }

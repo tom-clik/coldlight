@@ -29,7 +29,7 @@
  * 
  */
 
-component implements="coldlight.pluginInterface" {
+component implements="coldlight.plugins.pluginInterface" {
 	
 	public function init(markdown.flexmark markdownObj, coldsoup.coldsoup coldsoupObj) {
 		
@@ -37,6 +37,19 @@ component implements="coldlight.pluginInterface" {
 		variables.coldsoup = arguments.coldsoupObj;
 		
 		return this;
+	}
+
+		
+	public string function preProcess(required string text) localmode=true {
+
+		/**
+		 * Process the whole text string before processings
+		 *
+		 * arguments.text = Replace(arguments.text,"♠","&spade;","all");
+		 * 
+		 */
+		return arguments.text;
+		
 	}
 
 	public void function process(required node, required struct document) localmode=true {
