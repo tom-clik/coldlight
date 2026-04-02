@@ -141,8 +141,6 @@ component name="coldlight" {
 
 		temp = variables.markdown.markdown(text=arguments.text,options={"meta"=false});
 
-		writeDump(temp);
-		
 		temp.node.outputSettings().charset("UTF-8");
 		
 		// Check title exists and remove first h1 if its the title
@@ -372,7 +370,7 @@ component name="coldlight" {
 
 			local.sectionObj = arguments.document.data[local.id];
 			node = duplicate(local.sectionObj.node);
-			updateXrefs(node=node,contents=arguments.document.contents,preview=false,usePage=0);
+			updateXrefs(node=node,contents=arguments.document.contents,preview=false,usePage=1);
 
 			if (arguments.XML) {
 				node.outputSettings(variables.coldsoup.XML); 
@@ -450,12 +448,24 @@ component name="coldlight" {
 
 		for (link in links) {
 			
-			linkid = ListLast(link.attr("href"),"##");
+			href =link.attr("href");
 			
-			if (StructKeyExists(arguments.contents,linkid)) {
-				text = link.text();
-				if (trim(text) eq "" OR link.hasClass("auto")) {
+			if ( ! find("##", href ) ) {
+				href = sectionLink(section=href, anchor="", preview=arguments.preview);
+				link.attr("href", href);
+			}
+			else {
+				
+				linkid = ListLast(href,"##");
+
+				if (StructKeyExists(arguments.contents,linkid)) {
+					
+					text = link.text();
 					linkData = arguments.contents[linkid];
+					if (trim(text) eq "" OR link.hasClass("auto")) {
+						
+						link.html(linkData.text);
+					}
 					if (arguments.usePage) {
 						href = sectionLink(section=linkData.section, anchor=linkid, preview=arguments.preview);
 					}
@@ -463,7 +473,15 @@ component name="coldlight" {
 						href = "##" & linkid;
 					}
 					link.attr("href", href);
-					link.html(linkData.text);
+				}
+				else {
+					// manual link to e.g. table or something in form section#id
+					if (ListLen( href ,"##") gt 1) {
+						link_section = ListFirst(href,"##");
+						href = sectionLink(section=link_section, anchor=linkid, preview=arguments.preview);
+						link.attr("href", href);
+					}
+					
 				}
 			}
 			

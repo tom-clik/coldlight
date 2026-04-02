@@ -1,3 +1,6 @@
+/**
+ * Utility functions for the sample/preview app
+ */
 component {
 
 	/* Load and process configuration file */

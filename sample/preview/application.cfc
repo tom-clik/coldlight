@@ -67,8 +67,7 @@ component {
 		if ( request.rc.reload OR checkCache() ) {
 			loadDoc();
 		}
-
-
+				
 	}
 
 	boolean function checkCache() localmode="true" {
@@ -100,7 +99,7 @@ component {
 			new cferrorHandler.ErrorHandler(e=error, debug=1);
 		}
 		catch (any n) {
-			throw(object=e);
+			throw(object=arguments.error);
 		}
 	}
 

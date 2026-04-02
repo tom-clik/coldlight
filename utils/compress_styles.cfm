@@ -1,6 +1,6 @@
 <!---
 
-# compress_styless
+# compress_styles
 
 Compress standard styles ready for synching to coldlight public CDN
 
