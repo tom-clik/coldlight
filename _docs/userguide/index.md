@@ -14,6 +14,7 @@ As a CFML application, it is easily extensible to add custom content. The docume
 
 <div href="gettingstarted.md" />
 <div href="ColdLight_Documents.md" />
+<div href="running_coldlight.md" />
 <div href="coldLightmarkdown.md" />
 <div href="templates.md" />
 <div href="toc.md" />

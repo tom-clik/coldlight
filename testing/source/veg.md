@@ -2,7 +2,7 @@
 
 Lorem Nulla dolore in sed velit officia deserunt aute irure enim dolore magna duis dolor aute ex irure.
 
-{$menu}
+{$toc}
 
 <div href="veg/aubergines.md" />
 <div href="veg/broc.md" />

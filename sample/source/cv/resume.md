@@ -1,13 +1,13 @@
 ---
+title: John A. Doe
 email: john.doe@example.com
-author: John A. Doe
 subject: Senior Software Architect
 date:  2023-08-28
 ---
 
 <div id="header">
 
-# {{author}} { #title }
+# {{title}} { #title }
 
 * Senior Software Architect
 * Full-Stack Developer

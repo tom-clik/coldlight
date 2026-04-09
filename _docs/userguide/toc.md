@@ -2,7 +2,7 @@
 
 ## Web version
 
-Each section and the site has a toc variables which is the top level headings in that section.
+Each section and the site has a toc variable which is the top level headings in that section.
 
 ## Print Version
 

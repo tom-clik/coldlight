@@ -75,6 +75,7 @@ component name="coldlight" {
 		returnVal["data"] = data;
 		returnVal["contents"] = contents;
 
+		/* Index page has own text */
 		if ( Trim( temp.node.body().html() ) neq "" ) {
 			id = ListFirst( ListLast(arguments.filename,"\/"), "." );
 			returnVal["meta"]["home"] = id;// weird naming. TODO: check see if this shouldn't be "id"
@@ -140,6 +141,9 @@ component name="coldlight" {
 		}
 
 		temp = variables.markdown.markdown(text=arguments.text,options={"meta"=false});
+
+		// to avoid confusion later, ignore the single page toc
+		structDelete(temp.data.meta, "toc");
 
 		temp.node.outputSettings().charset("UTF-8");
 		
@@ -209,7 +213,7 @@ component name="coldlight" {
 					);
 				}
 
-				// parse text is a variable -- not part of the main flow
+				// parse text as a variable -- not part of the main flow
 				if (info.attributes.meta) {
 					// not even markdown, maybe css or something
 					if ( ListLast(filename,".") != "md" ) {
@@ -263,6 +267,7 @@ component name="coldlight" {
 
 	}
 
+	/** Recursive function to set "parent" for any sub sections */
 	private void function setHierarchy(required struct data, required array sections, string parent="") localmode=true {
 
 		for (code in arguments.sections) {
@@ -327,7 +332,7 @@ component name="coldlight" {
 	/**
 	 * Generate single page of html from sections (ignores "home" page)
 	 *
-	 * @footnotes  manually process footnotes and place end notes into meta var "footnotes" (required context argument)
+	 * @footnotes  manually process footnotes and place end notes into meta var "footnotes" (requires context argument)
 	 * @XML        sets output settings to XML - only needed for ebook generation
 	 * @context    page rendering content to be updated with footnotes
 	 *
@@ -601,9 +606,11 @@ component name="coldlight" {
 	 *
 	 * TODO: [ISSUE-7] this needs to be more generic and usable for section TOCs
 	 *
-	 * @contents      Struct of headings
+	 * @document      Complete document
+	 * @toclevel      Headng level to include
+	 * @linktype      page|live|preview - page = anchors on same page (epub, pdf), live = section.html, preview= index.cfm?section=section
 	 */
-	public string function TOC(required struct document, numeric toclevel=2) localmode=true {
+	public string function TOC(required struct document, numeric toclevel=2, linktype="page") localmode=true {
 		
 		html = "";
 
@@ -612,20 +619,20 @@ component name="coldlight" {
 			level = 1;	
 			sectionObj =  arguments.document.data[id];
 			
-			html &= "    <p class='toc#level#'><a href=""###id#"">#sectionObj.meta.title#</a></p>" & newLine();
+			html &= "    <p class='toc#level#'><a href=""###formatLink(section=id,type=arguments.linktype)#"">#sectionObj.meta.title#</a></p>" & newLine();
 
 			if (arguments.toclevel gt 1) {
 				level = 2;	
 				if (sectionObj.keyExists("sections") ) {
 					for (sub_id in sectionObj.sections) {
 						subSectionObj =  arguments.document.data[sub_id];
-						html &= "    <p class='toc#level#'><a href=""###sub_id#"">#subSectionObj.meta.title#</a></p>" & newLine();
+						html &= "    <p class='toc#level#'><a href=""###formatLink(section=sub_id,type=arguments.linktype)#"">#subSectionObj.meta.title#</a></p>" & newLine();
 						if (arguments.toclevel gt 2) {
 							for (heading_id in subSectionObj.contents) {
 								heading = subSectionObj.contents[heading_id];
 								level = heading.level + 1;
 								if (level gt 2 && level lte ( arguments.toclevel ) ) {
-									html &= "    <p class='toc#level#'><a href=""###heading_id#"">#heading.text#</a></p>" & newLine();
+									html &= "    <p class='toc#level#'><a href=""###formatLink(section=sub_id,type=arguments.linktype,anchor=heading_id)#"">#heading.text#</a></p>" & newLine();
 								}
 							}
 						}
@@ -876,18 +883,31 @@ component name="coldlight" {
 		context["site"]["menu"] = sectionMenu(data=arguments.document.data, sections=arguments.document.sections, preview=arguments.preview);
 		context["site"]["home_link"] = sectionLink(section=arguments.document.meta.home, preview=arguments.preview);
 
+		linktype = arguments.preview ? "preview" : "live";
+		context["toc"] = TOC(document=arguments.document, toclevel=arguments.document.meta.toclevel ? : 1, linktype=linktype);
+
 		context.debug = arguments.preview;
 
 		return context;
 
 	}
 
-	public string function pageHTML(required string section, required struct document, required struct context, required string template, boolean preview=false  ) localmode=true {
+	/**
+	 * Generate HTML for a given page
+	 * 
+	 * @section       page code
+	 * @document        
+	 * @context       Struct to pass to mustache render. "page" is added to it
+	 * @template      Mustache template for export
+	 * @preview       Generate dynamic links for live preview
+	 */
+	public string function pageHTML( required string section, required struct document, required struct context, required string template, boolean preview=false ) localmode=true {
 		
 		// default page is index - use first section if not present
 		if ( arguments.section eq "index" && ! arguments.document.data.keyExists("index") ) {
 			arguments.section = arguments.document.sections[1];
 		}
+
 		sectionObj = arguments.document.data[arguments.section];
 
 		if (! ( sectionObj.hasContent ? : true ) ) {
@@ -896,7 +916,10 @@ component name="coldlight" {
 
 		// TODO: parent section values
 		context["page"] = getPage(document=arguments.document,section=arguments.section,preview=arguments.preview);
+		
+		// replace {{ in text temporarily		
 		context["page"].body = Replace(context["page"].html,"{{","X&X^AA%A%","all");
+
 		context["page"]["section"] = {
 			"id" = arguments.section,
 			"parent" = sectionObj.parent ? : "",
@@ -934,10 +957,14 @@ component name="coldlight" {
 			sectionList.append(arguments.document.meta.home);
 		}
 
+		arguments.document.meta["toc"] = TOC(document=arguments.document,toclevel=1,linktype="live");
+
 		for (code in sectionList) {
 
 			section = arguments.document.data[code];
 			
+			section.meta["toc"] = sectionTOC(document=arguments.document,toclevel=1,linktype="live");
+
 			htmlx = pageHTML(document= arguments.document, section=code,context=context,template=templateHTML);
 
 			if (htmlx eq "") continue;
@@ -982,7 +1009,9 @@ component name="coldlight" {
 		return "symbols = " & serializeJSON(searchSymbols) & ";" & newLine();
 	}
 
-	// Replace {$ with a place holder if they're in a code block 
+	/**
+	 *	 Replace {$ with a place holder if they're in a code block 
+	 */	 
 	private void function replaceCodeVars(required any node) localmode=true {
 
 		code = node.select("code");
@@ -1150,6 +1179,24 @@ component name="coldlight" {
 		menu &= "</ul>";
 
 		return menu;
+	}
+
+	// Format page link
+	public string function formatLink(required string section, string anchor, string type="preview") {
+
+		if (arguments.type eq "page") {
+			if (arguments.anchor neq "") {
+				return "##" & arguments.anchor;
+			}
+			else {
+				return "##" & arguments.section;
+			}
+		}
+
+		preview = arguments.type eq "preview";
+
+		return sectionLink(argumentCollection = arguments, preview = preview);
+
 	}
 
 	// Get link for a page 

@@ -2,10 +2,12 @@
 author: Tom Peer
 title: Sample publication
 description: Demonstrate document layout and markdown
-toclevel: 2
+toclevel: 1
 ---
 
 Welcome to the {$title}
+
+{$toc}
 
 <div href="disclaimer.md" id="disclaimer" meta="true" />
 <div href="fruit/index.md" />

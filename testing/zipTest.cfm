@@ -2,7 +2,7 @@
 /**
  * Testing adding files to Zip archive
  *
- * Working just using the date fof the whole archive. A little dangerous...but as best as we could do.
+ * Working just using the date for the whole archive. A little dangerous...but as best as we could do.
  * 
  * The individual dates are all a bit of a mystery. Windows picks up a "date taken" attribute for a photo and uses that as the modified date.
  *

@@ -3,11 +3,11 @@ component {
 	this.componentpaths["libraries"] = getCanonicalPath(getDirectoryFromPath(getCurrentTemplatePath()) & "../../..");
 	
 	public void function  onApplicationStart(){
-		application.debug = server.system.environment.debug ? : true; //MUSTDO: revert to false
+		application.debug = server.system.environment.debug ? : false;
 		application.errorsFolder = expandPath("../_logs");
 		
 		application.coldLightObj = new coldlight.testing.coldLightTestingObj();
-		local.filePath = ExpandPath("/coldlight/testing/source/index.md");
+		local.filePath = ExpandPath("../../testing/source/index.md");
 		local.pub = application.coldLightObj.load( local.filePath );
 
 		// Get query for search
@@ -17,13 +17,14 @@ component {
 
 	public void function onRequestStart() {
 		
-		if (url.reset && application.debug) {
-			if ( url.reset ? : false) {
+		param name="url.method" type="string" default="index";
+
+		if ( application.debug ) {
+			param name="url.reset" type="boolean" default=false;
+			if ( url.reset ) {
 				onApplicationStart();
 			}
 		}
-
-		param name="url.method" type="string" default="index";
 
 	}
 	
@@ -32,7 +33,7 @@ component {
 		
 		// errorhandler available at https://github.com/tom-clik/cferrorHandler
 		try {
-			new cferrorHandler.ErrorHandler(e=arguments.e, isAjaxRequest=request.isAjaxRequest ,debug=application.debug ? : false, logger= new cferrorHandler.textLogger( application.errorsFolder ));
+			new cferrorHandler.ErrorHandler(e=arguments.e, ajax=request.isAjaxRequest ,debug=application.debug ? : false, logger= new cferrorHandler.textLogger( application.errorsFolder ));
 
 		}
 		catch (any local.n) {
