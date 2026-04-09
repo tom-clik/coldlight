@@ -646,20 +646,20 @@ component name="coldlight" {
 			level = 1;	
 			sectionObj =  arguments.document.data[id];
 			
-			html &= "    <p class='toc#level#'><a href=""###formatLink(section=id,type=arguments.linktype)#"">#sectionObj.meta.title#</a></p>" & newLine();
+			html &= "    <p class='toc#level#'><a href=""#formatLink(section=id,type=arguments.linktype)#"">#sectionObj.meta.title#</a></p>" & newLine();
 
 			if (arguments.toclevel gt 1) {
 				level = 2;	
 				if (sectionObj.keyExists("sections") ) {
 					for (sub_id in sectionObj.sections) {
 						subSectionObj =  arguments.document.data[sub_id];
-						html &= "    <p class='toc#level#'><a href=""###formatLink(section=sub_id,type=arguments.linktype)#"">#subSectionObj.meta.title#</a></p>" & newLine();
+						html &= "    <p class='toc#level#'><a href=""#formatLink(section=sub_id,type=arguments.linktype)#"">#subSectionObj.meta.title#</a></p>" & newLine();
 						if (arguments.toclevel gt 2) {
 							for (heading_id in subSectionObj.contents) {
 								heading = subSectionObj.contents[heading_id];
 								level = heading.level + 1;
 								if (level gt 2 && level lte ( arguments.toclevel ) ) {
-									html &= "    <p class='toc#level#'><a href=""###formatLink(section=sub_id,type=arguments.linktype,anchor=heading_id)#"">#heading.text#</a></p>" & newLine();
+									html &= "    <p class='toc#level#'><a href=""#formatLink(section=sub_id,type=arguments.linktype,anchor=heading_id)#"">#heading.text#</a></p>" & newLine();
 								}
 							}
 						}
@@ -815,11 +815,9 @@ component name="coldlight" {
 				fileDelete(arguments.filename);
 			} 
 			catch (any e) {
-				local.extendedinfo = {"tagcontext"=e.tagcontext,"filename":arguments.filename};
 				throw(
 					extendedinfo = SerializeJSON(local.extendedinfo),
-					message      = "Unable to delete exising file:" & e.message, 
-					detail       = e.detail
+					message      = "Unable to delete exising file #arguments.filename#:" & e.message
 				);
 			}
 			
@@ -976,7 +974,7 @@ component name="coldlight" {
 		context = getSiteContext(document=arguments.document, site=arguments.site, preview=false );
 
 		sectionList = structKeyArray(arguments.document.data);
-		
+
 		// Home page might have text in its own right, save it as a file
 		if (! arguments.document.data.keyExists(arguments.document.meta.home) ) {
 			// TODO: don't save if it doesn't have any actual content...
