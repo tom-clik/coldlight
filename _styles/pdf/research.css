@@ -15,7 +15,7 @@ body {
 	page: main;
 }
 
- .layout-body h1 {prince-page-group: start;}
+ .layout-body h1 {-prince-page-group: start;}
 
 /* the header is taken out of the flow and used as the header on the main content */
 div#header { 
@@ -98,16 +98,16 @@ div#coverheader {
 	}
 }
 
-
 @page front {
 	padding-left: 0mm;
 }
 
 @page main {
+	
 	padding-left: 20mm;
 }
 
-@page main:first {
+@page main:first-of-group {
 	padding-left: 50mm;
 }
 

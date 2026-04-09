@@ -13,7 +13,7 @@ Title: Company one
 
 #### Company description
 		
-<p class="intro">By adding the `company` class to the `h1` heading for the company it will use a narrower column with space for the company info shown left. To adjust this spacing see`@page main:first`
+<p class="intro">The first page of each company will use a narrower column with space for the company info shown left. To adjust this spacing see`@page main:first-of-group`
 
 The company info just uses an `img` tag and a table</p>
 
