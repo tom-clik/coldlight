@@ -4,6 +4,8 @@
 	"site_template" : "./templates/site.html",
 	"epub_template": "../_docs/userguide/templates/kindle_template.html",
 	"epub": "../guide/coldlight_userguide.epub",
+	"pdf": "../guide/coldlight_userguide.pdf",
+	"pdf_template": "./templates/pdf.html",
 	"site": "../guide",
 	"copyright": "&copy; Tom Peer 2008-2026",
 	"assets_url": "/clikpage/_assets",

@@ -8,7 +8,7 @@
 
 coldLightObj = new coldlight.testing.coldLighttestingObj();
 
-for ( plugin in ['coldlight.testing.plugin_listings'] ) {
+for ( plugin in ['coldlight.plugins.listings'] ) {
 	coldLightObj.addPlugin(plugin);
 }
 

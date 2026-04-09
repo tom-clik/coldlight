@@ -33,7 +33,7 @@ component name="coldlight" {
 	 * @hint      Pseudo constructor
 	 *
 	 */
-	public coldlight function init(required string jarpath, required string jsoupjar) {
+	public coldlight function init(required string jarpath, required string jsoupjar, iconverter pdfconverter) {
 		
 		variables.coldsoup = new coldsoup.coldsoup(arguments.jsoupjar);
 		variables.markdown = new markdown.flexmark(attributes="true",typographic=true,jarpath=arguments.jarpath,coldsoupObj=variables.coldsoup);
@@ -41,6 +41,11 @@ component name="coldlight" {
 		variables.patternObj = CreateObject( "java", "java.util.regex.Pattern" );
 		variables.var_pattern = variables.patternObj.compile("(?m)\{\$\w*\_\w*\}",variables.patternObj.MULTILINE + variables.patternObj.UNIX_LINES);
 		variables.plugins = [=];
+		
+		if ( arguments.keyExists("pdfconverter")) {
+			variables.pdfconverter = arguments.pdfconverter;
+		}
+
 		
 		return this;
 	}
@@ -305,13 +310,17 @@ component name="coldlight" {
 	
 
 	/**
-	 * Not working yet. Needs to call princeXML. Currently just returns HTML
+	 * Convert to PDF using pdfconverter defined at initialisation
 	 * 
 	 */
-	public string function pdf(
+	public void function pdf(
 		required struct document,
 		required string template,
 		required string filename) localmode=true {
+
+		if ( ! variables.keyExists("pdfconverter")) {
+			throw("PDF converter not defined. To use pdf() conversion you must initialise ColdLight with a converter");
+		}
 
 		templateHtml = FileRead(arguments.template,"utf-8");
 
@@ -323,10 +332,28 @@ component name="coldlight" {
 		context.toc = TOC(arguments.document,toclevel)
 
 		html = variables.mustache.render(template=templateHtml, context=context);
-		
+		html_file = Replace(arguments.filename, ".pdf",".html");
 
-		return html;
+		try{
+			fileWrite(html_file, html);
+		} 
+		catch (any e) {
+			throw(
+				message      = "Unable to save html file for conversion:" & e.message
+			);
+		}
 
+		try{
+			variables.pdfconverter.convert(html_file);
+		} 
+		catch (any e) {
+			local.extendedinfo = {"error"=e};
+			throw(
+				extendedinfo = SerializeJSON(local.extendedinfo),
+				message      = "Error calling PDF converter:" & e.message
+			);
+		}
+				
 	}
 
 	/**
@@ -949,7 +976,7 @@ component name="coldlight" {
 		context = getSiteContext(document=arguments.document, site=arguments.site, preview=false );
 
 		sectionList = structKeyArray(arguments.document.data);
-
+		
 		// Home page might have text in its own right, save it as a file
 		if (! arguments.document.data.keyExists(arguments.document.meta.home) ) {
 			// TODO: don't save if it doesn't have any actual content...
@@ -963,8 +990,6 @@ component name="coldlight" {
 
 			section = arguments.document.data[code];
 			
-			section.meta["toc"] = sectionTOC(document=arguments.document,toclevel=1,linktype="live");
-
 			htmlx = pageHTML(document= arguments.document, section=code,context=context,template=templateHTML);
 
 			if (htmlx eq "") continue;

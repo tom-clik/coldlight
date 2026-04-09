@@ -42,7 +42,15 @@ version = "flexmark-all-0.64.0-lib.jar";
 flexmarkPath = server.system.environment.javalib & "\" & version
 if (! FileExists( flexmarkPath ) ) { throw("Flexmark jar file (#flexmarkPath#) not found");}
 
-coldLightObj = new coldlight.coldlight(jarpath=flexmarkPath,jsoupJar=jsoupJarPath);
+args = {jarpath=flexmarkPath,jsoupJar=jsoupJarPath};
+
+// Usee prince to convert to PDF
+princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files/Prince/engine/bin/prince.exe";
+if (fileExists( princeExecutable ) ) {
+	args.pdfconverter = new coldlight.converters.princeXML(princeExecutable);
+}
+
+coldLightObj = new coldlight.coldlight(argumentCollection = args);
 coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
 logger = new logger.logger(debug=1);
 coldLightObj.loggerObj = logger;
@@ -54,8 +62,6 @@ if (! IsDefined("url.code") ) {
 	abort;
 }
 
-// Uses prince to convert to PDF. Omit pdf from config file if not using 
-princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files/Prince/engine/bin/prince.exe";
 
 fileName = ExpandPath("./" & url.code & ".json");
 
@@ -76,32 +82,33 @@ if (config.keyExists( "plugins") ) {
 
 args.filepath = getDirectoryFromPath(config.index);
 
-for (type in ['pdf','epub']) { 
+for (type in ['pdf','epub']) {
+
 	if (config.keyExists(type)) {
+		
 		writeOutput("<p>Generating #type#</p>");
-		// see note above
+		
+		// see note above - shouldn't be needed but have bug somewhere
 		args.document = coldlightObj.load(config.index);
 		
+		// Additional meta vars supplied from config file - not a required part of ColdLight conversion
 		StructAppend(args.document.meta, site, false);
 		
 		args.filename = config[type];
+
+		// check dir exists
 		coldLightSampleObj.checkDirectory(args.filename);
 		
-		args.template = config[type & "_template"];
-		doc = coldLightObj[type](argumentCollection = args);
-		
-		if (type eq "pdf") {
-			html_file = Replace(args.filename,".pdf",".html");
-			fileWrite(html_file, doc);
-
-			cfexecute(name=princeExecutable,arguments=html_file,variable="res");
-
-			if (IsDefined("res") && res != "") {
-				writeOutput("<p>Error Generating #type#</p>");
-				writeDump(res);    
-			}
-					
+		// get template for type
+		template_name = type & "_template";
+		if (! config.keyExists(template_name)) {
+			throw("Template not defined for type #type#");
 		}
+		args.template = config[template_name];
+			
+		// NOW convert
+		coldLightObj[type](argumentCollection = args);
+				
 	}
 }
 
