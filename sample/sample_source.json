@@ -9,7 +9,7 @@
 	"site_template" : "./templates/site.html",
 	"copyright": "&copy; Tom Peer 2008-2025",
 	"assets_url" : "/clikpage/_assets",
-	"plugins": "coldlight.plugins.listings"
+	"plugins": "coldlight.plugins.listings,coldlight.plugins.section_menus"
 }
 
 
