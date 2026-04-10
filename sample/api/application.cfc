@@ -29,11 +29,12 @@ component {
 	}
 	
 	function onError(e,method) {
+		
 		param name="request.isAjaxRequest" type="boolean" default="0";
 		
 		// errorhandler available at https://github.com/tom-clik/cferrorHandler
 		try {
-			new cferrorHandler.ErrorHandler(e=arguments.e, ajax=request.isAjaxRequest ,debug=application.debug ? : false, logger= new cferrorHandler.textLogger( application.errorsFolder ));
+			new cferrorHandler.errorHandler(e=arguments.e, ajax=request.isAjaxRequest, debug=application.debug ? : false, logger= new cferrorHandler.textLogger( application.errorsFolder ));
 
 		}
 		catch (any local.n) {
