@@ -52,9 +52,9 @@ component implements="coldlight.plugins.pluginInterface" {
 		
 	}
 
-	public void function process(required node, required struct document) localmode=true {
+	public void function process(required struct section, required struct document) localmode=true {
 
-		listings = arguments.node.select(".listing");
+		listings = arguments.section.node.select(".listing");
 
 		for ( listing in listings ) {
 			attr = variables.coldsoup.getAttributes(listing);

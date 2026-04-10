@@ -27,7 +27,7 @@ interface {
 		
 	}
 	
-	public void function process(required node, required struct document) localmode=true {
+	public void function process(required struct section, required struct document) localmode=true {
 
 		/**
 		 * Do something to the node

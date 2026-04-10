@@ -104,7 +104,7 @@ component name="coldlight" {
 			for (section in returnVal.data) {
 				sectionObj = returnVal.data[section];
 				try {
-					plugin.process(node=sectionObj.node, jsoupObj=variables.coldsoup, markDownObj=variables.markdown, document=returnVal);
+					plugin.process(section=sectionObj, document=returnVal);
 				}
 				catch (any e) {
 					local.extendedinfo = {"error"=e};

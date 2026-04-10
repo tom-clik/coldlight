@@ -38,7 +38,7 @@ component implements="coldlight.plugins.pluginInterface" {
 		
 	}
 	
-	public void function process(required node, required struct document) localmode=true {
+	public void function process(required section, required struct document) localmode=true {
 		
 	}
 
