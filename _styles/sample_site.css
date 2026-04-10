@@ -128,6 +128,10 @@ a {
     grid-template-rows: auto 50px;
 }
 
+#maincol .inner * {
+    min-width: 0;
+}
+
 .pageBody h1 a:before, .pageBody h2 a:before , .pageBody h3 a:before  {
   display: block; 
   content: " "; 
@@ -336,10 +340,10 @@ code, .code {
 pre {
     margin-bottom: 1em;
     white-space: pre;
-    max-width: 760px;
-    width: 100%;
+    max-width: 100%;
     margin: 1em 0;
     overflow-x: auto;
+     -webkit-overflow-scrolling: touch;
 }
 
 pre code {
