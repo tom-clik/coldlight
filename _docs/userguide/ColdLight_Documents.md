@@ -50,7 +50,7 @@ Note that the div tags are removed in the final HTML. You would need to wrap the
 
 ## YAML Data
 
-YAML data can be defined in the main index for global values or in the files to rapply to that section only. The defined variables can be used in the final document generation -- see [](#variables) and [](#templates)
+YAML data can be defined in the main index for global values or in the files to apply to that section only. The defined variables can be used in the final document generation -- see [](#variables) and [](#templates)
 
 ## Meta includes { #metainc}
 

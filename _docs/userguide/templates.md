@@ -4,7 +4,7 @@ To output a publication, a template is required. These use the [Mustache](https:
 
 Variable names are enclosed in curly braces, e.g. `{{title}}`. Note any variables containing HTML need triple braces, e.g. `{{{intro}}}`.
 
-For PDF or EPUB versions, one template is used to generate the whole document.
+Remember that to include variables in the text of a document, you use `${varname}` syntax. Any mustache code in the text will be preserved as is.
 
 ## Basic fields
 
@@ -20,13 +20,13 @@ Each separate file is added in order. If a section has sub sections, the title o
 
 ### The TOC variable
 
-An HTML table of contents can be output with the `toc` variable.
-
-Note this is only for PDF documents. The EPUB TOC is generated automatically in code.
+An HTML table of contents can be output with the `toc` variable. It's primarily designed for PDF documents. The EPUB TOC is generated automatically in code, and listings of content for websites are usually best done with a plug-in, see e.g. the `section_menus` plug-in.
 
 ## Website publications
 
-Multiple page publications have a "page" variable with multiple fields for navigation.
+Multiple page publications have a "page" variable with multiple fields for navigation. These are included with dot notation, e.g. `{{page.title}}` or `{{{page.parent.link}}}`.
+
+### Page Variables
 
 | Field      | Description
 |------------|------------------------------
@@ -44,7 +44,7 @@ Multiple page publications have a "page" variable with multiple fields for navig
 
 ### Site Variables
 
-When saving a static website, variables can be defined in the site object and output with the `site` prefix, e.g. `{{site.title}}`. These are in addition to the basic variables defined in YAML.
+When saving a static website, variables can be defined in the optional site struct and output with the `site` prefix, e.g. `{{site.title}}`. These are in addition to the basic variables defined in YAML.
 
 These are generally used for "technical" variables such as `{{site.assets_url}}`. Editorial variables such as title are best defined in the text.
 

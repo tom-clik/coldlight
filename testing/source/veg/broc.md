@@ -1,6 +1,6 @@
 # Broccoli
 
-<div class="listing" data-href="listings/sample1.md" />
+<div class="listing" data-href="listings/sample1.md"></div>
 
 Broccoli is a nutrient-dense vegetable with a variety of health benefits due to its high content of vitamins, minerals, fiber, and antioxidants. Here are some of the key benefits of broccoli:
 
@@ -8,7 +8,7 @@ Broccoli is a nutrient-dense vegetable with a variety of health benefits due to 
 
 instead of History lets have a code listing:
 
-<div class="listing listingtitle" data-href="listings/sample1.md" />
+<div class="listing listingtitle" data-href="listings/sample1.md"></div>
 
 ## Benefits
 

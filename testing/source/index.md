@@ -7,7 +7,7 @@ toclevel: 1
 
 Welcome to the {$title}
 
-{$toc}
+<div class="section-menu"></div>
 
 <div href="disclaimer.md" id="disclaimer" meta="true" />
 <div href="fruit/index.md" />

@@ -4,6 +4,8 @@ Description: This is the fruit section
 ---
 # Fruit
 
+<div class="section-menu"></div>
+
 LoremNulla dolore in sed velit officia deserunt aute irure enim dolore magna duis dolor aute ex irure.
 
 Random cross reference to [](#grapes_eye_health).

@@ -1,3 +1,7 @@
+---
+description: Information about apples
+---
+
 # Apples
 
 Apples are a nutritious fruit that offer a wide range of health benefits due to their rich content of vitamins, minerals, antioxidants, and fiber. Here are some of the key benefits of apples:

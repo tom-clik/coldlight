@@ -1,6 +1,10 @@
+---
+description: Aubergines, also known as eggplants, are a nutrient-rich vegetable with several health benefits. 
+---
+
 # Aubergines
 
-Aubergines, also known as eggplants, are a nutrient-rich vegetable with several health benefits. They contain essential vitamins, minerals, fiber, and antioxidants that contribute to overall health. Here are the key benefits of aubergines:
+Aubergines, also known as eggplants, are a nutrient-rich vegetable with several health benefits. They contain essential vitamins, minerals, fiber, and antioxidants that contribute to overall health. Here are the key benefits of aubergines: { .description}
 
 ## 1. Rich in Nutrients
    - **Low in Calories**: Aubergines are low in calories but packed with nutrients, making them a great addition to a healthy diet. They provide small amounts of essential nutrients like **vitamin C**, **vitamin K**, **vitamin B6**, and **potassium**.
