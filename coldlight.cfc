@@ -70,15 +70,16 @@ component name="coldlight" {
 		data = {};
 		contents = {};
 
+		// parse text for this document and any includes
 		temp = parseText(text=text, filepath=filepath, data=data, contents=contents);
 
 		setHierarchy(data=data,sections=temp.sections);
 
 		returnVal["basepath"] = filepath;
-		returnVal["sections"] = temp.sections;
-		returnVal["meta"] = temp.meta;
-		returnVal["data"] = data;
-		returnVal["contents"] = contents;
+		returnVal["sections"] = temp.sections; // array of top level sections
+		returnVal["meta"] = temp.meta; // Meta data as defined with YAML vars
+		returnVal["data"] = data; // Struct of pages keyed by ID. 
+		returnVal["contents"] = contents; // Complete struct of all headings keyed by code, with fields id, level, section, text and toc (boolean, show in the toc)
 
 		/* Index page has own text */
 		if ( Trim( temp.node.body().html() ) neq "" ) {
@@ -99,6 +100,7 @@ component name="coldlight" {
 			returnVal["meta"]["home"] = returnVal["navigation_list"][1];
 		}
 		
+		// apply process method for plug-ins
 		for (plugin_code in variables.plugins) {
 			plugin = variables.plugins[plugin_code];
 			for (section in returnVal.data) {
@@ -183,7 +185,7 @@ component name="coldlight" {
 			"node" = temp.node
 		};
 
-		// convert attributes for each "div" into a struct
+		// Find divs with hrefs and process those
 		for (div in retVal.node.select("div[href]")) {
 			
 			info = variables.coldsoup.nodeInfo(div);
@@ -391,7 +393,9 @@ component name="coldlight" {
 	}
 
 	/**
-	 * Recursive helper function for html()
+	 * @hint Recursive helper function for html()
+	 *
+	 * Used in generating single html page from all sections
 	 * 
 	 */
 	private string function sectionsHTML(required array sections, required struct document, required struct footnotes, boolean XML=false, numeric depth=0 ) {
@@ -402,7 +406,18 @@ component name="coldlight" {
 
 			local.sectionObj = arguments.document.data[local.id];
 			node = duplicate(local.sectionObj.node);
-			updateXrefs(node=node,contents=arguments.document.contents,preview=false,usePage=1);
+			
+			try{
+				updateXrefs(node=node,document=arguments.document,preview=false,usePage=0);
+			} 
+			catch (any e) {
+				local.extendedinfo = {"error"=e,"id"=local.id,"html"=node.html()};
+				throw(
+					extendedinfo = SerializeJSON(local.extendedinfo),
+					message      = "Error processing page:" & e.message
+				);
+			}
+			
 
 			if (arguments.XML) {
 				node.outputSettings(variables.coldsoup.XML); 
@@ -469,33 +484,55 @@ component name="coldlight" {
 
 
 	/**
-	 * @hint Update automatic cross references with text of target
+	 * @hint Format href of links and update automatic cross references with text of target
 	 *
 	 * Auto links are any links with blank text or class of "auto" 
+	 *
+	 * Note the syntax of links is just `section` for a link to a section or `#heading` for a link to a heading, 
+	 * or section#id for a link to any item e.g. a table. 
 	 * 
+	 * For headings, the system will work out which section to link to for an anchor.
+	 *
+	 * You can put the section before the heading for your own reference but BIM it isn't used.
+	 *
+	 * @node      page jsoup node
+	 * @document  Complete document struct - used for Xrefs
+	 * @preview   Generate links in preview format
+	 * @usePage   Use page reference in links - false for single page outputs
 	 */
-	private void function updateXrefs(required node, required struct contents, boolean preview=false, boolean usePage=true) localmode=true {
+	private void function updateXrefs(required node, required struct document, boolean preview=false, boolean usePage=true) localmode=true {
 
 		links = arguments.node.select("a[href]");
+
 
 		for (link in links) {
 			
 			href =link.attr("href");
+			text = trim( link.text() );
 			
-			if ( ! find("##", href ) ) {
-				href = sectionLink(section=href, anchor="", preview=arguments.preview);
-				link.attr("href", href);
+			if ( Left(href,4) eq "http" ) {
+				continue;
+			}
+			else if ( ! find("##", href ) ) {
+				if ( StructKeyExists(arguments.document.data,href)) {
+					href = sectionLink(section=href,preview=arguments.preview);
+					link.attr("href", href);
+					if (text eq "" OR link.hasClass("auto")) {
+						link.html(arguments.document.data[href].meta.title);
+					}
+				}
+				else {
+					throw("Invalid link #href# - section not found");
+				}
 			}
 			else {
 				
 				linkid = ListLast(href,"##");
 
-				if (StructKeyExists(arguments.contents,linkid)) {
+				if (StructKeyExists(arguments.document.contents,linkid)) {
 					
-					text = link.text();
-					linkData = arguments.contents[linkid];
-					if (trim(text) eq "" OR link.hasClass("auto")) {
-						
+					linkData = arguments.document.contents[linkid];
+					if (text eq "" OR link.hasClass("auto")) {
 						link.html(linkData.text);
 					}
 					if (arguments.usePage) {
@@ -953,7 +990,7 @@ component name="coldlight" {
 		// TODO: formalise all this stuff
 		// section menu
 		if ( sectionObj.keyExists("sections") ) {
-			context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections,preview=arguments.preview);
+			context["page"]["section"]["menu"] = sectionMenu(data=arguments.document.data, sections=sectionObj.sections, preview=arguments.preview);
 		}
 
 		html = variables.mustache.render(template=arguments.template, context=context);
@@ -969,6 +1006,7 @@ component name="coldlight" {
 	public struct function staticSite(required struct document, required string template, required string outputDir, struct site={} ) localmode=true {
 
 		returnVal = {};
+
 		templateHTML = FileRead(arguments.template);
 
 		context = getSiteContext(document=arguments.document, site=arguments.site, preview=false );
@@ -1047,11 +1085,30 @@ component name="coldlight" {
 
 	}
 
+	/**
+	 * Generate HTML for a single page
+	 * 
+	 * @document      ColdLight publication
+	 * @section       Section or page code
+	 * @preview       Generate links in preview mode
+	 */
 	public struct function getPage(required struct document, required string section, boolean preview = false ) localmode=true {
 
 		sectionData = arguments.document.data[arguments.section];
-		node = duplicate(sectionData.node);
-		updateXrefs(node=node,contents=arguments.document.contents,preview=arguments.preview,usePage=1);
+
+		node = variables.coldsoup.clone( sectionData.node );
+		
+		try{
+			updateXrefs(node=node,document=arguments.document,preview=arguments.preview,usePage=1);
+		} 
+		catch (any e) {
+			local.extendedinfo = {"error"=e,"html"=node.html(), sectionData=sectionData};
+			throw(
+				extendedinfo = SerializeJSON(local.extendedinfo),
+				message      = "Unable to process page #arguments.section#:" & e.message
+			);
+		}
+		
 
 		replaceCodeVars(node);
 		page = {
