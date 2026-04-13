@@ -8,7 +8,7 @@ How you run ColdLight depends on your workflow. Essentially all usage involves l
 
 ## Instantiating the component
 
-ColdLight is designed as a singleton component. It can be loaded into a shared scope, e.g. `application`. Essentially all methods are static, and require you to pass in the loaded "document", see following
+ColdLight is designed as a singleton component. It can be loaded into a shared scope, e.g. `application`. All methods are static, and require you to pass in the loaded "document", see following.
 
 Assuming you have successfully installed the JARs and the helper components, it can be instantiated thus:
 

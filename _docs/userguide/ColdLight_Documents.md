@@ -62,7 +62,7 @@ An attribute `meta` can be added to the included files to exclude them from the 
 
 ## Cross references
 
-Cross references require only the unique id of the target, irrespective of file source. For sections, use the filename excluding any legacy sort orders at the front (e.g. for a file `40-getting-started.md` just use (`#getting-started`). For headings, you need to apply an ID -- see [](#additional_attrs) -- and then use this as the link.
+Cross references require only the unique id of the target, irrespective of file source. For sections, use the filename excluding any extension (e.g. for a file `getting-started.md` just use (`getting-started`). For headings, you need only the  ID -- see [](#additional_attrs). ColdLight will add the document link if required. For other cross references, you need a combination of the page and the ID of the reference, e.g. `[](filename#anchor)`.
 
 In addition, ColdLight will automatically update cross references with the text of the reference (if left blank).
 
@@ -70,4 +70,4 @@ In addition, ColdLight will automatically update cross references with the text 
 
 Variable subsitutions can be made using `{$fieldname}` syntax. Any YAML data, meta includes, or heading with an ID can be used.
 
-In addition, all the YAML or meta includes can be used with the template system when the final version is generated.
+In addition, all the YAML or meta includes can be used with the Mustache templates when the final version is generated.
