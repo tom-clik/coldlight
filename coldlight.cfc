@@ -1096,8 +1096,10 @@ component name="coldlight" {
 
 		sectionData = arguments.document.data[arguments.section];
 
+		// regression bug. Apparently fixed in Lucee 7.0.2.98, broken all versions since 6.2
 		node = variables.coldsoup.clone( sectionData.node );
-		
+		// node = sectionData.node.clone();
+
 		try{
 			updateXrefs(node=node,document=arguments.document,preview=arguments.preview,usePage=1);
 		} 
