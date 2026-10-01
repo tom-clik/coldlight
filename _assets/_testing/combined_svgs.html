@@ -5,11 +5,52 @@
 	
 	<meta charset="UTF-8">
 	<style>
+	:root {
+		--icon-width:24px;
+		--icon-height:24px;
+		--icon-fill:black;
+		--icon-bg: transparent;
+	}
+
+	.flex {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 12px;
+		grid-gap: 12px;
+	}
+
+	.icon {
+		width:var(--icon-width);
+		height:var(--icon-height);
+		background-color:var(--icon-bg);
+	}
+
 	svg {
 		display: inline-block;
-		fill:black;
-		width:24px;
-		height:48px;
+		width:100%;
+		height:100%;		
+		fill:var(--icon-fill);		
+	}
+
+	.smallblue {
+		--icon-fill:turquoise;
+	}
+
+	.smallblue .icon:hover {
+		--icon-fill:magenta;
+	}
+
+	.bigmagenta .icon {
+		padding:4px;
+		--icon-bg: magenta;
+		--icon-fill:white;
+		--icon-width:52px;
+		--icon-height:52px;
+		border-radius: 4px;
+	}
+
+	.bigmagenta .icon:hover {
+		--icon-fill:turquoise;
 	}
 	</style>
 </head>
@@ -17,10 +58,41 @@
 
 <h2 class="open">Testing Combined SVGs</h2>
 
+<p>SVGs <em>can</em> be styled with CSS if you use the <code>use</code> syntax. The html for both these elements is the same, just copied</p>
 
-<svg   viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#cart"></svg>
-<svg   viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#help_outline"></svg>
-<svg   viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#help"></svg>
+<div class="smallblue flex">
+	<div class="icon"><svg viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#cart"></svg></div>
+	<div class="icon"><svg viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#help_outline"></svg></div>
+	<div class="icon"><svg viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#help"></svg></div>
+	<div class="icon"><svg viewBox="0 0 284.929 284.929"><use xlink:href="../images/combined.svg#arrow_down"></svg></div>
+	<div class="icon"><svg viewBox="0 0 283.922 283.922"><use xlink:href="../images/combined.svg#popup"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#arrows-fullscreen"></svg></div>
+	<div class="icon"><svg viewBox="0 0 32 32"><use xlink:href="../images/combined.svg#menu"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#chevron-right"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#chevron-left" ></svg></div>
+	<div class="icon"><svg viewBox="0 0 357 357"><use xlink:href="../images/combined.svg#close"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#instagram"></svg></div>
+	<div class="icon"><svg viewBox="0 0 223.413 223.413"><use xlink:href="../images/combined.svg#right_arrow"></svg></div>
+	<div class="icon"><svg viewBox="0 0 408 408"><use xlink:href="../images/combined.svg#thumbnails"></svg></div>
+	<div class="icon"><svg viewBox="0 0 197.4 197.4"><use xlink:href="../images/combined.svg#left_arrow"></svg></div>
+</div>
+
+<div class="bigmagenta flex">
+	<div class="icon"><svg viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#cart"></svg></div>
+	<div class="icon"><svg viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#help_outline"></svg></div>
+	<div class="icon"><svg viewBox="0 0 24 24"><use xlink:href="../images/combined.svg#help"></svg></div>
+	<div class="icon"><svg viewBox="0 0 284.929 284.929"><use xlink:href="../images/combined.svg#arrow_down"></svg></div>
+	<div class="icon"><svg viewBox="0 0 283.922 283.922"><use xlink:href="../images/combined.svg#popup"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#arrows-fullscreen"></svg></div>
+	<div class="icon"><svg viewBox="0 0 32 32"><use xlink:href="../images/combined.svg#menu"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#chevron-right"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#chevron-left" ></svg></div>
+	<div class="icon"><svg viewBox="0 0 357 357"><use xlink:href="../images/combined.svg#close"></svg></div>
+	<div class="icon"><svg viewBox="0 0 16 16"><use xlink:href="../images/combined.svg#instagram"></svg></div>
+	<div class="icon"><svg viewBox="0 0 223.413 223.413"><use xlink:href="../images/combined.svg#right_arrow"></svg></div>
+	<div class="icon"><svg viewBox="0 0 408 408"><use xlink:href="../images/combined.svg#thumbnails"></svg></div>
+	<div class="icon"><svg viewBox="0 0 197.4 197.4"><use xlink:href="../images/combined.svg#left_arrow"></svg></div>
+</div>
 
 
 </body>

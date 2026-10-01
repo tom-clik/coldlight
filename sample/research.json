@@ -1,0 +1,10 @@
+{
+	"title" : "Research document",
+	"index": "./source/research/index.md",
+	"pdf_template": "./templates/research.html",
+	"pdf": "../testing/output/research/research.pdf",
+	"assets_urlYYY": "../../../",
+	"assets_urlXXX": "/coldlight",
+	"assets_url": "https://www.coldlight.net",
+	"preview_url": "/coldlight/testing/output/research/research.pdf"
+}

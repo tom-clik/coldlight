@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Steelfish Rg';
+  font-style: normal;
+  font-weight: 400;
+  src: url('steelfish rg.ttf');
+}
+
+@font-face {
+  font-family: 'Steelfish Rg';
+  font-style: italic;
+  font-weight: 400;
+  src: url('steelfish rg it.ttf');
+}

@@ -22,31 +22,18 @@ $.fn.menu = function(ops) {
 		options = $.extend({},defaults,ops);
 
 	$(".submenu").on("open",function() {
-		var id = $(this).attr("id");
-		console.log("opening " + id);
-		
-		// close children
-		$(this).find("ul.submenu").each(function() {
-			let $childmenu = $(this);
-			if ($childmenu.hasClass("open")) {
-				$childmenu.trigger("close");
-			}
-		});
-
+		console.log("opening " + $(this).attr("id"));
 		$(this).animateAuto("height", options.menuAnimationTime, function() {
-			console.log("Open animation complete for " + id);	
+			console.log("Animation complete");	
 			$(this).css({"height":""}).addClass("open");
 		});
-		return false;
 
 	}).on("close",function() {
-		var id = $(this).attr("id");
-		console.log("closing " + id);
+		console.log("closing " + $(this).attr("id"));
 		$(this).animate({"height":0}, options.menuAnimationTime, function() {
-			console.log("Close animation complete for " + id);	
+			console.log("Animation complete");	
 			$(this).removeClass("open").css({"height":""});
 		});
-		return false;
 	});
 	
 
@@ -57,54 +44,22 @@ $.fn.menu = function(ops) {
 			$(this).prev("a").append(options.arrow).addClass("hasmenu");
 		});
 
-		$(self).on("click",".hasmenu",function(e) {
-			
-			console.log("opening submenu");
-
+		$(self).on("click",".hasmenu > i",function(e) {
 			e.preventDefault();
 			e.stopPropagation(); 
-			
 			var $li = $(this).closest("li");
 			var open = $li.hasClass("open");
 			
-			// close siblings
-			$(this).closest("ul").find("li").each(function() {
-				if ($(this).hasClass("open")) {
-					let $submenu = $(this).find("> ul").first();
-					$submenu.trigger("close");
-					$(this).removeClass("open");
-				}
-			});
-			
-			var $submenu = $li.find("> ul").first();
-
+			$(this).closest("ul").find("li").removeClass("open");
 			if (!open) {
 				$li.addClass("open");
-				console.log($submenu.html());
-				$submenu.trigger("open");
+				$li.find("> ul").first().trigger("open");
 			}
 			else {
-				$submenu.trigger("close");	
+				$li.find("> ul").first().trigger("close");	
 			}
 			
-			return false;
 
 		});
-
-		$(self).on("open",function(){
-			console.log(options);
-			console.log("opening " + $(self).attr("id"));
-			$(self).show().animateAuto("height", options.menuAnimationTime, function() {
-				console.log("Animation complete");	
-				$(self).css({"height":"auto"});
-			});
-		}).on("close",function(){
-			console.log("closing " + $(self).attr("id"));
-			$(self).animate({"height":0}, options.menuAnimationTime, function() {
-				console.log("Animation complete");	
-				$(self).css({"height":0}).hide();
-			});
-		});
-		
 	});
 }

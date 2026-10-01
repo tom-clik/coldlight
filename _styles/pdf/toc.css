@@ -1,0 +1,97 @@
+/*
+
+# TOC Stylesheet 
+
+Stylesheet for table of contents
+
+## Usage
+
+Create toc
+
+    <div class="toc">
+		<div class="tocsection">
+			<p class="toc1"><a href="#first"></a></p>
+			<p class="toc2"><a href="#second"></a></p>
+			<p class="toc3"><a href="#third"></a></p>
+			<p class="toc4"><a href="#notrecommended"></a></p>
+			<p class="toc3"><a href="#fourth"></a></p>
+		</div>
+	</div>
+
+And use this stylesheet.
+
+This will pick up the content from the targets. To add these manually, override this
+behaviour with `manual` class, e.g.
+
+    <div class="toc manual">
+		<div class="tocsection">
+			<p class="toc1"><a href="#first"><span class'hnum'>1</span>Chapter first</a></p>
+
+*/
+
+.toc a {
+	text-decoration:none;
+	color:inherit;
+	content: target-content(attr(href));
+}
+
+/* Insert chapter number before each heading */
+.toc.numbers a::before {
+	content: target-counter(attr(href),chapternum) ". ";
+}
+
+/* Align numbers neatly */
+.toc.numbers.padded a::before {
+	display: inline-block;
+	width:2em;	
+	padding-right: 0.4em;
+	margin-left: -2em;
+}
+
+.toc.numbers.padded a {
+	margin-left: 2em;
+}
+
+.toc.manual a {
+	content:initial;
+}
+
+.toc a:after {
+	content: leader('.') target-counter(attr(href),page);
+}
+
+.toc p {
+	margin:0;
+}
+
+.toc .tocsection {
+	page-break-inside: avoid;
+}
+
+.toc .toc1 {
+	margin-top:12px;
+	text-transform: uppercase;
+	font-size: 1.1em;
+	margin-bottom: 4px;
+}
+
+.toc .toc2 {
+	margin-left:2em;
+	margin-bottom: 2px;
+}
+
+.toc .toc3 {
+	margin-left:4em;
+	margin-bottom: 2px;
+}
+
+.toc .toc4 {
+	margin-left:8em;
+	margin-bottom: 2px;
+}
+
+.toc.col2 {
+	column-count: 2;
+	column-gap: 1em;
+	column-fill: balance;
+}

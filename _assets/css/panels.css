@@ -1,13 +1,10 @@
-/* Static CSS for new var style grid styling of "items"
-
-NB I'm sure we can do this with the standard grid functionality
-
- */
+/* Static CSS for new var style grid styling of "items" */
 :root {
 	--item-grid-template-areas: "imageWrap" "title"  "textWrap";
 	--item-grid-template-rows: min-content min-content auto;
-	--item-gridgap: 10px;
+	--image-gap: 10px;
 	--item-rowgap: 0px;
+	--item-image-width: 40%;
 	--item-grid-template-columns: 1fr;
 }
 
@@ -23,21 +20,28 @@ NB I'm sure we can do this with the standard grid functionality
 .item {
 	display: grid;
 	grid-template-areas: var(--item-grid-template-areas);
-	grid-column-gap: var(--item-gridgap);
+	grid-column-gap: var(--image-gap);
 	grid-row-gap:  var(--item-rowgap);
 	grid-template-rows: var(--item-grid-template-rows);
 	grid-template-columns:   var(--item-grid-template-columns);
 }
 
+.item, .item .title, .item .imageWrap, .item .textWrap {
+	border-style: solid;
+}
+
 .item .title {
 	grid-area: title;
+	height:auto;
+	min-height:0; 
+	margin:0;
 }
 
 .item .imageWrap {
-	grid-area: imageWrap;;
+	grid-area: imageWrap;
 }
 
-.item .textWrap{
+.item .textWrap {
 	grid-area: textWrap;
 }
 

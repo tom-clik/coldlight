@@ -1,0 +1,29 @@
+{
+  "scripts": [
+    {
+      "debug": "/coldlight/_styles/sample_site.css",
+      "min": "//www.coldlight.net/_styles/min/1.0/sample_site.css",
+      "name": "sample_site"
+    },
+    {
+      "debug": "/coldlight/_styles/pdf/reset.css",
+      "min": "//www.coldlight.net/_styles/min/1.0/pdf/reset.css",
+      "name": "reset"
+    },
+    {
+      "debug": "/coldlight/_styles/pdf/simplebook.css",
+      "min": "//www.coldlight.net/_styles/min/1.0/pdf/simplebook.css",
+      "name": "simplebook"
+    },
+    {
+      "debug": "/coldlight/_styles/pdf/standard.css",
+      "min": "//www.coldlight.net/_styles/min/1.0/pdf/standard.css",
+      "name": "standard"
+    },
+    {
+      "debug": "/coldlight/_styles/pdf/toc.css",
+      "min": "//www.coldlight.net/_styles/min/1.0/pdf/toc.css",
+      "name": "toc"
+    }
+  ]
+}
