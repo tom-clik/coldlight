@@ -1,0 +1,140 @@
+<cfscript>
+/*
+Save kindle epub (all files added to zip), PDF, and static site for a publication
+
+## Description
+
+Use a json configuration to set source file and output(s) for conversion.  
+
+## Usage
+
+1. See the sample_source.json and create a copy for your publication (see notes below).
+2. Set the path to the Prince executable in environment.princeExecutable (or use default below) for PDFs
+3. Run script NB it's configured to read all .json files in folder and display a list. If you use this, you may want to add a title to the json to appear in the list. Otherwise just call with url.code={stem of your json file}
+
+### Config file fields
+
+| Param         | Description
+|---------------|-----------------------------------------------------------
+| index         | REQUIRED  Markdown index page
+| epub*         | File name for Epub export
+| epub_template | Template to use for epub conversion
+| pdf*          | File name for PDF export 
+| pdf_template  | Template to use for PDF conversion
+| site*         | Folder for HTML site 
+| site_template | Template for HTML conversion
+| plugins       | List of ColdLight plug ins to load. Currently in alpha testing
+| assets_url    | This or any other field can be added here and will be added to site data for use in the Mustache templates, e.g. {{{assets_url}}}. Typically you would use technical variables here and the markdown for editorial variables. 
+
+* Any of these can be omitted. The corresponding template file is then not needed. 
+
+## Notes
+
+The html for PDF version ends up in the root for the relative file paths. This could be better, we could adjust the paths as per the epub version.
+
+*/
+
+cfsetting(requesttimeout="300" );
+
+version = "jsoup-1.22.1.jar";
+jsoupJarPath = server.system.environment.javalib & "\" & version
+if (! FileExists( jsoupJarPath ) ) { throw("JSOUP jar file (#jsoupJarPath#) not found");}
+
+version = "flexmark-all-0.64.0-lib.jar";
+flexmarkPath = server.system.environment.javalib & "\" & version
+if (! FileExists( flexmarkPath ) ) { throw("Flexmark jar file (#flexmarkPath#) not found");}
+
+args = {jarpath=flexmarkPath,jsoupJar=jsoupJarPath};
+
+// Usee prince to convert to PDF
+princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files/Prince/engine/bin/prince.exe";
+if (fileExists( princeExecutable ) ) {
+	args.pdfconverter = new coldlight.converters.princeXML(princeExecutable);
+}
+
+coldLightObj = new coldlight.coldlight(argumentCollection = args);
+coldLightSampleObj = new coldlight.sample.preview.coldlightSample();
+logger = new logger.logger(debug=1);
+coldLightObj.loggerObj = logger;
+
+
+// List settings files in the folder if code not defined
+if (! IsDefined("url.code") ) {
+	coldLightSampleObj.listPubs(getDirectoryFromPath(getCurrentTemplatePath()));
+	abort;
+}
+
+
+fileName = ExpandPath("./" & url.code & ".json");
+
+site = {};
+config = coldLightSampleObj.getConfig(fileName=fileName, site=site);
+
+if (config.keyExists( "plugins") ) {
+	if (! isArray(config.plugins)){ config.plugins = listToArray(config.plugins ) }
+	for ( plugin in config.plugins ) {
+		coldLightObj.addPlugin(plugin);
+	}
+}
+
+// The idea was to only load this once. I have a bug whereby the epub process is affecting
+// the pdf process that I can't track down. In the meantime, see the main loop where we load it 
+// on each iteration.
+// args.document = coldlightObj.load(config.index);
+
+args.filepath = getDirectoryFromPath(config.index);
+
+for (type in ['pdf','epub']) {
+
+	if (config.keyExists(type)) {
+		
+		writeOutput("<p>Generating #type#</p>");
+		
+		// see note above - shouldn't be needed but have bug somewhere
+		args.document = coldlightObj.load(config.index);
+		
+		// Additional meta vars supplied from config file - not a required part of ColdLight conversion
+		StructAppend(args.document.meta, site, false);
+		
+		args.filename = config[type];
+
+		// check dir exists
+		coldLightSampleObj.checkDirectory(args.filename);
+		
+		// get template for type
+		template_name = type & "_template";
+		if (! config.keyExists(template_name)) {
+			throw("Template not defined for type #type#");
+		}
+		args.template = config[template_name];
+		args.debug = 0;
+		// NOW convert
+		coldLightObj[type](argumentCollection = args);
+				
+	}
+}
+
+if (config.keyExists("site")) {
+	
+	writeOutput("<p>Generating site</p>");
+	args = {};
+	
+	args.document = coldlightObj.load(config.index);
+	args.outputDir = config["site"];
+	coldLightSampleObj.checkDirectory(args.outputDir);
+	args.template = config["site_template"];
+	args.site = site;
+
+	site = coldLightObj.staticSite(argumentCollection = args);
+
+}
+
+WriteOutput("<p>Done</p>");
+
+if (config.keyExists("preview_url")) {
+	writeOutput("<p><a href='#config.preview_url#'>#config.preview_url#</a></p>");
+}
+
+logger.viewLog();
+
+</cfscript>

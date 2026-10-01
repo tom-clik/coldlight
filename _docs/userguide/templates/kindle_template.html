@@ -1,0 +1,39 @@
+<html>
+<head>
+	<title>{{title}}</title>
+	<meta name="Author" content="{{author}}" />
+	<meta name="Description" content="{{description}}" />
+	<meta name="ISBN" content="{{ISBN}}" />
+	
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../../_styles/kindle.css">
+	<styles>
+		#titlepage .title {
+			text-align:center;
+			font-size:24pt;
+			font-weight:bold;
+		}
+</head>
+<body>
+
+<div id="frontmatter">
+
+	<section id="titlepage" class="section">
+
+		<p class="title">{{title}}</p>
+				
+	</section>
+	
+
+</div>
+
+<div id="content">
+
+{{{body}}}
+
+</div>
+{{#footnotes}}
+<section id="footnotes"><h1>Footnotes</h1>{{{footnotes}}}</section>
+{{/footnotes}}
+</body>
+</html>
