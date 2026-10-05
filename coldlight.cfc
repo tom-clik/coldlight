@@ -50,6 +50,44 @@ component name="coldlight" {
 		return this;
 	}
 
+	/** Capture IDs from a full HTML string or Jsoup Document without mutating it. */
+	public array function saveImages(required any document, required array images,
+		required string outputFolder, required string baseUrl, required string nodePath,
+		struct options={}) localmode=true {
+		if (!arrayLen(arguments.images)) return [];
+		if (!reFindNoCase("^(https?://|file:/)", arguments.baseUrl))
+			throw(type="coldlight.images", message="baseUrl must be an absolute HTTP(S) or file URL");
+		html = isSimpleValue(arguments.document) ? arguments.document : arguments.document.outerHtml();
+		node = variables.coldsoup.Jsoup.parse(html);
+		// This snapshot lives in a temporary directory. Resolve resources at the original location.
+		node.select("base").remove();
+		node.head().prependElement("base").attr("href", arguments.baseUrl);
+		node.outputSettings().charset("UTF-8");
+		converter = new coldlight.converters.htmlToPng(arguments.nodePath);
+		return converter.convert(node.outerHtml(), arguments.images, arguments.outputFolder, arguments.options);
+	}
+
+	/** Build a capture batch for any selected elements, with filenames derived from IDs. */
+	public array function imageBatch(required any node, string selector="[data-image]",
+		string folder="images", string prefix="image") localmode=true {
+		if (len(arguments.prefix) && !reFind("^[A-Za-z0-9_-]+$", arguments.prefix))
+			throw(type="coldlight.images", message="Image prefix must contain only letters, digits, underscores or hyphens");
+		batch = [];
+		for (element in arguments.node.select(arguments.selector)) {
+			id = element.id();
+			if (!reFind("^[A-Za-z0-9_-]+$", id))
+				throw(type="coldlight.images", message="Image elements need a filename-safe ID (letters, digits, underscores or hyphens)", detail=id);
+			batch.append({"id":id, "filename":(len(arguments.folder) ? arguments.folder & "/" : "")
+				& (len(arguments.prefix) ? arguments.prefix & "-" : "") & id & ".png"});
+		}
+		return batch;
+	}
+
+	/** Convenience batch for marked tables, using images/table-{id}.png. */
+	public array function tableImageBatch(required any node, string folder="images") localmode=true {
+		return imageBatch(node=arguments.node, selector="table[data-image]", folder=arguments.folder, prefix="table");
+	}
+
 	// Add a plugin that implements pluginInterface
 	public void function addPlugin(required pluginName) {
 		
@@ -601,6 +639,8 @@ component name="coldlight" {
 		addNameSpace(doc);
 		doc.outputSettings(variables.coldsoup.XML); 
 		doc.outputSettings().charset("UTF-8");
+		// EPUB XML cannot use HTML-only named entities such as &nbsp;.
+		doc.outputSettings().escapeMode(createObject("java", "org.jsoup.nodes.Entities$EscapeMode", "org.jsoup").xhtml);
 
 		returnValue = {};
 		links = doc.select("link[rel=stylesheet]");
@@ -663,7 +703,7 @@ component name="coldlight" {
 			
 			sectionObj =  arguments.document.data[id];
 			
-			html &= "    <li><a href=""#arguments.filename####id#"">#sectionObj.meta.title#</a></li>" & newLine();
+			html &= "    <li><a href=""#xmlFormat(arguments.filename)####xmlFormat(id)#"">#xmlFormat(sectionObj.meta.title)#</a></li>" & newLine();
 
 		}
 		
@@ -726,14 +766,14 @@ component name="coldlight" {
 		local.html.append("<?xml version=""1.0"" encoding=""UTF-8""?>");
 		local.html.append( "<package xmlns=""http://www.idpf.org/2007/opf"" version=""3.0"" xml:lang=""en"" unique-identifier=""pub-id"" prefix=""cc: http://creativecommons.org/ns##"">");
 		local.html.append( "  <metadata xmlns:dc=""http://purl.org/dc/elements/1.1/"">");
-		local.html.append( "    <dc:title id=""title"">#arguments.context.title#</dc:title>");
+		local.html.append( "    <dc:title id=""title"">#xmlFormat(arguments.context.title)#</dc:title>");
 		local.html.append( "    <meta refines=""##title"" property=""title-type"">main</meta>");
-		local.html.append( "    <dc:creator id=""creator"">#arguments.context.author#</dc:creator>");
+		local.html.append( "    <dc:creator id=""creator"">#xmlFormat(arguments.context.author)#</dc:creator>");
 		local.html.append( "    <!--meta refines=""##creator"" property=""file-as"">{$author_fileas}</meta-->");
 		local.html.append( "    <meta refines=""##creator"" property=""role"" scheme=""marc:relators"">aut</meta>");
-		local.html.append( "    <dc:identifier id=""pub-id"">#arguments.context["pub-id"]#</dc:identifier>");
+		local.html.append( "    <dc:identifier id=""pub-id"">#xmlFormat(arguments.context["pub-id"])#</dc:identifier>");
 		local.html.append( "    <meta property=""dcterms:modified"">#dateTimeFormat(now(), "iso", "UTC")#</meta>");
-		local.html.append( "    <dc:language>#arguments.context.language#</dc:language>");
+		local.html.append( "    <dc:language>#xmlFormat(arguments.context.language)#</dc:language>");
 		local.html.append( "  </metadata>");
 		local.html.append( "  <manifest>");
 
@@ -744,12 +784,12 @@ component name="coldlight" {
 			
 			local.props = ( arguments.context.keyExists("cover" ) && ( local.image eq arguments.context.cover ) ) ? " properties=""cover-image""" : "";
 
-			local.html.append( "    <item id=""img_#local.id#""#local.props# href=""#local.image#""  media-type=""#local.mime#""/>");
+			local.html.append( "    <item id=""img_#xmlFormat(local.id)#""#local.props# href=""#xmlFormat(local.image)#""  media-type=""#local.mime#""/>");
 		}
 
 		for (local.stylesheet in arguments.manifest.styles) {
 			local.id = ListFirst(local.stylesheet,".");
-			local.html.append( "    <item id=""#local.id#"" href=""css/#local.stylesheet#""  media-type=""text/css""/>");
+			local.html.append( "    <item id=""#xmlFormat(local.id)#"" href=""css/#xmlFormat(local.stylesheet)#""  media-type=""text/css""/>");
 		}
 
 		local.html.append( "    <item id=""content"" href=""content.xhtml"" media-type=""application/xhtml+xml""/>");
@@ -852,9 +892,11 @@ component name="coldlight" {
 		
 		manifest = {"styles"={},"images"= getImages(arguments.document) };
 		
-		templateHTML = processStylesheets(templateHTML,manifest.styles);
-
 		context.body = html(document=arguments.document,XML=true,footnotes=true, context=context);
+		// Render first: metadata can contain HTML, and unexpanded Mustache sections
+		// inside <head> would make the HTML parser move following elements into <body>.
+		contentHTML = variables.mustache.render(template=templateHTML, context=context);
+		contentHTML = processStylesheets(contentHTML,manifest.styles);
 
 		if (fileExists(arguments.filename)) {
 			try{
@@ -899,7 +941,7 @@ component name="coldlight" {
 		for (item in manifest.styles) {
 			// source will be absolute specified by var or relative
 			item_path = replaceFields( manifest.styles[item], context );
-			if (item_path eq manifest.styles[item]) {
+			if (!createObject("java", "java.io.File").init(item_path).isAbsolute()) {
 				item_path = getCanonicalPath( arguments.filePath & item_path );
 			}
 			data = fileRead(item_path);
@@ -909,7 +951,7 @@ component name="coldlight" {
 		}
 
 		// output html
-		html = variables.mustache.render(template=templateHTML, context=context);
+		html = contentHTML;
 
 		
 		outputFile = "OPS/content.xhtml";

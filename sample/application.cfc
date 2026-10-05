@@ -19,5 +19,19 @@ Normally you would redefined the functions marked virtual in the coldlightApplic
 component extends="coldlight.coldlightApplication" {
 
 	this.testMode = false;
+
+	public void function onError(e) {
+		
+		param request.prc = {};
+
+		local.args = {
+			e=e,
+			debug=1,
+			ajax=request.prc.isAjaxRequest ? : 0
+		};
+
+		new cferrorHandler.errorHandler(argumentCollection=local.args);
+		
+	}
 	
 }

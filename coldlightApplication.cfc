@@ -36,7 +36,7 @@ component{
 	
 	// adjust default content for your site.
 	// Redifine this in your own application.cfc
-	public void function defaultContent(required clikpage.pageObj pageObj) {
+	public void function defaultContent(required clikpage.page pageObj) {
 		StructAppend(arguments.pageObj.content.static_css,
 			{
 				"content" = 1,
@@ -63,25 +63,41 @@ component{
 
 	}
 
-	public array function defineApp() {
+	public struct function defineApp() localmode="true" {
 		
+		version = "jsoup-1.22.1.jar";
+		jsoupJarPath = server.system.environment.javalib & "\" & version
+		if (! FileExists( jsoupJarPath ) ) { throw("JSOUP jar file (#jsoupJarPath#) not found");}
+
+		version = "flexmark-all-0.64.0-lib.jar";
+		flexmarkPath = server.system.environment.javalib & "\" & version
+		if (! FileExists( flexmarkPath ) ) { throw("Flexmark jar file (#flexmarkPath#) not found");}
+
+		args = {jarpath=flexmarkPath,jsoupJar=jsoupJarPath};
+
+		// Usee prince to convert to PDF
+		princeExecutable = server.system.environment.princeExecutable ? :  "C:/Program Files/Prince/engine/bin/prince.exe";
+		if (fileExists( princeExecutable ) ) {
+			args.pdfconverter = new coldlight.converters.princeXML(princeExecutable);
+		}
+
+		application.defaultTemplate = "";
 		application.rootFolder = Replace(getDirectoryFromPath(getCurrentTemplatePath()),"sample\","sourcedocs");
 		application.defaultTemplate = "/template.cfm";
-		local.appDef = [];
-		ArrayAppend(local.appDef,{"code"="coldlight","title"="Coldlight Demo",path=application.rootFolder});
 
-		return local.appDef;
+
+		return args;
 
 	}
 	
 
 	public boolean function onApplicationStart(){
 		
-		application.pageObj =  new clikpage.pageObj();
+		application.pageObj =  new clikpage.page();
 		
 		defaultContent(application.pageObj);		
 
-		application.coldLight =  new coldlight.coldLight(defineApp());		
+		application.coldLight =  new coldlight.coldLight(argumentCollection=defineApp());		
 
 		return true;
 
@@ -139,73 +155,5 @@ component{
 	}
 
 
-	public void function onError(e) {
-		
-		var niceError = ["message"=e.message,"detail"=e.detail,"code"=e.errorcode,"ExtendedInfo"=deserializeJSON(e.ExtendedInfo)];
-		
-		// supply original tag context in extended info
-		if (IsDefined("niceError.ExtendedInfo.tagcontext")) {
-			niceError["tagcontext"] =  niceError.ExtendedInfo.tagcontext;
-			StructDelete(niceError.ExtendedInfo,"tagcontext");
-		}
-		else {
-			niceError["tagcontext"] =  e.TagContext;
-		}
-		
 	
-
-		// set to true in any API to always get JSON errors even when testing
-		param name="request.prc.isAjaxRequest" default="false" type="boolean";
-
-		if (e.type == "ajaxError" OR request.prc.isAjaxRequest) {
-			
-			local.errorCode = createUUID();
-			local.filename = this.errorFolder & "/" & local.errorCode & ".html";
-			
-			FileWrite(local.filename,local.errorDump,"utf-8");
-			
-			local.error = {
-				"status": 500,
-				"filename": local.filename,
-				"message" : e.message,
-				"code": local.errorCode
-			}
-			
-			WriteOutput(serializeJSON(local.error));
-		}
-		else {
-			if (this.testMode) {
-				writeDump(niceError);
-			}
-			else {
-				handleError(niceError);
-				
-				local.pageWritten = false;
-				if (IsDefined("application.pageObj")) {
-
-					request.content.body = "<h1>Error</h1>";
-					request.content.body &= arguments.e.message;
-					try {
-						writeOutput(application.pageObj.buildPage(request.content));
-						local.pageWritten = true;
-					}
-					catch (any e) {
-
-					}
-				}
-				if (NOT local.pageWritten) {
-					writeOutput("Sorry, an error has occurred");
-				}
-
-			}
-			
-		}
-		
-	}
-
-	// VIRTUAL
-	public void function handleError(struct error) {
-		// DO SOMETHING WITH THE ERROR
-	}
-
 }

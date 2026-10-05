@@ -1,0 +1,11 @@
+{
+  "name": "coldlight-html-to-png",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "install-browser": "node install-browser.mjs",
+    "test": "node --test renderer.test.mjs"
+  },
+  "dependencies": { "playwright": "1.63.0" }
+}
